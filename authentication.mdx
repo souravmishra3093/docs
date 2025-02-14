@@ -1,0 +1,45 @@
+---
+title: "Authentication"
+description: ""
+---
+
+All API endpoints are authenticated using API Subscription Keys provided by Sarvam AI when you sign up. Include these keys in the header of each API request as follows:
+
+```yaml
+api-subscription-key: <your-api-key>
+```
+
+### Obtaining Your API Subscription Key
+
+1. **Sign Up**: Create an account on the Reverie Dashboard
+
+2. **Generate Key**: When you sign up, an API key is generated for your account and shown in the dashboard.
+
+3. **Organisation Key Management**: Create Organisational level keys is not currently supported and will be available soon.
+
+### Using the API Subscription Key
+
+To authenticate your requests, include the `API-Subscription-Key` in the headers of your HTTP requests. Here’s an example using Python and the `requests` library:
+
+```python
+import requests
+
+url = 'https://api.rev.ai/<api-endpoint>'
+headers = {
+    'API-Subscription-Key': 'your-api-key'
+}
+data = {
+    'text': 'Rev AI is a powerful platform for LLM tasks.'
+}
+
+response = requests.post(url, headers=headers, json=data)
+print(response.json())
+```
+
+### Best Practices for API Key Management
+
+1. **Keep Your Key Secret**: Never expose your API key in public repositories or client-side code.
+
+2. **Use Environment Variables**: Store your API key in environment variables rather than hardcoding it in your application.
+
+3. **Monitor Usage**: Regularly check your API usage on the Sarvam dashboard. You should be able to see the credits utilised & remaining

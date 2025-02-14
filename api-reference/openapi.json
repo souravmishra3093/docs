@@ -1,72 +1,25 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
+    "title": "Localization API",
+    "description": "An API for translating text content into multiple languages",
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
+      "url": "https://revapi.reverieinc.com"
     }
   ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
+    "/localization": {
       "post": {
-        "description": "Creates a new plant in the store",
+        "description": "Translates text content to one or multiple target languages",
         "requestBody": {
-          "description": "Plant to add to the store",
+          "description": "Text content to be translated",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/TranslationRequest"
               }
             }
           },
@@ -74,50 +27,17 @@
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "Translation response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/TranslationResponse"
                 }
               }
             }
           },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
+          "403": {
+            "description": "Unauthorized to use this src/tgt language",
             "content": {
               "application/json": {
                 "schema": {
@@ -132,63 +52,85 @@
   },
   "components": {
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
+      "TranslationRequest": {
         "type": "object",
         "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
+          "data": {
+            "type": "array",
+            "description": "The text you want to translate. This is the input text that will be processed by the translation model.",
+            "items": {
+              "type": "string"
+            }
           },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
+          "src_lang": {
+            "type": "string",
+            "example": "en"
+          },
+          "tgt_lang": {
+            "type": "string",
+            "example": "hi,ta"
+          },
+          "domain": {
+            "type": "string",
+            "example": "generic",
+            "description": "The Domain refers to the universe in which you use the Transliteration API. Example - Health Care, Insurance, Legal, etc.\n\n **Available Domains:**\n\n * `General`: The default domain. Localizes content irrespective of the domain.\n * `Travel`: Trained for travel industry terminologies.\n * `Ecommerce`: Helps localize content in the Ecommerce domain.\n * `Music`: Trained for Media & Entertainment domain translations.\n * `Banking`: Accurately translates BFSI domain content.\n * `Grocery`: Specially built for grocery industry terminologies.\n * `Education`: Helps translate academic content.\n * `Medical`: Serves the healthcare industry.\n\n **Note**: Mention the domain ID. Refer to Supporting Domain above for valid domain ID. The default domain 1"
+          },
+          "nmtMask": {
+            "type": "boolean",
+            "example": true
+          },
+          "nmtMaskTerms": {
+            "type": "object"
+          },
+          "enableNmt": {
+            "type": "boolean",
+            "example": true
+          },
+          "enableLookup": {
+            "type": "boolean",
+            "example": false
           }
-        }
+        },
+        "required": ["data", "domain"]
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
+      "TranslationResponse": {
+        "type": "object",
+        "properties": {
+          "responseList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "inString": {
+                  "type": "string"
+                },
+                "outStrings": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "apiStatus": {
+                  "type": "integer"
+                }
               }
             }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
           },
-          "message": {
-            "type": "string"
+          "tokenConsumed": {
+            "type": "integer"
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          }
+        }
       }
     }
   }
