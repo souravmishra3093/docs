@@ -35,7 +35,8 @@
           {
             "group": "Endpoint",
             "pages": [
-              "endpoint1/localpost"
+              "endpoint1/localpost",
+               "endpoint1/transpost"
             ]
           }
         ]
