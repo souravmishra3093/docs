@@ -7,6 +7,11 @@
     "light": "#07C983",
     "dark": "#15803D"
   },
+  "api": {
+  "playground": {
+    "display": "none"
+  }
+},
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
@@ -35,8 +40,8 @@
           {
             "group": "Endpoint",
             "pages": [
-              "endpoint1/localpost",
-               "endpoint1/transpost"
+              "endpoints/localpost",
+              "endpoints/transpost"
             ]
           }
         ]
