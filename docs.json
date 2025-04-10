@@ -26,7 +26,8 @@
       {
         "group": "Usage Guides",
         "pages": [
-          "usage-guides/speech-to-text-streaming"
+          "usage-guides/speech-to-text-streaming",
+          "usage-guides/speech-to-text-batch"
         ]
       },
       {
