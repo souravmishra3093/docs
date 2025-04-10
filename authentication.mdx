@@ -1,39 +1,63 @@
 ---
-title: "Authentication"
+title: "Get your API credentials"
 description: ""
 ---
 
-All API endpoints are authenticated using API Subscription Keys provided by Sarvam AI when you sign up. Include these keys in the header of each API request as follows:
+All API endpoints are authenticated using API Key and APP Id provided by Reverie Language Technologies when you sign up. Include these keys in the header of each API request as follows:
 
 ```yaml
-api-subscription-key: <your-api-key>
+REV-API-KEY: <YOUR-API-KEY>
+REV-APP-ID: <YOUR-APP-ID>
 ```
 
-### Obtaining Your API Subscription Key
+### Obtaining Your API Credentials
 
-1. **Sign Up**: Create an account on the Reverie Dashboard
+1. **Sign Up** : Visit [RevUp](https://revup.reverieinc.com) and sign up for an account.
 
-2. **Generate Key**: When you sign up, an API key is generated for your account and shown in the dashboard.
+2. **Automatic API Key Generation** : Once you sign up, your first API key is automatically created.
 
-3. **Organisation Key Management**: Create Organisational level keys is not currently supported and will be available soon.
+3. **Access Credentials** : Your APP ID and API Key will be visible in the dashboard for use in your integrations.
 
-### Using the API Subscription Key
+<img src="/images/revDash.svg" alt="Reverie Dashboard" width="50%" />
 
-To authenticate your requests, include the `API-Subscription-Key` in the headers of your HTTP requests. Here’s an example using Python and the `requests` library:
+### Using the API Credentials
 
-```python
-import requests
+To authenticate your requests, include the `REV-APP-ID` & `REV-API-KEY` in the headers of your HTTP requests. Here’s an example using JavaScript:
 
-url = 'https://api.rev.ai/<api-endpoint>'
-headers = {
-    'API-Subscription-Key': 'your-api-key'
-}
-data = {
-    'text': 'Rev AI is a powerful platform for LLM tasks.'
-}
+```javascript
+const headers = {
+  'Content-Type': 'application/json',
+  'REV-API-KEY': <YOUR API-KEY>,
+  'REV-APP-ID': <YOUR APP-ID>,
+  'src_lang': 'en',
+  'tgt_lang': 'hi',
+  'domain': 'generic',
+  'cnt_lang': 'en',
+  'REV-APPNAME': 'transliteration',
+  'REV-APPVERSION': '2.0'
+};
 
-response = requests.post(url, headers=headers, json=data)
-print(response.json())
+const body = JSON.stringify({
+  data: [
+    "Reverie Language Technologies ltd website address is www.reverieinc.com"
+  ],
+  isBulk: false,
+  ignoreTaggedEntities: false
+});
+
+fetch('https://revapi.reverieinc.com/', {
+  method: 'POST',
+  headers: headers,
+  body: body
+})
+  .then(response => response.json())
+  .then(data => {
+    console.log('Response:', data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
 ```
 
 ### Best Practices for API Key Management
@@ -42,4 +66,4 @@ print(response.json())
 
 2. **Use Environment Variables**: Store your API key in environment variables rather than hardcoding it in your application.
 
-3. **Monitor Usage**: Regularly check your API usage on the Sarvam dashboard. You should be able to see the credits utilised & remaining
+3. **Monitor Usage**: Regularly check your API usage on the RevUp dashboard. You should be able to see the credits utilised & remaining
