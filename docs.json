@@ -38,16 +38,17 @@
         "group": "Endpoint",
         "pages": [
           "endpoints/localpost",
-          "endpoints/transpost"
+          "endpoints/transpost",
+          "endpoints/transliteration"
         ]
       }
     ],
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "Visit our Site",
+          "href": "https://reverieinc.com",
+          "icon": "globe"
         },
         {
           "anchor": "Discord Community",
@@ -64,7 +65,7 @@
   "navbar": {
     "primary": {
       "type": "button",
-      "label": "Visit RevUp",
+      "label": "Visit RevUp Dashboard",
       "href": "https://revup.reverieinc.com"
     }
   },
