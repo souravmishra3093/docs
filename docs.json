@@ -19,8 +19,14 @@
         "group": "Getting Started",
         "pages": [
           "introduction",
-          "authentication",
-          "development"
+          "authentication",          
+          "contact-us"
+        ]
+      },
+      {
+        "group": "Usage Guides",
+        "pages": [
+          "usage-guides/speech-to-text-streaming"
         ]
       },
       {
