@@ -1,0 +1,494 @@
+---
+title: "Speech-to-Text (Batch) API"
+description: "The Speech-to-Text API  powered by Reverie's AI technology accurately converts speech into text.  The solution can transcribe audio files of various Indian languages and audio formats."
+playground: "none"
+---
+
+# How Does API Work?
+
+The process to transcribe an audio file:
+
+- Post the request by:
+  - Enter the valid `REV-APPNAME`, `REV-APP-ID`, and `REV-API-KEY`.
+  - Define the Language Code and domain.
+  - Upload the audio file to transcribe.
+  - Define the audio format, if required.
+- The API will return the text in the requested Indian language.
+
+## cURL for Integration
+### Step 1 : Upload the Audio File
+#### Request : Transcribing Audio
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--header 'subtitles: true' \
+--form 'file=@"<File Path>"'
+```
+
+#### Request: Transcribing Audio other than Default Format
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--header 'subtitles: true' \
+--form 'file=@"<File Path>"' \
+--header 'format=mp3'
+```
+
+#### Response: Success
+```json
+{
+    "job_id": "e21f356d-cbf9-4d62-a960-1e9da1805d19",
+    "code": "000",
+    "message": "Success. Request accepted"
+}
+```
+#### Response: Error Message
+```json 
+{
+    "job_id": "9b46fa98-d5a6-49d3-96c2-c12c22cf1984",
+    "code": "005",
+    "message": "file is required"
+}
+```
+### Step 2 : Get the Status 
+#### Request: Get status of the transcription
+```bash
+curl --location --request GET 'https://revapi.reverieinc.com/status?job_id=<job_id>' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>'
+```
+#### Response: Success
+```json
+{
+    "job_id": "e21f356d-cbf9-4d62-a960-1e9da1805d19",
+    "code": "000",
+    "message": "Transcript ready.",
+    "status": "completed"
+}
+```
+### Step 3 : Get the Transcript 
+#### Request: Get transcript of the transcription
+```bash
+curl --location --request GET 'https://revapi.reverieinc.com/transcript?job_id=<job_id>' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>'
+```
+#### Response: Success
+```json
+{
+    "job_id": "e21f356d-cbf9-4d62-a960-1e9da1805d19",
+    "code": "000",
+    "message": "Transcript ready.",
+    "result": {
+        "transcript": "Hello. Welcome to Reverie.",
+        "original_transcript": "HELLO. WELCOME TO REVERIE.",
+        "channel_number": 1,
+        "words": [
+            [
+                {
+                    "conf": 0.991683,
+                    "end": 0.21,
+                    "start": 0.09,
+                    "word": "HELLO"
+                },
+                {
+                    "conf": 1.0,
+                    "end": 0.6,
+                    "start": 0.21,
+                    "word": "WELCOME"
+                },
+                {
+                    "conf": 0.99723,
+                    "end": 0.72,
+                    "start": 0.6,
+                    "word": "TO"
+                },
+                {
+                    "conf": 1.0,
+                    "end": 1.320315,
+                    "start": 0.72,
+                    "word": "REVERIE"
+                }
+            ]
+        ],
+        "subtitles": "1\n00:00:00,090 --> 00:00:06,900\nHELLO. WELCOME TO REVERIE.\n\n"
+    }
+}
+```
+
+## API References
+
+### HTTP Request URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | https://revapi.reverieinc.com/upload |
+
+#### Headers
+
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  API key shared by the Reverie team
+</ParamField> 
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  APP ID shared by the Reverie team
+</ParamField>
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  Value if this string should always be `stt_batch` 
+</ParamField>
+<ParamField header="src_lang" type="string" required>
+  {" "}  
+- Specify the language code.  <br />
+- Example: `hi` <br />
+- Refer to section [Language Codes](/usage-guides/speech-to-text-batch#supported-languages) for valid language code.
+</ParamField>  
+
+<ParamField header="domain" type="string" required>
+  {" "}
+  
+- This field identifies your use case type and set of the terminology defined for transcription.  <br />
+- e.g. for general audio is ‘generic’ <br />
+- It is only required for the first API i.e Upload File API.
+</ParamField> 
+
+<ParamField header="format" type="string">
+  {" "}
+  
+- Mention the audio sample rate and file format of the uploaded file.    <br />
+- Refer to section [Supported Audio Formats](/usage-guides/speech-to-text-batch#supported-audio-formats) for valid audio format code. <br />
+- It is only required for the first API i.e Upload File API
+- Note: 
+    - By default, the format = `16k_int16`. (WAV, Signed 16 bit, 16,000 or 16K Hz).
+    - It is an optional parameter.
+</ParamField> 
+<ParamField header="subtitles" type="boolean">
+  {" "}
+  
+- Enables subtitling from the audio file.
+
+</ParamField> 
+
+#### Query Parameter
+<ParamField query="file" type="file" required>
+  {" "}
+  
+- An audio file for which the transcript is desired.
+</ParamField> 
+#### Response
+<ParamField header="job_id" type="string">
+  {" "}
+  
+- A unique Identity number auto-assigned by the API for each request, to be used to fetch job status and transcripts.
+
+</ParamField> 
+
+<ParamField header="code" type="string">
+  {" "}
+  
+- Provides a message code which can be used to look up the nature of the response returned by the API.
+
+</ParamField> 
+
+
+<ParamField header="message" type="string">
+  {" "}
+  
+- Provides a brief description about the response returned by the API.
+
+</ParamField> 
+
+#### Handling Errors
+
+Our API raises errors when there is something wrong with certain aspects of the submitted file or any network issues. Some areas where errors might come up would be errors due to network related issues, file formats, incorrect domain names or language codes. Each response code provides a descriptive message about what has gone wrong.
+
+#### API Response Message Codes
+
+| Code | Message                                              |
+|------|-----------------------------------------------------|
+| 000  | Success. Request accepted                           |
+| 001  | Language code is required                           |
+| 002  | File type not supported. Upload only wav, flac or mp3 formats. Preferred format for transcription is wav files |
+| 003  | Language and/or Domain not available                |
+| 004  | File type not supported. Upload only wav, flac or mp3 formats. Preferred format for transcription is wav files |
+| 999  | Unknown error, please contact developer             |
+
+### HTTP Status URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | `https://revapi.reverieinc.com/status?job_id=<job_id>` |
+
+
+#### Query Parameter
+<ParamField query="job_id" type="string" required>
+  {" "}
+  
+- `job_id` received after uploading the file.
+
+</ParamField> 
+
+#### Status Query Response
+
+<ParamField header="job_id" type="string">
+  {" "}
+  
+- A unique Identity number auto-assigned by the API for each request
+
+</ParamField> 
+
+<ParamField header="code" type="string">
+  {" "}
+  
+- Provides a message code which can be used to look up the nature of the response returned by the API
+
+</ParamField> 
+
+
+<ParamField header="message" type="string">
+  {" "}
+  
+- Provides a brief description about the response returned by the API.
+
+</ParamField> 
+
+<ParamField header="status" type="string">
+  {" "}
+  
+- status values: `queued`, `processing`, `failed` and `completed`
+
+</ParamField> 
+
+#### Status Types
+
+| Status    | Description                                                      |
+|-----------|------------------------------------------------------------------|
+| queued    | When the file is successfully validated, the request is queued for processing. |
+| processing| The transcript generation process is in progress.                |
+| failed    | Due to network issues, availability constraints, etc., the request might fail during processing. |
+| completed | Transcription was successfully completed.                       |
+
+
+#### API Response Message Codes
+
+| Code | Message                          |
+|------|----------------------------------|
+| 000  | Transcript ready                 |
+| 001  | Invalid JOB ID                   |
+| 002  | Invalid JOB ID                   |
+| 003  | Your request is in the queue and will be processed shortly |
+| 004  | Your request is being processed  |
+| 005  | Job failed. Please contact the developers |
+| 999  | Unknown error                    |
+
+### HTTP Transcript URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | `https://revapi.reverieinc.com/transcript?job_id=<job_id> ` |
+
+
+#### Query Parameter
+<ParamField query="job_id" type="string" required>
+  {" "}
+  
+- `job_id` received after uploading the file.
+
+</ParamField> 
+
+#### Transcript Query Response
+
+<ParamField header="job_id" type="string">
+  {" "}
+  
+- A unique Identity number auto-assigned by the API for each request.
+
+</ParamField> 
+
+<ParamField header="code" type="string">
+  {" "}
+  
+- Provides a message code which can be used to look up the nature of the response returned by the API.
+
+</ParamField> 
+
+
+<ParamField header="message" type="string">
+  {" "}
+  
+- Provides a brief description about the response returned by the API.
+
+</ParamField> 
+
+<ParamField header="result" type="string">
+  {" "}
+  
+- An array of transcript objects including, channel_number, transcript, list of words with start time, end time and confidence.Please check the sample response.
+
+
+
+</ParamField> 
+
+#### API Response Message Codes
+
+| Code | Message                          |
+|------|----------------------------------|
+| 000  | Transcript ready                 |
+| 001  | Invalid JOB ID                   |
+| 002  | Invalid JOB ID                   |
+| 003  | Your request is in the queue and will be processed shortly |
+| 004  | Your request is being processed  |
+| 005  | Job failed. Please contact the developers |
+| 999  | Unknown error                    |
+
+## Sample Code for Integration
+
+### Install Dependencies
+
+<CodeGroup>
+
+```bash JavaScript
+npm i @reverieit/reverie-client
+```
+
+```bash Python
+pip install reverie-sdk
+```
+
+</CodeGroup>
+### Transcribe Audio from a Remote Stream
+
+To transcribe pre-recorded audio using one of Reverie's API, follow these steps.
+
+<CodeGroup>
+```javascript Javascript
+const ReverieClient = require("reverie-client");
+
+const reverieClient = new ReverieClient({
+apiKey: "YOUR-API-KEY",
+appId: "YOUR-APP-ID",
+});
+
+const response = await reverieClient.transcribeAudio({
+audioFile: file,
+language: "en",
+subtitles: true
+});
+
+console.log("Response from API:", response);
+
+````
+
+```python Python
+from reverie_sdk import ReverieClient
+
+client = ReverieClient(
+    api_key="<YOUR API KEY>",
+    app_id="<YOUR APP ID>",
+)
+
+resp = client.asr.stt_file(
+    src_lang="en",
+    data=open("./path/to/audio.wav", "rb").read(),
+)
+print(resp)
+```
+```go GoLang
+package main
+
+import (
+"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"mime/multipart"
+	"net/http"
+	"os"
+)
+
+const (
+	apiURL     = "https://revapi.reverieinc.com/"
+	apiKey     = "your_api_key"   
+	appID      = "your_app_id"
+	appName    = "stt_file"
+	srcLang    = "en"
+	domain     = "generic"
+	audioPath  = "audio.wav"
+)
+
+type ApiResponse struct {
+	DisplayText string `json:"display_text"`
+}
+
+func transcribeAudio(filePath string) (string, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return "", fmt.Errorf("error opening file: %v", err)
+	}
+	defer file.Close()
+
+	var requestBody bytes.Buffer
+	writer := multipart.NewWriter(&requestBody)
+	part, err := writer.CreateFormFile("audio_file", filePath)
+	if err != nil {
+		return "", fmt.Errorf("error creating form file: %v", err)
+	}
+
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		return "", fmt.Errorf("error reading file: %v", err)
+	}
+	part.Write(fileBytes)
+	writer.Close()
+
+	req, err := http.NewRequest("POST", apiURL, &requestBody)
+	if err != nil {
+		return "", fmt.Errorf("error creating request: %v", err)
+	}
+
+	req.Header.Set("src_lang", srcLang)
+	req.Header.Set("domain", domain)
+	req.Header.Set("REV-API-KEY", apiKey)
+	req.Header.Set("REV-APPNAME", appName)
+	req.Header.Set("REV-APP-ID", appID)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("error reading response: %v", err)
+	}
+
+	var apiResponse ApiResponse
+	if err := json.Unmarshal(body, &apiResponse); err != nil {
+		return "", fmt.Errorf("error parsing JSON: %v", err)
+	}
+
+	return apiResponse.DisplayText, nil
+}
+
+func main() {
+	transcription, err := transcribeAudio(audioPath)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("Transcription:", transcription)
+}
+```
+
+</CodeGroup>
