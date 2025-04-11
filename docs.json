@@ -27,7 +27,8 @@
         "group": "Usage Guides",
         "pages": [
           "usage-guides/speech-to-text-streaming",
-          "usage-guides/speech-to-text-batch"
+          "usage-guides/speech-to-text-batch",
+          "usage-guides/text-to-speech"
         ]
       },
       {
@@ -44,6 +45,8 @@
       {
         "group": "Endpoint",
         "pages": [
+          "endpoints/speech-to-text-streaming",
+          "endpoints/speech-to-text-batch",
           "endpoints/localpost",
           "endpoints/transpost",
           "endpoints/transliteration"
