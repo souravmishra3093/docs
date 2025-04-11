@@ -1,0 +1,336 @@
+---
+title: "Speech-to-Text (Streaming) API"
+description: "The Speech-to-Text accurately converts speech into text using an API powered by Reverie's AI technology. The solution will transcribe the speech in real-time of various Indian languages and audio formats. "
+playground: "none"
+---
+
+# How Does API Work?
+
+- The process to transcribe the continuous audio input:
+  - Open the connection with the STT service by defining `apikey`, `appid`, `appname`, `domain`, `src_lang`.
+  - In the API response, if the `cause = Ready`, then the connection is successfully established.
+  - Write the speech data into the upstream and continuously receive the transcribed data.
+    - **Note**: In the response, if the `final = false`, then the audio is partially transcribed, and the service is still processing the input data.
+  - Write `--EOF--` into the upstream to stop the recognition process.
+    - **Note**: If you fail to write `--EOF--` into the upstream, then the STT service will automatically terminate the recognition process.
+  - Below are the scenarios when the service will auto-terminate the recognition process:
+    - On connection timeout.
+    - After starting recording, if the user maintains silence for more than the defined duration.
+  - In the API response, if the `final = true`, then the text received is considered the final transcript.
+
+## Code Snippets for Integration
+
+### Initiating Speech Service
+
+**URL Elements**
+
+```html 
+wss://revapi.reverieinc.com/stream?apikey=<your apikey>&appid=<your app id>&appname=stt_stream&src_lang=hi&domain=generic
+```
+
+**CDN** <br/>
+Add the following script to the head section of your `index.html`
+```html 
+<script src="https://cdn.jsdelivr.net/npm/reverie-stt-sdk/dist/bundle.js"></script>
+```
+### Implementation
+<CodeGroup>
+```javascript Javascript
+const ReverieClient = require("reverie-client");
+
+const reverieClient = new ReverieClient({
+apiKey: "YOUR-API-KEY",
+appId: "YOUR-APP-ID",
+});
+
+await reverieClient.init_stt({
+src_lang: "hi",
+callback: (event) => {
+console.log("STT event:", event);
+},
+element: document.getElementById("transcript"),
+domain: "generic"
+
+});
+
+// Start/Stop streaming
+await reverieClient.start_stt();
+await reverieClient.stop_stt();
+
+````
+
+```python Python
+import pyaudio, asyncio
+from reverie_sdk import ReverieClient, AudioStream
+
+client = ReverieClient(
+    api_key="<YOUR-API-KEY>",
+    app_id="<YOUR-APP-ID>",
+)
+
+stream = AudioStream()
+pa = pyaudio.PyAudio()
+
+def mic_callback(in_data, frame_count, time_info, status):
+    try:
+        asyncio.run(stream.add_chunk_async(in_data))
+    except:
+        return (None, pyaudio.paAbort)
+    return (None, pyaudio.paContinue)
+
+async def main():
+    pa_stream = pa.open(
+        rate=16000,
+        channels=1,
+        format=pyaudio.paInt16,
+        frames_per_buffer=1024,
+        input=True,
+        stream_callback=mic_callback,
+    )
+    pa_stream.start_stream()
+
+    print("listening... press ctrl+C to stop", flush=True)
+
+    try:
+        await client.asr.stt_stream_async(
+            src_lang="en",  # Language code
+            bytes_or_stream=stream,
+            callback=print,  # Handle transcription results
+        )
+    except Exception as err:
+        print(err)
+    finally:
+        pa_stream.stop_stream()
+        pa_stream.close()
+
+asyncio.run(main())
+pa.terminate()
+````
+
+</CodeGroup>
+
+### Response
+#### Successful Response - Establishing the connection
+```json
+{
+  "id": "bb261bd789af4ba487a2667f8d942d4d7e0195fd1c8e4073",
+  "success": true,
+  "text": "",
+  "display_text": "",
+  "final": false,
+  "confidence": 1,
+  "cause": "ready"
+}
+```
+
+#### Partial Utterance - In-between an utterance 
+```json
+{
+  "id": "bb261bd789af4ba487a2667f8d942d4d7e0195fd1c8e4073",
+  "success": true,
+  "text": "आत्म निर्भर योजना इस योजना अथवा अभियान का उद्देश्य एक सौ तीस करोड़ भारतवासियो",
+  "display_text": "आत्म निर्भर योजना इस योजना अथवा अभियान का उद्देश्य 130 करोड़ भारतवासियों",
+  "final": false,
+  "confidence": 0.797274,
+  "cause": "partial"
+}
+```
+#### The Final Successful Response 
+```json
+{
+  "id": "bb261bd789af4ba487a2667f8d942d4d7e0195fd1c8e4073",
+  "success": true,
+  "text": "आत्म निर्भर योजना इस योजना अथवा अभियान का उद्देश्य एक सौ तीस करोड़ भारतवासियों को आत्मनिर्भर बनाना है ताकि देश का हर नागरिक संकट की इस घड़ी में कदम से कदम मिलाकर चल सके",
+  "display_text": "आत्म निर्भर योजना इस योजना अथवा अभियान का उद्देश्य 130 करोड़ भारतवासियों को आत्मनिर्भर बनाना है",
+  "final": true,
+  "confidence": 0.743304,
+  "cause": "EOF received"
+}
+```
+#### Error Response
+```json
+{
+  "id": "2ab3a0b76c854953a022df742f6b3857a76494acd72e4489",
+  "success": false,
+  "text": "",
+  "final": true,
+  "confidence": 1,
+  "cause": "no `domain` given"
+}
+```
+
+### API References
+
+#### Query Parameters
+
+<ParamField header="apikey" type="string" required>
+  {" "}
+  A unique key/token is provided by Reverie to identify the user using the STT API.
+</ParamField> 
+<ParamField header="appid" type="string" required>
+  {" "}
+  A unique account ID to identify the user and the default account settings
+</ParamField>
+<ParamField header="appname" type="string" required>
+  {" "}
+  The parameter to identify the API. <br />
+  **Note:** The value allowed is stt_stream
+</ParamField>
+<ParamField header="src_lang" type="string" required>
+  {" "}
+  
+- Indicates the language in which the audio is spoken. <br />
+- Specify the ISO language code. <br />
+- Example: `hi` <br />
+- Refer to section [Language Codes](/usage-guides/speech-to-text-streaming#supported-languages) for valid language code.
+</ParamField>  
+
+<ParamField header="domain" type="string" required>
+  {" "}
+  
+- The universe in which the Streaming STT API is used for transcribing the speech.  <br />
+- Specify the domain ID. <br />
+- Example: `generic` <br />
+- Refer to section [Domains](/usage-guides/speech-to-text-streaming#supported-domains) for valid domain code.
+</ParamField> 
+
+<ParamField header="timeout" type="float">
+  {" "}
+  
+- The duration to keep a connection open between the application and the STT server.   <br />
+- **Note**: The default timeout = `15` seconds, and the maximum time allowed = `180` seconds <br />
+</ParamField> 
+
+<ParamField header="silence" type="float">
+  {" "}
+  
+- The time to determine when to end the connection automatically after detecting the silence after receiving the speech data.   <br />
+- Example:
+    - Consider `silence = 15` seconds i.e., On passing the speech for 60 seconds, and if you remain silent, the connection will be open for the next 15 seconds and then will automatically get disconnected.  <br />
+- Note: The default silence= `1` second, and the maximum silence = `30` seconds.
+</ParamField> 
+
+<ParamField header="format" type="string">
+  {" "}
+  
+- The audio sampling rate and the data format of the speech.    <br />
+- Refer to section [Supported Audio Formats](/usage-guides/speech-to-text-streaming#supported-audio-formats) for valid audio format code. <br />
+- Note: By default, the format = `16k_int16`. (WAV, Signed 16 bit, 16,000 or 16K Hz).
+</ParamField> 
+
+<ParamField header="logging" type="string">
+  {" "}
+  
+- Possible values are :
+    1. `true` - stores audio and keep transcripts in logs.
+    2. `no_audio` -  does not store audios but keep transcripts in logs.
+    3. `no_transcript` - does not keep transcripts in logs but stores audios.
+    4. `false` - does not keep neither audios nor transcripts in log.
+- Default value is `true`
+</ParamField>
+
+<ParamField header="punctuate" type="string">
+  {" "}
+  
+- It will enable punctuation and capitalisation in the transcript. The values it can take are true and false.
+- Supported languages: `en`, `hi`
+- Default value is `true`
+
+</ParamField>
+
+<ParamField header="continuous" type="string">
+  {" "}
+  
+- It will enable continuous decoding even after silence is detected.
+- Can take value `true`/`1` or `false`/`0`.
+- Default value is `false`/`0`
+
+</ParamField>
+
+#### Request
+
+<ParamField header="streaming audio" type="binary" required>
+  {" "}
+  
+- The audio streamed from the input device. 
+- Note: The default timeout = 15 seconds, and the maximum time allowed = 180 seconds.
+
+</ParamField>
+
+#### Response
+
+<ParamField header="id" type="string">
+  {" "}
+  
+- API will auto-assign assign a unique identification number for each request.
+
+</ParamField>
+
+<ParamField header="success" type="boolean">
+  {" "}
+  
+- Will indicate the functional status of the API: 
+    - If the `success` = `true`, then the API is functioning and ready to generate output.
+    - If the `success` = `false`, then the API is not functional and has some errors
+
+</ParamField>
+
+<ParamField header="final" type="boolean">
+  {" "}
+  
+- Will report whether the received output is partial or final:
+    - If the `final` = `true`, then the received text is the final output.
+    - If the `final` = `false`, then the text received is partial and is still processing the file
+
+</ParamField>
+
+<ParamField header="cause" type="string">
+  {" "}
+  
+- Reason for obtaining the final output. 
+- The cause will appear for both successful and failed requests; 
+- Refer to section [API Codes](/usage-guides/speech-to-text-streaming#api-messages) to view the list of messages/ cause and its description.
+
+</ParamField>
+
+<ParamField header="text" type="string">
+  {" "}
+  
+- The streaming audio input is converted into text format in the requested language.  
+- Note: The field will remain empty in case of any error or on connect.
+
+</ParamField>
+
+<ParamField header="confidence" type="float">
+  {" "}
+  
+- The level of confidence that Streaming STT API has in the accuracy of the transcription.  
+- The Confidence score ranges from `0` to `1`. Higher scores indicate greater relevance to the transcription
+
+</ParamField>
+
+<ParamField header="display_text" type="string">
+  {" "}
+  
+- The beautified text of the final transcript.   
+- If the final transcript consists of digits, URL, app names, it is quickly converted to a readable format for the user. 
+- Note: The field will remain empty in case of any error or on connect
+</ParamField>
+
+#### Handling Error
+
+The Streaming STT API raises exceptions for many reasons, such as a failed connection, invalid parameters, authentication errors, and network unavailability. We provide more specific human-readable messages with an error response so that users can react to errors more. 
+
+In the API response, if the `success` = `false`, then the cause will display the reason for the error. Refer to [API Codes](/usage-guides/speech-to-text-streaming#api-messages) 
+to view the list of error messages and its description.
+
+```json 
+{
+  "id": "2ab3a0b76c854953a022df742f6b3857a76494acd72e4489",
+  "success": false,
+  "text": "",
+  "final": true,
+  "confidence": 1,
+  "cause": "no `domain` given"
+}
+```
