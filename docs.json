@@ -32,6 +32,12 @@
         ]
       },
       {
+        "group": "SDKs",
+        "pages": [
+          "sdk/all-sdks"
+        ]
+      },
+      {
         "group": "Essentials",
         "pages": [
           "essentials/markdown",
@@ -47,6 +53,7 @@
         "pages": [
           "endpoints/speech-to-text-streaming",
           "endpoints/speech-to-text-batch",
+          "endpoints/text-to-speech",
           "endpoints/localpost",
           "endpoints/transpost",
           "endpoints/transliteration"
