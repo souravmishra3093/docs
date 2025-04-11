@@ -21,6 +21,20 @@ To use Reverie's Speech-to-Text Streaming SDK, include the following CDN in your
 <script src="https://cdn.jsdelivr.net/npm/reverie-stt-sdk/dist/bundle.js"></script>
 ```
 
+### Install Dependencies
+
+<CodeGroup>
+
+```bash JavaScript
+npm i @reverieit/reverie-client
+```
+
+```bash Python
+pip install reverie-sdk
+pip install pyaudio
+```
+
+</CodeGroup>
 ### Transcribe Audio from a Remote Stream
 
 The following code shows how to transcribe audio from a remote audio stream. If you would like to learn how to stream audio from a microphone.
@@ -107,15 +121,6 @@ It also includes Deepgram’s Smart Formatting feature, smart_format=true. This 
 
 </Note>
 
-### Non-SDK Code Example
-
-If you would like to try out making a Reverie speech-to-text request in a specific language,
-we offer a library of code-samples in our Github repo. However, we recommend first trying out our SDKs.
-
-- [Python Sample Code](https://github.com/reverieinc/python-sdk/tree/main/stt-stream)
-- [JavaScript Sample Code](https://github.com/reverieinc/javascript-sdk/tree/main/stt-stream)
-- [GoLang Sample Code](https://github.com/reverieinc/golang-sdk/tree/main/stt-stream)
-
 ### Results
 
 In order to see the results from Reverie, you must run the application. Run your application from the terminal. Your transcripts will appear in your shell.
@@ -125,13 +130,19 @@ In order to see the results from Reverie, you must run the application. Run your
 ```bash JavaScript
 # Run your application using the file you created in the previous step
 # Example:
-node index.js
+npm start
 ```
 
 ```python Python
 # Run your application using the file you created in the previous step
 # Example:
 python main.py
+```
+
+```go GoLang
+// Run your application using the file you created in the previous step
+// Example:
+go run main.go
 ```
 
 </CodeGroup>
@@ -184,9 +195,6 @@ In this response we see:
     output.
   </Card>
 </CardGroup>
-
-### Flexible Deployment
-
 <CardGroup cols={2}>
   <Card title="Cloud-based Deployment" icon="cloud">
     Scalable and accessible from anywhere for dynamic, distributed teams.
@@ -195,22 +203,6 @@ In this response we see:
     Secure and customizable to integrate with your existing infrastructure.
   </Card>
 </CardGroup>
-
-### Supported Domains
-
-| Domain       | Description                                                      |
-| ------------ | ---------------------------------------------------------------- |
-| Generic      | Trained to transcribe speech across industries.                  |
-| BFSI         | Optimized for banking and financial terminologies.               |
-| E-commerce   | Tailored for E-commerce and FMCG-specific terms.                 |
-| Healthcare   | Specialized in medical and healthcare terminology.               |
-| Voice Search | Handles voice commands with smart formatting for search.         |
-| Alphanumeric | Accurately transcribes mixed letters and numbers.                |
-| Names        | Trained to recognize and transcribe person names.                |
-| Address      | Optimized for transcribing address details.                      |
-| Language     | Supports regional language variants (e.g., 'Bengali', 'Bangla'). |
-| Yes/No       | Recognizes diverse yes/no responses (e.g., 'Haan', 'Yes').       |
-| Email        | Precisely transcribes email addresses.                           |
 
 ### Sample Code
 
@@ -283,3 +275,70 @@ In this response we see:
     section for details
   </Accordion>
 </AccordionGroup>
+
+### Supported Domains
+
+| Domain       | Description                                                      |
+| ------------ | ---------------------------------------------------------------- |
+| generic      | Trained to transcribe speech across industries.                  |
+| bfsi         | Optimized for banking and financial terminologies.               |
+| ecomm   | Tailored for E-commerce and FMCG-specific terms.                 |
+| healthcare   | Specialized in medical and healthcare terminology.               |
+| voice-search | Handles voice commands with smart formatting for search.         |
+| alphanumeric | Accurately transcribes mixed letters and numbers.                |
+| names        | Trained to recognize and transcribe person names.                |
+| address      | Optimized for transcribing address details.                      |
+| language     | Supports regional language variants (e.g., 'Bengali', 'Bangla'). |
+| yes-no       | Recognizes diverse yes/no responses (e.g., 'Haan', 'Yes').       |
+| email        | Precisely transcribes email addresses.                           |
+
+### Supported Languages
+
+The Speech-to-Text solution supports transcription in multiple languages, tailored for diverse regional and linguistic needs:
+
+- `hi` - Hindi
+- `bn` - Bengali
+- `gu` - Gujarati
+- `kn` - Kannada
+- `ml` - Malayalam
+- `mr` - Marathi
+- `pa` - Punjabi
+- `ta` - Tamil
+- `te` - Telugu
+- `en` - Indian English
+- `as` - Assamese
+- `or` - Odia
+
+### Supported Audio Formats
+
+The Speech-to-Text solution supports various audio formats for flexible integration:
+
+| Audio Format | Description                                                      |
+| ------------ | ---------------------------------------------------------------- |
+| 16k_int16    | Default format: Signed 16-bit, 16KHz sampling rate in WAV format |
+| 16k_uint8    | Unsigned 8-bit, 16KHz sampling rate in WAV format                |
+| 8k_int16     | Signed 16-bit, 8KHz sampling rate in WAV format                  |
+| 8k_uint8     | Unsigned 8-bit, 8KHz sampling rate in WAV format                 |
+| opus_16k     | Opus-encoded audio frames, 16KHz sampling rate                   |
+| opus_8k      | Opus-encoded audio frames, 8KHz sampling rate                    |
+| ogg_opus     | Opus-encoded audio frames in Ogg container                       |
+| 16k_ulaw     | µ-Law audio frames, 16KHz sampling rate                          |
+| 8k_ulaw      | µ-Law audio frames, 8KHz sampling rate                           |
+
+### API Messages
+
+| Message Code | Message              | Description                                                      |
+|--------------|----------------------|------------------------------------------------------------------|
+| 403          | Forbidden            | Entered Invalid credentials                                      |
+| 403          | Forbidden            | The provided credit limit is exhausted.                          |
+| 403          | Forbidden            | The API key provided to a user is expired.                       |
+| 403          | Forbidden            | The user is not authorized to use the STT API.                   |
+| 403          | Forbidden            | The invalid language code is passed, or the user has entered the code, which he is not authorized to use. |
+| 400          | no decoder for given args | For the language and domain given in the request, STT service is not available |
+| 200          | unsupported audio format | The API does not support the audio format.                       |
+| 200          | ready                | STT is ready to receive audio data                               |
+| 200          | partial              | This is a partial response. Keep waiting for the final response. |
+| 200          | EOF received         | This is the final response. The connection will be closed as EOF received in the request. |
+| 200          | silence detected     | This is the final response. The connection will be closed as silence is received in the request. |
+| 200          | timeout              | This is the final response. The connection will be closed as no data is received. |
+| 200          | audio too short      | Audio too short to detect transcription                          |
