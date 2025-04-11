@@ -1,0 +1,594 @@
+---
+title: "Text-to-Speech"
+description: "An introduction to using Reverie's Text-to-Speech API to convert text into audio using REST. "
+---
+
+Reverie's TTS (Text-to-Speech) is a solution that turns text into lifelike speech, allowing you to create applications that talk in multiple Indic languages and build comprehensive speech-enabled products.
+
+### Getting Started
+
+In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
+
+<Note>
+  Before you start, you'll need to follow the steps in the [Get your API
+  Credentials](/authentication) to obtain your API KEY & APP ID.
+</Note>
+
+### cURL
+
+Make your first API Call using the cURL request. Add your own API Credentials where it says `<YOUR-APP-ID>` & `<YOUR-API-KEY>`
+and then run the following example in a terminal or your favorite API client.
+
+```bash cURL
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'REV-APPNAME: tts' \
+--header 'speaker: hi_female' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"text": "किसान होंगे आत्मनिर्भर, समृद्ध भारत"
+}'
+```
+
+By default, the API will return the `WAV` audio file with a sampling rate of `22.05KHz`.
+
+The audio file will contain the voice of the selected model saying the words that you sent in your request.
+
+### SDKs
+
+Reverie has several SDKs that can make it easier to use the API.
+Follow these steps to use the SDK of your choice to make a Reverie TTS request.
+
+### Install Dependencies
+
+<CodeGroup>
+
+```bash JavaScript
+npm i @reverieit/reverie-client
+```
+
+```bash Python
+pip install reverie-sdk
+```
+
+</CodeGroup>
+### Generate audio from text
+
+The following code shows how to transcribe audio from a remote audio stream. If you would like to learn how to stream audio from a microphone.
+
+<CodeGroup>
+```javascript Javascript
+const ReverieClient = require("reverie-client");
+
+const reverieClient = new ReverieClient({
+  apiKey: "YOUR-API-KEY",
+  appId: "YOUR-APP-ID",
+});
+
+try {
+  const audioBlob = await reverieClient.text_to_speech({
+    text: text,
+    speaker: speaker,
+    speed: speed,
+    pitch: pitch,
+  });
+
+  const audioUrl = URL.createObjectURL(audioBlob);
+  console.log("Audio URL is:", audioUrl);
+} catch (error) {
+  console.error("Error:", error);
+}
+
+````
+
+```python Python
+from reverie_sdk import ReverieClient
+
+client = ReverieClient(
+    api_key="MY_API_KEY",
+    app_id="MY_APP_ID",
+)
+
+with open("./big_text.txt", encoding="utf-8") as f:
+    text = f.read()
+
+for resp_idx, resp in enumerate(
+    client.tts.tts_streaming(
+        text=text,
+        speaker="en_male",
+        max_words_per_chunk=5,
+        fast_sentence_fragment=False,
+    )
+):
+    print(f"{resp_idx:08d} {resp.duration:10.3f}")
+    resp.save_audio(
+        f".path/to/output/{resp_idx:08d}.wav",
+        create_parents=True,
+        overwrite_existing=True,
+    )
+
+```
+```go Go
+package main
+
+import (
+	"bytes"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+)
+
+func sendRequest(payload string, filename string) {
+	url := "https://revapi.reverieinc.com/"
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(payload)))
+	if err != nil {
+		fmt.Println("Request creation error:", err)
+		return
+	}
+
+	// Set Headers
+	req.Header.Set("REV-API-KEY", "<YOUR-API-KEY>")
+	req.Header.Set("REV-APP-ID", "<YOUR-APP-ID>")
+	req.Header.Set("REV-APPNAME", "tts")
+	req.Header.Set("speaker", "hi_female") //Set Speaker
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Request error:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	// Create a file to save the response
+	file, err := os.Create(filename)
+	if err != nil {
+		fmt.Println("File creation error:", err)
+		return
+	}
+	defer file.Close()
+
+	// Copy response body to file
+	_, err = io.Copy(file, resp.Body)
+	if err != nil {
+		fmt.Println("File write error:", err)
+		return
+	}
+	fmt.Println("Audio saved as", filename)
+}
+
+func main() {
+	// Request 1: Plain text TTS
+	payload1 := `{
+		"text": ["भारत मेरा देश है।", "मेरी कंपनी का नाम रेवेरी लैंग्वेज टेक्नोलॉजीज है।"],
+		"speed": 1,
+		"pitch": 0,
+		"format": "WAV"
+	}`
+	sendRequest(payload1, "output1.wav")
+
+	// Request 2: SSML-based TTS
+	payload2 := `{
+		"ssml": "<speak> <voice name=\"en_female\"> Hello. </voice> </speak>",
+		"speed": 1,
+		"pitch": 0,
+		"format": "mp3"
+	}`
+	sendRequest(payload2, "output2.mp3")
+}
+```
+</CodeGroup>
+
+### Results
+
+In order to see the results from Reverie, you must run the application. Run your application from the terminal. Your transcripts will appear in your shell.
+
+<CodeGroup>
+
+```bash JavaScript
+# Run your application using the file you created in the previous step
+# Example:
+npm start
+```
+
+```python Python
+# Run your application using the file you created in the previous step
+# Example:
+python main.py
+```
+
+```go GoLang
+// Run your application using the file you created in the previous step
+// Example:
+go run main.go
+```
+</CodeGroup>
+
+### Analyzing the Response
+
+<img src="/images/ttsResponse.png" alt="Reverie Dashboard"  />
+
+​By default, the Reverie Text-to-Speech (TTS) API returns audio in the `WAV` format with a sampling rate of `22.05 kHz (22,050 Hz)`. This sampling rate is commonly used in speech synthesis, 
+offering a balance between audio quality and file size. You may play it to listen to the synthesized speech output and evaluate its clarity, naturalness, and suitability for your application.
+
+### Key Features
+
+<CardGroup cols={2}>
+  <Card title="Faster than Real-time Speech Synthesis" icon="play">
+    The TTS API swiftly synthesizes speech output in less time than it takes to speak in real-time. This enables a truly real-time experience for users interacting with your application.
+  </Card>
+  <Card title="Customize the Speech Model" icon="sliders">
+    Train the text-to-speech engine to suit your needs. Reverie TTS supports lexicons and SSML tags to manage speech characteristics like pitch, speed, volume, and pronunciation.
+  </Card>
+  <Card title="Text and SSML Support" icon="code">
+    Use SSML tags to fine-tune speech delivery—add pauses, format numbers, dates, and times, and control pronunciation for a natural-sounding output.
+  </Card>
+  <Card title="High-Quality & Accurate Pronunciation" icon="volume">
+    SSML features help deliver speech with improved clarity and naturalness, ensuring a high-quality voice output that aligns with user expectations.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="Optimize Your Speech Output" icon="waveform">
+    Choose from multiple audio formats—WAV, MP3, FLAC, OGG, Opus, and PCM—along with sampling rates from 8kHz to 48kHz to balance audio quality and bandwidth.
+  </Card>
+  <Card title="Branded Custom Voices" icon="star">
+    Collaborate with us to create a unique voice tailored to your brand. From selecting voice characteristics to testing, we help you stand out with a custom TTS voice.
+  </Card>
+</CardGroup>
+
+
+### Speakers
+| Language        | Male Speaker                              | Female Speaker                          |
+|-----------------|-------------------------------------------|-----------------------------------------|
+| Hindi           | hi_male, hi_male_2, hi_male_3, hi_male_4  | hi_female, hi_female_2, hi_female_3     |
+| Bengali         | bn_male, bn_male_2                        | bn_female, bn_female_2                  |
+| Kannada         | kn_male, kn_male_2                        | kn_female, kn_female_2                  |
+| Malayalam       | ml_male                                   | ml_female                               |
+| Tamil           | ta_male                                   | ta_female                               |
+| Telugu          | te_male, te_male_2                        | te_female, te_female_2                  |
+| Gujarati        | gu_male                                   | gu_female                               |
+| Odia            | or_male                                   | or_female                               |
+| Assamese        | as_male                                   | as_female                               |
+| Marathi         | mr_male, mr_male_2, mr_male_3             | mr_female, mr_female_2, mr_female_3     |
+| Punjabi         | pa_male                                   | pa_female                               |
+| Indian English  | en_male, en_male_2                        | en_female, en_female_2                  |
+
+# SSML Tags for Text-to-Speech Customization
+
+SSML (Speech Synthesis Markup Language) tags allow you to customize how a text-to-speech engine generates audio. 
+
+<CardGroup cols={2}>
+  <Card title="Why Use SSML?" icon="info">
+    SSML gives you precise control over speech characteristics like pauses, pitch, speed, and pronunciation, enabling natural and context-appropriate audio output.
+  </Card>
+  <Card title="Reverie TTS Support" icon="volume">
+    Reverie’s TTS API supports SSML to structure text, switch voices, and customize pronunciation for various formats like dates, currencies, and units.
+  </Card>
+</CardGroup>
+
+## Core SSML Tags
+
+### `<speak>` and `<voice>`
+
+<CardGroup cols={2}>
+  <Card icon="code">
+    The root element for any SSML document. Surround all text to be spoken with this tag.  
+    **Note**: The `<speak>` tag is mandatory.
+  </Card>
+  <Card icon="user">
+    Encapsulates text and other tags, specifying the voice to use via the `name` attribute. Supports multiple voices in a single request.
+  </Card>
+  <Card icon="user">
+   `<p>` represents a Paragraph. Use the tag to add a pause between paragraphs in the text. 
+   **Note**: By default, the API will separate the paragraphs by 800ms break. 
+  </Card>
+  <Card icon="code">
+ ` <s>` represents a Sentence. Use the tag to add a pause between lines or sentences in the text. 
+  **Note**: By default, the API will separate the sentences within a paragraph by a 400ms break.  
+  </Card>
+</CardGroup>
+
+<Note>
+  Recommend using the `<p>` and `<s>` tags to structure your requests, especially when using `<break>`.
+</Note>
+
+For `<speak>` Tag:
+```xml
+<speak>
+  <p><s>This is a sentence</s></p>
+</speak>
+```
+For `<voice>` Tag:
+```xml
+<speak>
+    <voice name="en_female"> This is an example. </voice>
+    <voice name="hi_female"> यह एक उदाहरण है </voice>
+</speak>
+```
+### `<break>`
+<Card icon="code">
+   It represents a pause in the speech. Set the length of the pause with the time attribute. Add pause of a specified duration, either in seconds or milliseconds.
+</Card>
+<Note>
+`<break>` is currently not supported within a sentence. It can only exist before or between sentences or paragraphs.
+</Note>
+
+| Attribute   | Description                                                                 |
+|-------------|-----------------------------------------------------------------------------|
+| `strength`  | (Optional) Strength of the pause inserted. Values: `none`, `x-weak`, `weak`, `medium`, `strong`, `x-strong`. |
+| `time`      | (Optional) Duration of the pause, e.g., `"1s"`, `"750ms"`. Unit must be specified. Default: `"400ms"`. |
+
+```xml
+<s>Fetching results</s>
+<break time="3s"/>
+<s>Found 3 items</s>
+```
+### `<sub>`
+<Card icon="code">
+Pronounce the specified word or phrase as a different word or phrase. Specify the pronunciation to substitute with the alias attribute.
+</Card>
+
+| Attribute   | Description                                                                 |
+|-------------|-----------------------------------------------------------------------------|
+| `alias`  |  The word or phrase to speak in place of the tagged text |
+
+```xml
+<sub alias='World Wide Web'>www</sub>
+```
+### `<say-as>`
+<Card icon="code">
+The `<say-as>` tag will allow you to provide instructions for how to speak a text file. The TTS engine will automatically detect many of these features, but the say-as command will enable you to mark them specifically.
+Use the `<say-as>` tag with the interpret-as attribute to tell the TTS how to speak certain characters, words, and numbers.
+
+
+</Card>
+
+| Attribute       | Description                                                                 |
+|-----------------|-----------------------------------------------------------------------------|
+| `interpret-as`  |  Uses some available possibility values to speak the given text. In the below section, we provide you the values available interpret-as |
+
+```xml
+<sub alias='World Wide Web'>www</sub>
+```
+
+#### `Cardinal`
+<Card icon="code">
+Interprets the numerical text as a cardinal number, as in 1,2,3,4 
+</Card>
+<Note>
+By default, the API will understand and pronounce the numbers in Cardinal format.
+**Example**: The API will interpret 1234 as One thousand two hundred and thirty-four.
+</Note>
+
+```xml
+<say-as interpret-as='cardinal'>1234</say-as>
+```
+
+#### `Ordinal`
+<Card icon="code">
+This value will interpret and speak the ordinal value for the given digit within the enclosed tag.
+</Card>
+| Value | Interpret Ordinal Value |
+|-------|------------------------|
+| 44    | Forty-Fourth           |
+| 2     | Second                 |
+
+```xml
+<say-as interpret-as='ordinal'>2</say-as>
+```
+
+#### `Character`
+<Card icon="code">
+This value will speak the characters in a given text within the enclosed tag.
+</Card>
+| Value | Interpret Ordinal Value |
+|-------|------------------------|
+| HELLO    |API will pronounce each character separately           |
+| 50WS     | Five Zero W S                 |
+
+```xml
+<say-as interpret-as='characters'>50WS</say-as>
+```
+
+
+#### `Digits`
+<Card icon="code">
+This value spells out the digits in a given number within the enclosed tag.
+</Card>
+| Value | Interpret Digits |
+|-------|------------------------|
+| 44    |Four Four      |
+| 1234     | One Two Three Four                 |
+
+```xml
+<say-as interpret-as='digits'>1234</say-as>
+```
+
+#### `Units`
+<Card icon="code">
+Interpret a value as a measurement. The value should be a number followed by a unit or just a unit. The units supported by the TTS API are:
+</Card>
+| Units                     | Interpreted as    |
+|---------------------------|-------------------|
+| kgs, kg                   | kilograms         |
+| gms, gm, g                | grams             |
+| mgs, mg                   | milligrams        |
+| kms, km                   | kilometers        |
+| cms, cm                   | centimeters       |
+| mtr, m                    | meters            |
+| mm                        | millimeters       |
+| ltrs, ltr, lt, l, ℓ       | liters            |
+| ft                        | feet              |
+| in                        | inches            |
+| lbs, lb                   | pounds            |
+| hrs, hr                   | hours             |
+| min                       | minutes           |
+| sec, s                    | seconds           |
+
+```xml
+<say-as interpret-as='unit'>5l</say-as> of oil is added to your cart.
+```
+
+#### `Date`
+<Card icon="code">
+This value will speak the enclosed tag’s date, using the format given in the associated format attribute. The format attribute is mandatory for use with the date value of interpret-as.
+</Card>
+|              | Denoted as | Digit Length   |
+|--------------|------------|----------------|
+| Date         | d          | 1 or 2 digits  |
+| Month        | m          | 1 or 2 digits  |
+| Year         | y          | 4 digits       |
+
+**Supported Date Formats:**
+
+| Date Format | Interpret Date |
+|-------------|----------------|
+| `dmy` | **day-month-year**<br />Example: 10-02-1990 is read as Tenth February, Nineteen Ninety<br />Sample Code:<br />`<say-as interpret-as='date' format='dmy'>10-2-1990</say-as>` |
+| `mdy` | **month-day-year**<br />Example: 02-10-1990 is read as Tenth February, Nineteen Ninety<br />Sample Code:<br />`<say-as interpret-as='date' format='mdy'>2-10</say-as>` |
+| `dm`  | **day-month**<br />Example: 10-2 is read as Tenth February<br />Sample Code:<br />`<say-as interpret-as='date' format='dm'>10-2</say-as>` |
+| `md`  | **month-day**<br />Example: 02-10 is read as Tenth February<br />Sample Code:<br />`<say-as interpret-as='date' format='md'>2-10</say-as>` |
+
+#### `Currency`
+<Card icon="code">
+Use the currency parameter to control the synthesis of monetary quantities. The currency formats supported and spoken by the API is:
+</Card>
+
+| Currency       | Symbol   | API Interpretation                                              |
+|----------------|----------|-----------------------------------------------------------------|
+| Rupee & Paisa  | `₹, Rs., र` | Example: `₹`10.50 is read as Ten rupees fifty paise. <br /> Sample Code: `<say-as interpret-as='currency'>`₹10.50`</say-as>` |
+| Dollars & Cents| `$`         | Example: `$`10.50 is read as Ten dollars fifty cents. <br /> Sample Code: `<say-as interpret-as='currency'>`$10.50`</say-as>` |
+| Pounds & Pence | `£`         | Example: `£`10.50 is read as Ten pounds fifty pence. <br /> Sample Code: `<say-as interpret-as='currency'>`£10.50`</say-as>` |
+| Euros & Cents  | `€`         | Example: `€`10.50 is read as Ten euros fifty cents. <br /> Sample Code: `<say-as interpret-as='currency'>`€10.50`</say-as>` |
+
+#### `URL`
+<Card icon="code">
+This value is used to control the synthesis of the website address. 
+</Card>
+<Note>
+By default, the API will interpret the website address and speak in the right format. 
+The API will pronounce symbols as present in a web address.
+**Example**: reverieinc.com is pronounced as reverieinc dot com
+</Note>
+
+```xml
+<say-as interpret-as='url'> reverieinc.com</say-as>
+```
+
+### `<prosody>`
+<Card icon="code">
+The prosody element can be used to adjust the below-listed attributes for the text-to-speech output.
+</Card>
+
+| Attribute | Description                                                                                          |
+|-----------|------------------------------------------------------------------------------------------------------|
+| `pitch`   | (optional) Changes the pitch (frequency) of the enclosed text overall.<br />Values:<br />Absolute or relative values in Hertz (Hz). e.g. 350Hz, +20Hz, -10Hz.<br />Relative values in semitones (st). e.g. +1st, -0.5st.<br />Absolute or relative values in percentage. e.g. 90%, +10%, -5%.<br />Labels: default, x-low, low, medium, high, x-high. |
+| `rate`    | (optional) Changes the rate of speaking of the enclosed text overall.<br />Values:<br />Number as a factor. 1.0 being default. e.g. 0.75, 1.2.<br />Absolute or relative values in percentage. e.g. 90%, +20%, -10%.<br />Labels: default, x-slow, slow, medium, fast, x-fast. |
+| `duration`| (optional) Elapsed time of the enclosed text overall. overrides rate.<br />Values:<br />Number with unit (seconds or milliseconds). e.g. 2.5s, 3500ms. |
+| `volume`  | (optional) Changes the loudness of the enclosed text overall.<br />Values:<br />Absolute or relative number, 100 being default. e.g. 80, 120, +5, -10.<br />Absolute or relative values in percentage. e.g. 90%, +20%, -10%.<br />Relative values in decibels (dB). e.g. +6dB, -6dB.<br />Labels: default, silent, x-soft, soft, medium, loud, x-loud. |
+| `contour` | (optional) Changes the pitch at various points as the utterance progresses.<br />Expressed as a space-separated array of parameter pairs. The first value denotes the location in text as a percentage. The second value denotes the desired pitch. See pitch attribute for possible value expressions.<br />e.g. `<prosody contour="(0%,+20Hz)(10%,-2st)(40%,+10Hz)">`<br />Note: This option is available for English and Hindi only. But the request will not fail if this option is used for other languages. It will just not have the intended effect. |
+| `range`   | (optional) Changes the range of pitch variation of the enclosed text. Range refers to the difference between min and max pitch. Refer pitch attribute for possible value expressions.<br />Note: This option is available for English and Hindi only. But the request will not fail if this option is used for other languages. It will just not have the intended effect. |
+
+```xml
+<prosody pitch="value" rate="value" duration="value" volume="value"></prosody>
+```
+
+## Supported Audio Formats
+
+| Audio Format | Description            |
+|--------------|------------------------|
+| **WAV**      | Default audio format   |
+| **MP3**      |                        |
+| **FLAC**     |                        |
+| **OGG**      |                        |
+| **OPUS**     |                        |
+| **PCM**      |                        |
+
+## Supported Sampling Rate
+| Sample Rate (Hz) | Description             |
+|------------------|-------------------------|
+| **8000 (8kHz)**  |                         |
+| **16000 (16kHz)**|                         |
+| **22050 (22.05kHz)** | Default sample rate |
+| **24000 (24kHz)**|                         |
+| **44100 (44.1kHz)**|                       |
+| **48000 (48kHz)**|                         |
+
+## Sample Code
+
+<CardGroup cols={2}>
+  <a
+    href="https://github.com/reverieinc/python-sdk/tree/main/tts"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Card title="Python" icon="python">
+    Access Python SDK samples for generating lifelike speech using Reverie’s TTS API. Ideal for server-side TTS processing and automation.
+    </Card>
+  </a>
+
+{" "}
+
+<a
+  href="https://github.com/reverieinc/javascript-sdk/tree/main/tts"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <Card title="JavaScript" icon="js">
+    Explore JavaScript SDK examples to integrate real-time Text-to-Speech directly into web applications and browser-based experiences.
+  </Card>
+</a>
+
+  <a
+    href="https://github.com/reverieinc/golang-sdk/tree/main/tts"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Card title="GoLang" icon="golang">
+    Find GoLang SDK samples to implement fast and scalable TTS solutions for backend systems and APIs.
+    </Card>
+  </a>
+</CardGroup>
+
+## FAQs
+
+<AccordionGroup>
+ <Accordion title="What audio formats are supported in TTS?" icon="music">
+    Reverie TTS supports various formats including **WAV, MP3, FLAC, OGG, Ogg Opus, and PCM**. You can select a format based on your application’s compatibility and audio quality needs.
+  </Accordion>
+
+  <Accordion title="Can I use SSML for customizing speech?" icon="code">
+    **Yes**, the TTS API supports **SSML (Speech Synthesis Markup Language)**. Use SSML tags to adjust pitch, speed, volume, pauses, and pronunciation for more natural and expressive speech output.
+  </Accordion>
+
+  <Accordion title="Does TTS support Indian languages?" icon="globe">
+    Absolutely. Reverie’s TTS engine supports **multiple Indian languages** and voices, delivering natural-sounding output tailored to regional and linguistic preferences.
+  </Accordion>
+
+  <Accordion title="Can I create a custom voice for my brand?" icon="star">
+    Yes. Reverie offers **Branded Custom Voices**, allowing you to work with our team to create a unique voice tailored to your brand’s tone, personality, and user experience goals.
+  </Accordion>
+
+  <Accordion title="How fast is the speech synthesis?" icon="volume">
+    Reverie TTS provides **faster-than-real-time synthesis**, meaning the audio is generated quicker than the time it would take to speak it naturally—ideal for real-time applications.
+  </Accordion>
+</AccordionGroup>
+
+## API Messages
+| Status Code | Error Message                | Description                                              |
+|-------------|------------------------------|----------------------------------------------------------|
+| 403         | Invalid REV-API-KEY or REV-APP-ID | Entered Invalid credentials                             |
+| 403         | usage exhausted              | The provided credits or the character limit is exhausted.|
+| 403         | API key expired              | The API key provided to a user is expired.               |
+| 403         | unauthorized to use this API | The REV-APPNAME entered is invalid, or the user is not authorized to use it. |
+| 403         | unauthorized to use this src/tgt language | The invalid speaker code is passed, or the user cannot use the defined speaker code. |
+| 400         | no spkr given                | The speaker code is missing                              |
+| 400         | invalid speed value          | The speed requested in the input is invalid or not supported by the API. |
+| 400         | invalid pitch value          | The audio pitch defined in the input is invalid or not supported by the API. |
+| 400         | invalid format value         | The requested audio format is invalid or not supported by the API. |
+| 400         | invalid sample_rate value    | The requested audio sample rate is invalid or not supported by the API. |
+| 400         | no text given                | The input text is missing                                |
