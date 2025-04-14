@@ -28,7 +28,37 @@
         "pages": [
           "usage-guides/speech-to-text-streaming",
           "usage-guides/speech-to-text-batch",
-          "usage-guides/text-to-speech"
+          "usage-guides/text-to-speech",
+          "usage-guides/localization",
+          "usage-guides/transliteration"
+        ]
+      },
+      {
+        "group": "API Reference",
+        "pages": [
+          "api-reference/speech-to-text-streaming",
+          "api-reference/speech-to-text-batch",
+          "api-reference/text-to-speech",
+          "api-reference/localization",
+          "api-reference/transliteration"
+        ]
+      },
+      {
+        "group": "Integrations",
+        "pages": [
+          "integrations/zapier",
+          "integrations/klamp"
+        ]
+      },
+      {
+        "group": "Use Cases",
+        "pages": [
+          "use-cases/voice-agent",
+          "use-cases/voice-search",
+          "use-cases/call-center-transcription",
+          "use-cases/speech-translation",
+          "use-cases/speech-to-speech",
+          "use-cases/web-reader"
         ]
       },
       {
@@ -38,14 +68,10 @@
         ]
       },
       {
-        "group": "Essentials",
+        "group": "Resources",
         "pages": [
-          "essentials/markdown",
-          "essentials/code",
-          "essentials/images",
-          "essentials/settings",
-          "essentials/navigation",
-          "essentials/reusable-snippets"
+          "resources/security",
+          "resources/on-prem-deployment"
         ]
       },
       {
@@ -54,8 +80,7 @@
           "endpoints/speech-to-text-streaming",
           "endpoints/speech-to-text-batch",
           "endpoints/text-to-speech",
-          "endpoints/localpost",
-          "endpoints/transpost",
+          "endpoints/localization",
           "endpoints/transliteration"
         ]
       }
