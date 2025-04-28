@@ -7,11 +7,6 @@
     "light": "#07C983",
     "dark": "#15803D"
   },
-  "api": {
-  "playground": {
-    "display": "none"
-  }
-  },
   "favicon": "/favicon.svg",
   "navigation": {
     "groups": [
@@ -81,7 +76,9 @@
           "endpoints/speech-to-text-batch",
           "endpoints/text-to-speech",
           "endpoints/localization",
-          "endpoints/transliteration"
+          "endpoints/transliteration",
+          "endpoints/localpost",
+           "endpoints/transpost"
         ]
       }
     ],
