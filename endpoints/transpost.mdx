@@ -9,20 +9,19 @@ playground: "none"
 
  <RequestExample>
  ```bash cURL
- curl --location --request POST 'https://revapi.reverieinc.com/localization' \
+ curl --location --request POST 'https://revapi.reverieinc.com' \
  --header 'Content-Type: application/json' \
  --header 'REV-API-KEY: <YOUR API KEY>' \
  --header 'REV-APP-ID: <YOUR APP-ID>' \
  --header 'src_lang: en' \
  --header 'tgt_lang: hi' \
  --header 'domain: generic' \
- --header 'REV-APPNAME: localization' \
- --header 'REV-APPVERSION: 3.0' \
+ --header 'REV-APPNAME: transliteration' \
+ --header 'REV-APPVERSION: 2.0' \
  --data-raw '{
  "data": ["Hello, how are you?"],
- "nmtMask": true,
- "enableNmt": true,
- "enableLookup": false
+ "isBulk": true,
+ "ignoreTaggedEntities": true
  }'
  ```
  ```python Python
@@ -51,10 +50,9 @@ playground: "none"
  
  ### Headers
  
- <ParamField header="Content-Type" type="string" required>
-   {" "}
-   The format of the data to be posted.
- </ParamField> <ParamField header="REV-API-KEY" type="string" required>
+<ParamField header="Content-Type" type="string" required default="application/json">
+  The format of the data to be posted. Must be set to "application/json".
+</ParamField> <ParamField header="REV-API-KEY" type="string" required>
    {" "}
    A unique key/token provided by Reverie to identify the user using the Localization
    API.{" "}
@@ -87,10 +85,10 @@ playground: "none"
  
  ### Body
  
- <ParamField body="data" type="array" required>
-   {" "}
-   An array containing the text strings to be transliterated.{" "}
- </ParamField> <ParamField body="isBulk" type="boolean" required>
+<ParamField body="data" type="string[]" required>
+  The text you want to translate. This is the input text that will be processed by the translation model.
+</ParamField>
+ <ParamField body="isBulk" type="boolean" required>
    {" "}
    Indicates whether the request is for bulk processing. Set to `false` for single
    sentence transliteration.{" "}

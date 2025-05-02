@@ -1,0 +1,297 @@
+---
+title: "NLP API"
+description: " The Comprehensive NLP API is a robust, all-in-one solution for performing multiple natural language processing tasks through a unified endpoint. It supports content moderation, entity detection, sentiment analysis, translation, PII (Personally Identifiable Information) redaction, and text summarization. "
+---
+
+# How Does API Work?
+
+The process to analyze the text:
+
+- Post the Request
+- Authenticate the Request:
+    - `REV-API-KEY`: Your valid API key
+    - `REV-APP-ID`: Your registered application ID
+    - `REV-APPNAME`: Set to `text-analysis`
+- Set Query Parameters to Enable NLP Tasks
+- Provide the Request Payload
+- Receive the Analysis Output
+
+## cURL for Integration
+### Analyze the Text
+#### Request
+```bash
+curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=false&summary=false&sentiment=true&detect_entities=true&content_safety=true&pii_redaction=true' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR_REV_API_KEY>' \
+--header 'REV-APP-ID: <YOUR_REV_APP_ID>' \
+--header 'REV-APPNAME: text-analysis' \
+--data-raw '{
+  "text": "Today is a special day. I sent you an email earlier and shared my website link. Please use #ForBetterReach and feel free to contact me around 10 AM.",
+  "language": "en",
+  "translation": {
+    "target_language": "en",
+    "translation_domain": "generic"
+  },
+  "pii_redaction": {
+    "redact_pii_sub": "entity_name",
+    "redact_pii_types": []
+  },
+  "summary": {
+    "summary_model": "gemma2:2b",
+    "summary_type": "headline"
+  },
+  "entity_recognition": {
+    "entity_types": []
+  },
+  "sentiment": {
+    "level": "whole"
+  },
+  "content_moderation": {
+    "moderation_types": [
+      "hate_speech",
+      "profanity"
+    ]
+  }
+}'
+```
+#### Response
+```json
+{
+  "results": {
+    "translation": {
+      "translated_text": [
+        "आज एक खास दिन है। मैंने आपको पहले एक ईमेल भेजा और अपनी वेबसाइट का लिंक साझा किया। कृपया #ForBetterReach का उपयोग करें और सुबह 10 बजे मुझसे संपर्क करने में संकोच न करें।"
+      ]
+    },
+    "summary": {
+      "summarised_text": "\"Special Day, Email Sent, Contact at 10 AM\""
+    },
+    "entity_recognition": {
+      "entities": {
+        "time": [
+          "10 AM"
+        ],
+        "hashtag": [
+          "#ForBetterReach"
+        ]
+      }
+    },
+    "sentiment": {
+      "sentiments": {
+        "text": "Today is a special day. I sent you an email earlier and shared my website link. Please use #ForBetterReach and feel free to contact me around 10 AM.",
+        "average": {
+          "sentiment": "positive",
+          "confidence": 0.88
+        }
+      }
+    },
+    "pii_redaction": {
+      "redacted_text": "Today is a special day. I sent you an email earlier and shared my website link. Please use #ForBetterReach and feel free to contact me around ##:##.",
+      "redaction_results": [
+        {
+          "pii_type": "time",
+          "text": "10 AM"
+        }
+      ]
+    },
+    "content_moderation": {
+      "moderated_text": "today is a special day. i sent you an email earlier and shared my website link. please use #forbetterreach and feel free to contact me around 10 am.",
+      "moderation_results": []
+    }
+  }
+}
+
+```
+## API References
+
+### HTTP Request URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | http://revapi.reverieinc.com/api/v2/text-analyse?translate=false&summary=false&sentiment=true&detect_entities=true&content_safety=true&pii_redaction=true |
+
+### Headers
+<ParamField header="Content-Type" type="string" required default="application/json">
+  The format of the data to be posted. Must be set to "application/json".
+</ParamField> 
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  A unique key/token provided by Reverie to identify the user using the  API.
+</ParamField> 
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  The unique account ID to identify the user and the default account settings.
+</ParamField> 
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  The parameter to identify the API : `text-analysis`
+</ParamField> 
+
+### Query Parameter
+<ParamField query="translate" type="boolean" required>
+  {" "}
+  
+- To enable translation of the text into a specified language.
+
+</ParamField> 
+<ParamField query="summary" type="boolean" required>
+  {" "}
+  
+- To enable summarization of the text.
+
+</ParamField> 
+<ParamField query="sentiment" type="boolean" required>
+  {" "}
+  
+- To enable sentiment analysis of the text.
+
+</ParamField> 
+<ParamField query="detect_entities" type="boolean" required>
+  {" "}
+  
+- To enable detection of named entities (e.g., people, organizations, locations) in the text.
+
+</ParamField> 
+<ParamField query="content_safety" type="boolean" required>
+  {" "}
+  
+- To enable content safety checks to identify potentially harmful or inappropriate content in the text.
+
+</ParamField> 
+<ParamField query="pii_redaction" type="boolean" required>
+  {" "}
+  
+- To enable redaction of personally identifiable information (PII) in the text.
+
+</ParamField> 
+
+### Request
+
+<ParamField body="text" type="string" required>
+  - The actual input text to be analyzed.
+</ParamField>
+
+<ParamField body="language" type="string" required>
+  - Language code of the input text (e.g., "en" for English).
+  - Refer to section [Language Codes](/usage-guides/text-analysis#supported-languages) for valid language code.
+</ParamField>
+
+<ParamField body="translation" type="object" required>
+  - Configuration for translating the input text.
+</ParamField>
+
+<ParamField body="translation.target_language" type="string" required>
+  - Target language code for translation.
+  - Refer to section [Language Codes](/usage-guides/text-analysis#supported-languages) for valid language code.
+</ParamField>
+
+<ParamField body="translation.translation_domain" type="string" required>
+  - Domain for translation to improve accuracy (e.g., "generic").
+  - Refer to section [Domain Codes](/usage-guides/localization#supported-domains) for valid language code.
+</ParamField>
+
+<ParamField body="pii_redaction" type="object" required>
+  - To enable redaction of personally identifiable information (PII) in the text.
+</ParamField>
+
+<ParamField body="pii_redaction.redact_pii_sub" type="string" required>
+ -  The replacement string or type name to substitute redacted PII.
+</ParamField>
+
+<ParamField body="pii_redaction.redact_pii_types" type="array" required>
+  - List of specific PII types to redact (empty means all).
+  - Refer to section [Redact Types](/usage-guides/text-analysis#pii-redaction) for valid code.
+</ParamField>
+
+<ParamField body="summary" type="object" required>
+  - Configuration for generating a summary of the input text.
+</ParamField>
+
+<ParamField body="summary.summary_model" type="string" required>
+ -  Specifies which model to use for summarization.
+</ParamField>
+
+<ParamField body="summary.summary_type" type="string" required>
+ -  Type of summary to produce (e.g., "headline").
+ - Refer to section [Summarization Types](/usage-guides/text-analysis#summarization) for valid code.
+</ParamField>
+
+<ParamField body="entity_recognition" type="object" required>
+  - Configuration for named entity recognition (NER).
+</ParamField>
+
+<ParamField body="entity_recognition.entity_types" type="array" required>
+  - List of entity types to detect (empty means all types).
+  - Refer to section [Entity Types](/usage-guides/text-analysis#named-entity-recognition-ner) for valid code.
+</ParamField>
+
+<ParamField body="sentiment" type="object" required>
+  - Configuration for sentiment analysis.
+</ParamField>
+
+<ParamField body="sentiment.level" type="string" required>
+  - Level at which sentiment is analyzed (e.g., "whole" or "sentence").
+  - Refer to section [Sentiment Level](/usage-guides/text-analysis#sentiment-analysis) for valid code.
+</ParamField>
+
+<ParamField body="content_moderation" type="object" required>
+  - Configuration for content safety/moderation checks.
+</ParamField>
+
+<ParamField body="content_moderation.moderation_types" type="array" required>
+  - List of content types to check (e.g., "hate_speech", "profanity").
+  - Refer to section [Content Moderation Types](/usage-guides/text-analysis#content-moderation) for valid code.
+</ParamField>
+
+### Response
+<ParamField body="results.translation.translated_text" type="array">
+  - List of translated sentences for the input text.
+</ParamField>
+
+<ParamField body="results.summary.summarised_text" type="string">
+  - Generated summary or headline of the input text.
+</ParamField>
+
+<ParamField body="results.entity_recognition.entities.time" type="array">
+  - List of detected time expressions (e.g., "10 AM").
+</ParamField>
+
+<ParamField body="results.entity_recognition.entities.hashtag" type="array">
+  - List of detected hashtags (e.g., "#ForBetterReach").
+</ParamField>
+
+<ParamField body="results.sentiment.sentiments.text" type="string">
+  - The original input text for which sentiment analysis was performed.
+</ParamField>
+
+<ParamField body="results.sentiment.sentiments.average.sentiment" type="string">
+  - Overall sentiment result (e.g., "positive").
+</ParamField>
+
+<ParamField body="results.sentiment.sentiments.average.confidence" type="float">
+  - Confidence score of the sentiment classification (0 to 1 scale).
+</ParamField>
+
+<ParamField body="results.pii_redaction.redacted_text" type="string">
+  - Text with redacted personally identifiable information (e.g., time replaced with ##:##).
+</ParamField>
+
+<ParamField body="results.pii_redaction.redaction_results" type="array">
+  - List of redacted PII instances and their types.
+</ParamField>
+
+<ParamField body="results.pii_redaction.redaction_results[].pii_type" type="string">
+  - Type of redacted PII (e.g., "time").
+</ParamField>
+
+<ParamField body="results.pii_redaction.redaction_results[].text" type="string">
+  - The actual text that was redacted.
+</ParamField>
+
+<ParamField body="results.content_moderation.moderated_text" type="string">
+  - Moderated version of the input text (e.g., cleaned of offensive content).
+</ParamField>
+
+<ParamField body="results.content_moderation.moderation_results" type="array">
+  - List of content moderation flags (empty if no issue found).
+</ParamField>
+

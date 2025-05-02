@@ -1,8 +1,305 @@
 ---
-title: Localization
-description: Description for localization
+title: "Localization API"
+description: "Localization is the REST API developed for localizing the contents from English to Indic languages. Using the Localization API, you can either localize a single sentence or multiple sentences in a fraction of time."
+
 ---
+# How Does API Work?
 
-# Localization
+The Localization API will use the App Id and API key to authenticate requests. Your credentials carry many privileges, so be sure to keep them secure.  
 
-Write your content here...
+- **Post the request by:**
+  - Enter the valid `REV-APPNAME`, `REV-APP-ID`, and `REV-API-KEY`.
+  - Specify the Source language & Target language(s) code.
+  - Enter the content you want to localize and mention the domain.
+
+- **On posting the request:**
+  - The API will validate user credentials.
+  - Validate the key-value pairs in the API request.
+  - If all the information is valid, then initially, the API will refer to the Database (Lookup DB & Template DB) to localize the content.
+  - If the content is not available in the Database, then the NMT (Neural Machine Translation) technology is adapted.
+
+- **On successfully translating the content:**
+  - The API returns the content in the requested target language(s).
+
+## cURL for Integration
+### Translate content to one target language
+#### Request
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: localization' \
+--header 'REV-APPVERSION: 3.0' \
+--data '{
+    "data": [
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bengaluru."
+    ],
+   "nmtMask": true,
+    "nmtMaskTerms": {
+        "Reverie Language Technologies":"Reverie Language Technologies"
+    },
+    "enableNmt": true,
+    "enableLookup": true
+}'
+```
+
+#### Response
+```json
+{
+    "responseList": [
+        {
+            "inString": "Reverie Language Technologies was established in 2009.",
+            "outString": "Reverie Language Technologies की स्थापना 2009 में की गई थी।",
+            "apiStatus": 3
+        },
+        {
+            "inString": "The company head office is located in Bengaluru.",
+            "outString": "कंपनी का मुख्यालय बेंगलुरु में स्थित है।",
+            "apiStatus": 3
+        }
+    ],
+    "tokenConsumed": 102
+}
+```
+### Translate content to multiple target languages
+#### Request
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi,ta' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: localization' \
+--header 'REV-APPVERSION: 3.0' \
+--data '{
+    "data": [
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bengaluru."
+    ],
+   "nmtMask": true,
+    "nmtMaskTerms": {
+        "Reverie Language Technologies":"Reverie Language Technologies"
+    },
+    "enableNmt": true,
+    "enableLookup": true
+}'
+```
+
+#### Response
+```json
+{
+    "responseList": [
+        {
+            "inString": "Reverie Language Technologies was established in 2009.",
+            "apiStatus": 3,
+            "outStrings": {
+                "hi": "रेवरी लैंग्वेज टेक्नोलॉजीस की स्थापना 2009 में की गई थी।",
+                "ta": "ரெவரி லாங்வேஜ் டெக்னாலஜிஸ் 2009 இல் நிறுவப்பட்டது ."
+            },
+            "api_statuses": {
+                "hi": 3,
+                "ta": 3
+            }
+        },
+        {
+            "inString": "The company head office is located in Bengaluru.",
+            "apiStatus": 3,
+            "outStrings": {
+                "hi": "कंपनी का प्रधान कार्यालय बंगलुरू में स्थित है।",
+                "ta": "நிறுவனத்தின் தலைமை அலுவலகம் பெங்கலூரில் அமைந்துள்ளது ."
+            },
+            "api_statuses": {
+                "hi": 3,
+                "ta": 3
+            }
+        }
+    ],
+    "tokenConsumed": 204
+}
+```
+#### Error Response
+```json
+{
+    "message": "unauthorized to use this src/tgt language",
+    "status": 403
+}
+```
+
+## API References
+### HTTP Request URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | https://revapi.reverieinc.com/ |
+
+### Headers
+<ParamField header="Content-Type" type="string" required>
+  {" "}
+  The format of the data to be posted: `application/json`
+</ParamField> 
+
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  A unique key/token provided by Reverie to identify the user using the Localization API.
+</ParamField> 
+
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  The unique account ID to identify the user and the default account settings.
+</ParamField> 
+
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  The parameter to identify the API : `localization`
+</ParamField> 
+
+<ParamField header="REV-APPVERSION" type="string" required>
+  {" "}
+  - The version refers to the specific iteration of the API that is being called.
+  - Note: The default version is **2.0**.
+</ParamField> 
+
+<ParamField header="src_lang" type="string" required>
+  {" "}
+  - The language of the input text 
+  - Example : `or`, `hi`, `bn`
+  - Refer to section [Language Codes](/usage-guides/localization#supported-languages) for valid language code.
+</ParamField> 
+
+<ParamField header="tgt_lang" type="string" required>
+  {" "}
+  - Language to which you want to localize the input text 
+  - Note: To enter multiple target languages, separate the value using the comma separator(,). For example: `tgt_lang` : `hi, ta`
+  - Example : `or`, `hi`, `bn`
+  - Refer to section [Language Codes](/usage-guides/localization#supported-languages) for valid language code.
+</ParamField> 
+
+<ParamField header="domain" type="string" required>
+  {" "}
+  - The Domain refers to the universe in which you use the Localization API. Example- Health Care, Insurance, Legal, etc.
+  - Refer to section [Domain Codes](/usage-guides/localization#supported-domains) for valid language code.
+</ParamField> 
+
+### Request
+<ParamField header="data" type="array[]" required>
+  {" "}
+  - List of input text for localization.
+</ParamField> 
+
+<ParamField header="enableNmt" type="boolean">
+  {" "}
+  - Specify whether the content localization process should use NMT technology or not. 
+  - For Example, When the enableNmt value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then the NMT is used for translation.
+  - **Note** - By default, the `enableNmt`= `true`
+</ParamField> 
+
+<ParamField header="enableTransliteration" type="boolean">
+  {" "}
+  - Specify whether the content localization process should use transliteration technology or not. 
+  - For Example, When the enableTransliteration value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then nmt is used for translation. If nmt fails, transliteration is called.
+  - **Note** - By default, the `enableTransliteration`= `true`
+</ParamField> 
+
+<ParamField header="enableLookup" type="boolean">
+  {" "}
+  - The parameter will specify whether the application should refer to the Lookup DB or not.  
+  - For Example, when the enableLookup is true, the system will initially refer to the Database to fetch contents.
+  - **Note** - By default, the `enableLookup`= `true`
+</ParamField> 
+
+<ParamField header="nmtMask" type="boolean">
+  {" "}
+  - The feature to screen the non-dictionary words used in a sentence. In other words, the mask will indicate the words that should not be translated into the target language.
+  - **Note** - By default, the `enableLookup`= `true`
+  - **Note** - To set the `nmtMask` = `true`, it is mandatory the `src_lang` = `en` (English).
+</ParamField> 
+
+<ParamField header="nmtMaskTerms" type="array[]">
+  - Determines the words that are to be masked.
+  - **Note** - On defining values in the `nmtMaskTerms`, then automatically the `nmtMask` is set to true.
+  - **Example** - Masking a term:  
+    `nmtMaskTerms: ["Reverie Language Technologies"]`  
+    Here, the API will mask the term `Reverie Language Technologies`, if found in the source content, and will transliterate the word.
+</ParamField>
+
+<ParamField header="filterProfane" type="boolean">
+  {" "}
+  - Specify whether you want to filter out profane content from the input.
+  - **Note** - By default, the `filterProfane`= `true`
+</ParamField> 
+
+### Response
+<ParamField header="responseList" type="array[]">
+  {" "}
+  - The API will return the string(s) in the target language(s).
+</ParamField> 
+
+<ParamField header="inString" type="string">
+  {" "}
+  - The input text in the source language.
+</ParamField> 
+
+<ParamField header="outString" type="string">
+  {" "}
+  - The localized content in the requested target language(s).
+</ParamField> 
+
+<ParamField header="apiStatus" type="integer">
+  {" "}
+  - Status of API Moderated / Partial /Unmoderated (Aggregate of all segments). Refer to [API Messages](/usage-guides/localization#api-messages) to know about the available apiStatus and its description.
+</ParamField> 
+
+
+<ParamField header="api_statuses" type="Map<String, Integer>">
+  {" "}
+  - A dictionary/object with language codes as keys and integer status codes as values. Represents the status of the API output for each language, indicating the moderation level of the response content. Each key is a language code (e.g.,”hi” for Hindi,”ta” for Tamil), and each value is an integer status code representing the moderation level.
+  - **Note**: This `api_statuses` field will be displayed only if multiple languages are requested in the same API payload.
+  - Refer to section [Language Codes](/usage-guides/localization#supported-languages) for valid language code.
+  - Refer to [API Messages](/usage-guides/localization#api-messages) to know about the available apiStatus and its description.
+
+</ParamField> 
+
+<ParamField header="status" type="string">
+  {" "}
+  - Error status code for the invalid request. 
+  - **Note**: The status is shown only for the invalid request.
+</ParamField> 
+
+<ParamField header="msg" type="string">
+  {" "}
+  - A Human-readable error message.
+  - Refer to [API Messages](/usage-guides/localization#api-messages) to know about the available apiStatus and its description.
+</ParamField> 
+
+<ParamField header="tokenConsumed" type="integer">
+  {" "}
+  - The payload length served by NMT. 
+  - **Note** - if LookUp DB serves the payload and if the content is moderated, then the token`Consumed = `0` (Zero).
+</ParamField> 
+
+<ParamField header="uuid" type="string">
+  {" "}
+  - It is a 128-bit Universally Unique Identifier. It is likely being used for tracking a request in the localization API.
+
+</ParamField> 
+
+### Handling Errors
+
+The Localization API raises exceptions for many reasons, such as failed conversions, invalid parameters, authentication errors, and network unavailability. It will provide more specific machine-readable messages with an error response so that users can react to errors more effectively.
+
+Refer to: [API Messages](/usage-guides/localization#api-messages) section to know the error code and corresponding messages.
+
+```json
+{ 
+    "documentation": "http://beta.revup.reverieinc.com/dashboard/documentation", 
+    "message": "Oops! something wrong happened", 
+    "error_cause": "Target language is mandatory", 
+    "status": "BAD_REQUEST" 
+}
+```

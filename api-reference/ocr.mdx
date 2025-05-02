@@ -1,0 +1,121 @@
+---
+title: "OCR API"
+description: "This API provides OCR capabilities to extract text from PDFs and images, supporting multiple languages and processing modes for various document types. It’s ideal for automating text recognition and digitization tasks."
+---
+# How Does API Work?
+
+The OCR API uses App ID and API Key to authenticate requests. Your credentials carry many privileges, so keep them secure.
+
+- **Pass valid login credentials**:
+  - Rev App ID
+  - App Key
+  - App Name (OCR)
+
+- Upload the file (PDF or image)
+
+- Select the language and process type
+
+- Validate user credentials & load default account settings
+
+- Returns
+  - **layout_ocr**: DOCX file with preserved layout
+
+  - **only_ocr**: Plain text file
+
+## cURL for Integration
+### Process the Document
+#### Request
+```bash
+curl -X POST https://revapi.reverieinc.com/process_doc \
+  --header 'REV-API-KEY: YOUR-API-KEY' \
+  --header 'REV-APP-ID: YOUR-APPID' \
+  --header 'REV-APPNAME: ocr' \
+  -F "file=@document.pdf" \
+  -F "file_type=pdf" \
+  -F "languages=en,hi" \
+  -F "ocr_type=layout_ocr"
+
+```
+#### Response
+```json
+{
+  "filename": "maxresdefault.jpg",
+  "languages": [
+    "en"
+  ],
+  "text": "MORNING\n\nHe wakes up. He sees the sun rise. He\nbrushes his teeth. His teeth are white. He\nputs on his clothes. His shirt is blue. His\nshoes are yellow. His pants are brown.\n;P He goes downstairs. He gets a bowl. He\npours milk and cereal. He eats. He gets\nthe newspaper. He reads.\n\not o LOTS OF ENGLISH TEXTS ;. You{TT}",
+  "processing_time_sec": 0.83
+}
+```
+
+## API References
+
+### HTTP Request URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | https://revapi.reverieinc.com/process_doc |
+
+### Headers
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  A unique key/token provided by Reverie to identify the user using the API.
+</ParamField> 
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  The unique account ID to identify the user and the default account settings.
+</ParamField> 
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  The parameter to identify the API : `ocr`
+</ParamField> 
+
+### Request
+<ParamField body="file" type="file" required>
+  {" "}
+   - The PDF or image file to process
+</ParamField> 
+
+<ParamField body="file_type" type="string" required>
+  {" "}
+    - Type of file i.e., `pdf` or `img`
+</ParamField> 
+
+<ParamField body="languages" type="string" required>
+  {" "}
+    -  Comma-separated list of language codes
+    -  Refer to section [Language Codes](/usage-guides/ocr#supported-languages) for valid language code.
+</ParamField> 
+
+<ParamField body="ocr_type" type="string" required>
+  {" "}
+    -  Type of OCR processing
+    -  Refer to section [OCR Codes](/usage-guides/ocr#processing-modes) for valid processing code.
+</ParamField> 
+
+### Response
+
+<ParamField body="filename" type="string">
+  {" "}
+    -  This field contains the name of the file that was uploaded for processing.
+</ParamField> 
+
+<ParamField body="languages" type="string">
+  {" "}
+    -  This field contains an array of language codes that were detected or specified for OCR (Optical Character Recognition) processing.
+</ParamField> 
+
+<ParamField body="text" type="string">
+  {" "}
+    -  This is the text extracted from the image/pdf during the OCR process. The OCR technology recognizes the text in the image and converts it into machine-readable format. 
+</ParamField> 
+
+<ParamField body="processing_time_sec" type="string">
+  {" "}
+    -  This field represents the time (in seconds) it took for the OCR API to process the file and extract the text. 
+</ParamField> 
+
+### Handling Errors
+
+The OCR API can raise exceptions for various reasons, such as failed OCR processing, invalid parameters, authentication errors, and network unavailability. The API provides detailed, machine-readable error responses to help users diagnose issues and respond more effectively. 
+
+Refer to: [API Messages](/usage-guides/ocr#api-messages) section to know the error code and corresponding messages.

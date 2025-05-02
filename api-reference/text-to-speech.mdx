@@ -1,8 +1,148 @@
 ---
-title: Text To Speech
-description: Description for text-to-speech
+title: "Text-to-Speech API"
+description: "Reverie's TTS (Text-to-Speech) is a solution that turns text into lifelike speech, allowing you to create applications that talk in multiple Indic languages and build comprehensive speech-enabled products. "
+playground: "none"
 ---
 
-# Text To Speech
+# How Does API Work?
 
-Write your content here...
+The process to generate an audio file for the text input is:
+
+- Post the request by:
+  - Enter the valid `REV-APPNAME`, `REV-APP-ID`, and `REV-API-KEY`.
+  - Enter the text for which you want to obtain the speech.
+  - Select the output voice type (either male voice or the female voice) of the audio file.
+  - Define the SSML Code, if required.
+- By default, the API will return the WAV audio file with a sampling rate of 22.05KHz.
+
+## cURL for Integration
+### Request : Synthesizing Audio for Single Sentence
+```bash 
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'REV-APPNAME: tts' \
+--header 'speaker: hi_female' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"text": "किसान होंगे आत्मनिर्भर, समृद्ध भारत"
+}'
+```
+### Request : Synthesizing Audio for Multiple Sentences
+
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'REV-APPNAME: tts' \
+--header 'speaker: hi_female' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"text": ["भारत मेरा देश है।" , "मेरी कंपनी का नाम रेवेरी लैंग्वेज टेक्नोलॉजीज है।" ], 
+	"speed": 1,
+	"pitch": 0,
+	"format": "WAV"
+
+}'
+```
+### Request : Synthesizing Audio for Multiple Sentences
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'REV-APPNAME: tts' \
+--header 'speaker: hi_female' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"ssml": "<speak> <voice name=\"en_female\">Hello.</voice> </speak>", 
+	"speed": 1,
+	"pitch": 0,
+	"format": "WAV"
+}'
+```
+
+### Error Response 
+```json
+{
+    "success": false,
+    "cause": "no `spkr` given"
+}
+```
+## API References
+### HTTP Request URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | https://revapi.reverieinc.com/ |
+
+#### Headers
+<ParamField header="Content-Type" type="string" required>
+  {" "}
+  `application/JSON`
+</ParamField> 
+
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  A unique key/token provided by Reverie to identify the user using the TTS API.
+</ParamField> 
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  The unique account ID to identify the user and the default account settings.
+</ParamField>
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  The parameter to identify the API. The value is `tts`
+
+</ParamField>
+<ParamField header="speaker" type="string" required>
+  {" "}  
+- The desired language and voice code for synthesizing the audio file  <br />
+- Example: `hi_male` <br />
+- Specify the speaker’s code with respect to the language. Refer to [Supporting Speaker](/usage-guides/text-to-speech#speakers) Code section for valid speaker code.
+</ParamField>  
+
+#### Request
+<ParamField header="text or ssml" type="string/array" required>
+  {" "}
+  - The plain text or SSML input to synthesize an audio output.
+  - If you want to follow W3 standards, the ssml field must be used and not the text field.
+  - For SSML input Refer to the [SSML Tags](/usage-guides/text-to-speech#core-ssml-tags)
+</ParamField> 
+
+<ParamField header="speed" type="float">
+  {" "}
+  - The speech rate of the audio file. Allows values: from 0.5 (slowest speed rate) up to 1.5 (fastest speed rate). 
+  - Note: By default, speed = 1 (normal speed).
+</ParamField> 
+
+<ParamField header="pitch" type="float " >
+  {" "}
+  - Speaking pitch, in the range Allows values: from -3 up tp 3. 3 indicates an increase of 3 semitones from the original pitch. -3 indicates a decrease of 3 semitones from the original pitch. 
+  - Note: By default, the pitch = 0 (zero)
+</ParamField>
+
+<ParamField header="sample_rate" type="integer">
+  {" "}
+  - The sampling rate (in hertz) to synthesize the audio output. Refer to [Supporting Sampling Rate](usage-guides/text-to-speech#supported-sampling-rate) section, to know the supporting audio sample rates.
+  - Note: By default, the sample_rate = 22050 Hz (22.05kHz)
+</ParamField>
+
+<ParamField header="format" type="string">
+  {" "}
+  
+- The speech audio format to generate the audio file. Refer to [Supporting Audio Format](/usage-guides/text-to-speech#supported-audio-formats) section, to know the supporting audio formats.   <br />
+- Note: By default, the format = WAV
+</ParamField> 
+
+#### Handling Error
+
+The TTS API raises exceptions for many reasons, such as failed conversions, invalid parameters, authentication errors, and network unavailability. It will provide more specific machine-readable messages with an error response so that users can react to errors more effectively. 
+
+Refer to [API Codes](/usage-guides/text-to-speech#api-messages) 
+to view the list of error messages and its description.
+
+```json 
+{
+    "success": false,
+    "cause": "no `text` given"
+}
+```

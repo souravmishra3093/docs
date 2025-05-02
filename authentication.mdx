@@ -3,62 +3,150 @@ title: "Get your API credentials"
 description: ""
 ---
 
-All API endpoints are authenticated using API Key and APP Id provided by Reverie Language Technologies when you sign up. Include these keys in the header of each API request as follows:
+To start integrating Reverie’s APIs into your application, you'll need two credentials:
 
-```yaml
-REV-API-KEY: <YOUR-API-KEY>
-REV-APP-ID: <YOUR-APP-ID>
-```
+- **REV-API-KEY**: Your unique API key for authentication
+- **REV-APP-ID**: Identifies your registered application
 
-### Obtaining Your API Credentials
+These are required in the header of every request made to our APIs.
 
-1. **Sign Up** : Visit [RevUp](https://revup.reverieinc.com) and sign up for an account.
+### Steps to Generate Your API Key
 
-2. **Automatic API Key Generation** : Once you sign up, your first API key is automatically created.
+1. **Sign Up** : Visit [RevUp Developer Portal](https://revup.reverieinc.com) and create a free developer account.
+
+2. **Automatic API Key Generation** : As soon as you register, your **first API Key** and **App ID** are automatically created — no extra steps required.
 
 3. **Access Credentials** : Your APP ID and API Key will be visible in the dashboard for use in your integrations.
 
 <img src="/images/revDash.svg" alt="Reverie Dashboard" width="50%" />
 
-### Using the API Credentials
+### How to Use the Credentials
+To authenticate your requests, include the REV-APP-ID & REV-API-KEY in the headers of your HTTP requests.
 
-To authenticate your requests, include the `REV-APP-ID` & `REV-API-KEY` in the headers of your HTTP requests. Here’s an example using JavaScript:
-
-```javascript
-const headers = {
-  'Content-Type': 'application/json',
-  'REV-API-KEY': <YOUR API-KEY>,
-  'REV-APP-ID': <YOUR APP-ID>,
-  'src_lang': 'en',
-  'tgt_lang': 'hi',
-  'domain': 'generic',
-  'cnt_lang': 'en',
-  'REV-APPNAME': 'transliteration',
-  'REV-APPVERSION': '2.0'
-};
-
-const body = JSON.stringify({
-  data: [
-    "Reverie Language Technologies ltd website address is www.reverieinc.com"
-  ],
-  isBulk: false,
-  ignoreTaggedEntities: false
-});
-
-fetch('https://revapi.reverieinc.com/', {
-  method: 'POST',
-  headers: headers,
-  body: body
-})
-  .then(response => response.json())
-  .then(data => {
-    console.log('Response:', data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-
+```yml
+REV-API-KEY: <YOUR-API-KEY>
+REV-APP-ID: <YOUR-APP-ID>
 ```
+
+### Test your first API call
+Here are the cURL requests of all the APIs.
+
+<CodeGroup>
+```bash Localization
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: localization' \
+--header 'REV-APPVERSION: 3.0' \
+--data '{
+    "data": [
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bengaluru."
+    ],
+   "nmtMask": true,
+    "nmtMaskTerms": {
+        "Reverie Language Technologies":"Reverie Language Technologies"
+    },
+    "enableNmt": true,
+    "enableLookup": true
+}'
+```
+```bash Transliteration
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'cnt_lang: en' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Reverie Language Technologies ltd website address is www.reverieinc.com"],
+"isBulk" :false,
+"ignoreTaggedEntities" : false
+}'
+```
+```bash Text-to-Speech
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'REV-APPNAME: tts' \
+--header 'speaker: hi_female' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"text": "किसान होंगे आत्मनिर्भर, समृद्ध भारत"
+}'
+```
+```bash Speech-to-Text (Batch)
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--header 'subtitles: true' \
+--form 'file=@"<File Path>"'
+```
+```bash OCR
+curl -X POST https://revapi.reverieinc.com/process_doc \
+  --header 'REV-API-KEY: YOUR-API-KEY' \
+  --header 'REV-APP-ID: YOUR-APPID' \
+  --header 'REV-APPNAME: ocr' \
+  -F "file=@document.pdf" \
+  -F "file_type=pdf" \
+  -F "languages=en,hi" \
+  -F "ocr_type=layout_ocr"
+```
+```bash Document Localization
+curl --location 'https://revapi.reverieinc.com/translate_doc_import' \
+  --header 'REV-APP-ID: YOUR_APP_ID' \
+  --header 'REV-APPNAME: nmt' \
+  --header 'REV-API-KEY: YOUR_API_KEY' \
+  --form sourceLanguage="english" \
+  --form targetLanguage="hindi" \
+  --form projectFiles=@"/path/to/your/file/Movie.txt"
+```
+```bash NLP
+curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=false&summary=false&sentiment=true&detect_entities=true&content_safety=true&pii_redaction=true' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR_REV_API_KEY>' \
+--header 'REV-APP-ID: <YOUR_REV_APP_ID>' \
+--header 'REV-APPNAME: text-analysis' \
+--data-raw '{
+  "text": "Today is a special day. I sent you an email earlier and shared my website link. Please use #ForBetterReach and feel free to contact me around 10 AM.",
+  "language": "en",
+  "translation": {
+    "target_language": "en",
+    "translation_domain": "generic"
+  },
+  "pii_redaction": {
+    "redact_pii_sub": "entity_name",
+    "redact_pii_types": []
+  },
+  "summary": {
+    "summary_model": "gemma2:2b",
+    "summary_type": "headline"
+  },
+  "entity_recognition": {
+    "entity_types": []
+  },
+  "sentiment": {
+    "level": "whole"
+  },
+  "content_moderation": {
+    "moderation_types": [
+      "hate_speech",
+      "profanity"
+    ]
+  }
+}'
+```
+</CodeGroup>
 
 ### Best Practices for API Key Management
 

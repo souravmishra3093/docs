@@ -1,0 +1,342 @@
+---
+title: "Localization API"
+api: "POST https://revapi.reverieinc.com/"
+description: "Localization is a REST API that quickly translates English content into Indic languages, supporting single or multiple sentences."
+---
+
+ <RequestExample>
+ ```bash cURL
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: localization' \
+--header 'REV-APPVERSION: 3.0' \
+--data '{
+    "data": [
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bengaluru."
+    ],
+   "nmtMask": true,
+    "nmtMaskTerms": {
+        "Reverie Language Technologies":"Reverie Language Technologies"
+    },
+    "enableNmt": true,
+    "enableLookup": true
+}'
+
+ ```
+ ```python Python
+from reverie_sdk import ReverieClient
+
+client = ReverieClient(
+    api_key="MY_API_KEY",
+    app_id="MY_APP_ID",
+)
+
+
+resp = client.nmt.localization(
+    data=[
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bangalore.",
+    ],
+    domain=1,
+    src_lang="en",
+    tgt_lang=["hi"],
+    nmtMask=True,
+    nmtMaskTerms=["Reverie Language Technologies"],
+    nmtParam=True,
+    dbLookupParam=True,
+    segmentationParam=False,
+)
+
+print(resp)
+
+
+ ```
+ ```javascript JavaScript
+const ReverieClient = require("reverie-client");
+
+const reverieClient = new ReverieClient({
+  apiKey: "YOUR-API-KEY",
+  appId: "YOUR-APP-ID",
+});
+
+async function translateText() {
+  const translation = await reverieClient.translate({
+    text: "Hey there, how are you doing?",
+    src_lang: "en",
+    tgt_lang: "or",
+  });
+  console.log(translation);
+}
+
+translateText();
+
+ ```
+ ```go Go
+ package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+)
+
+const (
+	apiURL = "https://revapi.reverieinc.com/"
+	apiKey     = "<YOUR API KEY>"
+	appID      = "<YOUR APP ID>"
+)
+
+type RequestBody struct {
+	Data                 []string `json:"data"`
+	IsBulk               bool     `json:"isBulk"`
+	IgnoreTaggedEntities bool     `json:"ignoreTaggedEntities"`
+}
+
+type APIResponse struct {
+	ResponseList []struct {
+		APIStatus int    `json:"apiStatus"`
+		InString  string `json:"inString"`
+		OutString string `json:"outString"` // Change []string to string
+	} `json:"responseList"`
+	TokenConsumed int `json:"tokenConsumed"`
+}
+
+
+func main() {
+	text := "Reverie Language Technologies ltd is a great place to work."
+
+	// Constructing JSON Request Body
+	requestBody := map[string]interface{}{
+		"data":                 []string{text},
+		"isBulk":               false,
+		"ignoreTaggedEntities": false,
+	}
+
+	jsonData, err := json.Marshal(requestBody)
+	if err != nil {
+		log.Fatalf("Error marshaling JSON: %v", err)
+	}
+
+	// Creating HTTP Request
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Fatalf("Error creating request: %v", err)
+	}
+
+	// Setting Request Headers
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("REV-API-KEY", apiKey)
+	req.Header.Set("REV-APP-ID", appID)
+	req.Header.Set("src_lang", "en")
+	req.Header.Set("tgt_lang", "hi")
+	req.Header.Set("domain", "1")
+	req.Header.Set("cnt_lang", "en")
+	req.Header.Set("REV-APPNAME", "localization")
+
+	// Making HTTP Request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatalf("Error making request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	// Handle non-200 response codes
+	if resp.StatusCode != http.StatusOK {
+		log.Fatalf("Unexpected API response status: %d", resp.StatusCode)
+	}
+
+	// Read Response Body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Error reading response body: %v", err)
+	}
+
+	// Unmarshalling JSON Response
+	var apiResponse APIResponse
+	err = json.Unmarshal(body, &apiResponse)
+	if err != nil {
+		log.Fatalf("Error unmarshaling response: %v", err)
+	}
+
+	// Check if response contains valid translation
+	if len(apiResponse.ResponseList) > 0 {
+		response := apiResponse.ResponseList[0]
+		if len(response.OutString) > 0 {
+			fmt.Println("Translated Text:", response.OutString)
+		} else {
+			fmt.Println("No translated text received.")
+		}
+
+		// Handling API Status
+		if response.APIStatus != 3 { // Example: 3 might indicate partial success
+			fmt.Printf("Warning: API returned status %d\n", response.APIStatus)
+		}
+	} else {
+		fmt.Println("No response from API")
+	}
+}
+
+```
+ </RequestExample>
+
+ ### Headers
+<ParamField header="Content-Type" type="string" initialValue="application/json" required>
+  {" "}
+  The format of the data to be posted: "application/json"
+</ParamField> 
+
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  A unique key/token provided by Reverie to identify the user using the Localization API.
+</ParamField> 
+
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  The unique account ID to identify the user and the default account settings.
+</ParamField> 
+
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  The parameter to identify the API : "localization"
+</ParamField> 
+
+<ParamField header="REV-APPVERSION" type="string" required>
+  {" "}
+  The version refers to the specific iteration of the API that is being called. : "2.0/3.0"
+  Note: The default version is "2.0".
+</ParamField> 
+
+<ParamField header="src_lang" type="string" required>
+  {" "}
+   The language of the input text 
+   Codes: hi, en, as, bn, gu, kn, kok, ml, mr, mai, or, pa, ta, te, ne, ur
+</ParamField> 
+
+<ParamField header="tgt_lang" type="string" required>
+  {" "}
+   Language to which you want to localize the input text 
+   Codes: hi, en, as, bn, gu, kn, kok, ml, mr, mai, or, pa, ta, te, ne, ur
+</ParamField> 
+
+<ParamField header="domain" type="string" required>
+  {" "}
+  Domain for APPVERSION 2.0: 0, 1, 2, 3, 4, 5, 6, 7, 8
+  Domain for APPVERSION 3.0: generic, government, travel, ecommerce, infotainment, bfsi, food, education, medical
+ 
+</ParamField> 
+
+### Body
+<ParamField body="data" type="string[]" required>
+  {" "}
+  List of input text for localization.
+</ParamField> 
+
+<ParamField body="enableNmt" type="boolean">
+  {" "}
+  Specify whether the content localization process should use NMT technology or not. 
+  - For Example, When the enableNmt value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then the NMT is used for translation.
+  - **Note** - By default, the `enableNmt`= `true`
+</ParamField> 
+
+<ParamField body="enableTransliteration" type="boolean">
+  {" "}
+  Specify whether the content localization process should use transliteration technology or not. 
+  - For Example, When the enableTransliteration value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then nmt is used for translation. If nmt fails, transliteration is called.
+  - **Note** - By default, the `enableTransliteration`= `true`
+</ParamField> 
+
+<ParamField body="enableLookup" type="boolean">
+  {" "}
+  The parameter will specify whether the application should refer to the Lookup DB or not.  
+  - For Example, when the enableLookup is true, the system will initially refer to the Database to fetch contents.
+  - **Note** - By default, the `enableLookup`= `true`
+</ParamField> 
+
+<ParamField body="nmtMask" type="boolean">
+  {" "}
+  The feature to screen the non-dictionary words used in a sentence. In other words, the mask will indicate the words that should not be translated into the target language.
+  - **Note** - By default, the `enableLookup`= `true`
+  - **Note** - To set the `nmtMask` = `true`, it is mandatory the `src_lang` = `en` (English).
+</ParamField> 
+
+<ParamField body="nmtMaskTerms" type="array[]">
+  Determines the words that are to be masked.
+  - **Note** - On defining values in the `nmtMaskTerms`, then automatically the `nmtMask` is set to true.
+  - **Example** - Masking a term:  
+    `nmtMaskTerms: ["Reverie Language Technologies"]`  
+    Here, the API will mask the term `Reverie Language Technologies`, if found in the source content, and will transliterate the word.
+</ParamField>
+
+<ParamField body="filterProfane" type="boolean">
+  {" "}
+  Specify whether you want to filter out profane content from the input.
+  - **Note** - By default, the `filterProfane`= `true`
+</ParamField> 
+
+<ResponseExample>
+ ```bash 200
+ {
+    "responseList": [
+        {
+            "inString": "Reverie Language Technologies was established in 2009.",
+            "outString": "Reverie Language Technologies की स्थापना 2009 में की गई थी।",
+            "apiStatus": 3
+        },
+        {
+            "inString": "The company head office is located in Bengaluru.",
+            "outString": "कंपनी का मुख्यालय बेंगलुरु में स्थित है।",
+            "apiStatus": 3
+        }
+    ],
+    "tokenConsumed": 102
+}
+
+ ```
+ ```bash 400
+ {
+ 	"message" : "Message depending on the missing parameter"
+ }
+ ```
+  ```bash 403
+ {
+ 	"message" : "Invalid REV-API-KEY or REV-APP-ID"
+ }
+ ```
+```bash 403
+ {
+ 	"message" : "usage exhausted"
+ }
+ ```
+ ```bash 403
+ {
+ 	"message" : "API key expired"
+ }
+ ```
+ ```bash 403
+ {
+ 	"message" : "unauthorized to use this src/tgt language"
+ }
+ ```
+ ```bash 403
+ {
+ 	"message" : "unauthorized to use this API"
+ }
+ ```
+  ```bash 500
+ {
+ 	"message" : "Internal Server Error"
+ }
+ ```
+ 
+ 
+ </ResponseExample>

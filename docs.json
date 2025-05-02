@@ -14,8 +14,10 @@
         "group": "Getting Started",
         "pages": [
           "introduction",
-          "authentication",          
+          "authentication",  
+          "analytics",        
           "contact-us"
+          
         ]
       },
       {
@@ -25,7 +27,10 @@
           "usage-guides/speech-to-text-batch",
           "usage-guides/text-to-speech",
           "usage-guides/localization",
-          "usage-guides/transliteration"
+          "usage-guides/transliteration",
+          "usage-guides/ocr",
+          "usage-guides/document-localization",
+           "usage-guides/text-analysis"
         ]
       },
       {
@@ -35,14 +40,10 @@
           "api-reference/speech-to-text-batch",
           "api-reference/text-to-speech",
           "api-reference/localization",
-          "api-reference/transliteration"
-        ]
-      },
-      {
-        "group": "Integrations",
-        "pages": [
-          "integrations/zapier",
-          "integrations/klamp"
+          "api-reference/transliteration",
+           "api-reference/ocr",
+           "api-reference/document-localization",
+           "api-reference/text-analysis"
         ]
       },
       {
@@ -72,13 +73,11 @@
       {
         "group": "Endpoint",
         "pages": [
-          "endpoints/speech-to-text-streaming",
-          "endpoints/speech-to-text-batch",
-          "endpoints/text-to-speech",
-          "endpoints/localization",
-          "endpoints/transliteration",
-          "endpoints/localpost",
-           "endpoints/transpost"
+           "endpoints/transliteration",
+           "endpoints/localization",
+           "endpoints/text-to-speech",
+            "endpoints/ocr",
+            "endpoints/text-analysis"
         ]
       }
     ],

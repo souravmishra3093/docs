@@ -1,0 +1,393 @@
+---
+title: "Localization"
+description: "Localization is a REST API that quickly translates English content into Indic languages, supporting single or multiple sentences."
+---
+
+### Getting Started
+
+In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
+
+<Note>
+  Before you start, you'll need to follow the steps in the [Get your API
+  Credentials](/authentication) to obtain your API KEY & APP ID.
+</Note>
+
+### Make your First Call!
+
+Make your first API Call using the cURL request. Add your own API Credentials where it says `<YOUR-APP-ID>` & `<YOUR-API-KEY>`
+and then run the following example in a terminal or your favorite API client.
+
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: localization' \
+--header 'REV-APPVERSION: 3.0' \
+--data '{
+    "data": [
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bengaluru."
+    ]
+}'
+```
+
+By default, The API will return the strings in the target language.
+
+### SDKs
+
+Reverie has several SDKs that can make it easier to use the API.
+Follow these steps to use the SDK of your choice to make a Reverie Localization request.
+
+### Install Dependencies
+
+<CodeGroup>
+
+```bash JavaScript
+npm i @reverieit/reverie-client
+```
+
+```bash Python
+pip install reverie-sdk
+```
+
+</CodeGroup>
+
+### Translate Text to your preferred language
+
+The following code shows how to convert the text to your preferred language.
+
+<CodeGroup>
+```javascript JavaScript
+const ReverieClient = require("reverie-client");
+
+const reverieClient = new ReverieClient({
+  apiKey: "YOUR-API-KEY",
+  appId: "YOUR-APP-ID",
+});
+
+async function translateText() {
+  const translation = await reverieClient.translate({
+    text: "Hey there, how are you doing?",
+    src_lang: "en",
+    tgt_lang: "or",
+  });
+  console.log(translation);
+}
+
+translateText();
+```
+```python Python
+from reverie_sdk import ReverieClient
+
+client = ReverieClient(
+    api_key="MY_API_KEY",
+    app_id="MY_APP_ID",
+)
+
+
+resp = client.nmt.localization(
+    data=[
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bangalore.",
+    ],
+    domain=1,
+    src_lang="en",
+    tgt_lang=["hi"],
+    nmtMask=True,
+    nmtMaskTerms=["Reverie Language Technologies"],
+    nmtParam=True,
+    dbLookupParam=True,
+    segmentationParam=False,
+)
+
+print(resp)
+```
+```go Go
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+)
+
+const (
+	apiURL = "https://revapi.reverieinc.com/"
+	apiKey     = "<YOUR API KEY>"
+	appID      = "<YOUR APP ID>"
+)
+
+type RequestBody struct {
+	Data                 []string `json:"data"`
+	IsBulk               bool     `json:"isBulk"`
+	IgnoreTaggedEntities bool     `json:"ignoreTaggedEntities"`
+}
+
+type APIResponse struct {
+	ResponseList []struct {
+		APIStatus int    `json:"apiStatus"`
+		InString  string `json:"inString"`
+		OutString string `json:"outString"` // Change []string to string
+	} `json:"responseList"`
+	TokenConsumed int `json:"tokenConsumed"`
+}
+
+
+func main() {
+	text := "Reverie Language Technologies ltd is a great place to work."
+
+	// Constructing JSON Request Body
+	requestBody := map[string]interface{}{
+		"data":                 []string{text},
+		"isBulk":               false,
+		"ignoreTaggedEntities": false,
+	}
+
+	jsonData, err := json.Marshal(requestBody)
+	if err != nil {
+		log.Fatalf("Error marshaling JSON: %v", err)
+	}
+
+	// Creating HTTP Request
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Fatalf("Error creating request: %v", err)
+	}
+
+	// Setting Request Headers
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("REV-API-KEY", apiKey)
+	req.Header.Set("REV-APP-ID", appID)
+	req.Header.Set("src_lang", "en")
+	req.Header.Set("tgt_lang", "hi")
+	req.Header.Set("domain", "1")
+	req.Header.Set("cnt_lang", "en")
+	req.Header.Set("REV-APPNAME", "localization")
+
+	// Making HTTP Request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatalf("Error making request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	// Handle non-200 response codes
+	if resp.StatusCode != http.StatusOK {
+		log.Fatalf("Unexpected API response status: %d", resp.StatusCode)
+	}
+
+	// Read Response Body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Error reading response body: %v", err)
+	}
+
+	// Unmarshalling JSON Response
+	var apiResponse APIResponse
+	err = json.Unmarshal(body, &apiResponse)
+	if err != nil {
+		log.Fatalf("Error unmarshaling response: %v", err)
+	}
+
+	// Check if response contains valid translation
+	if len(apiResponse.ResponseList) > 0 {
+		response := apiResponse.ResponseList[0]
+		if len(response.OutString) > 0 {
+			fmt.Println("Translated Text:", response.OutString)
+		} else {
+			fmt.Println("No translated text received.")
+		}
+
+		// Handling API Status
+		if response.APIStatus != 3 { // Example: 3 might indicate partial success
+			fmt.Printf("Warning: API returned status %d\n", response.APIStatus)
+		}
+	} else {
+		fmt.Println("No response from API")
+	}
+}
+```
+</CodeGroup>
+
+### Results
+
+In order to see the results from Reverie, you must run the application. Run your application from the terminal. Your transcripts will appear in your shell.
+
+<CodeGroup>
+
+```bash JavaScript
+# Run your application using the file you created in the previous step
+# Example:
+npm start
+```
+
+```python Python
+# Run your application using the file you created in the previous step
+# Example:
+python main.py
+```
+
+```go GoLang
+// Run your application using the file you created in the previous step
+// Example:
+go run main.go
+```
+</CodeGroup>
+
+### Analyzing the Response
+
+The API returns a `responseList`, which is an array containing the localized content. Each item includes the `inString`, representing the original input text in the source language, and the corresponding `outString`, which contains the translated text in the requested target language.
+
+### Key Features
+<CardGroup cols={2}>
+  <Card title="Rapid Content Localization" icon="bolt">
+    The Localization API quickly adapts English content into Indic languages, 
+    localizing single or multiple sentences in a fraction of the time for a seamless user experience.
+  </Card>
+  <Card title="Context-Aware Localization" icon="brain">
+    Our API analyzes the domain and context of the content, ensuring accurate localization 
+    by adapting terms like "book" to suit the industry or intent (e.g., booking tickets vs. reading books).
+  </Card>
+  <Card title="Cultural Nuance Adaptation" icon="globe">
+    Go beyond translation by capturing cultural references, simplifying text, 
+    and adjusting for local conventions like measurement systems to resonate with the target audience.
+  </Card>
+  <Card title="Wide Language Support" icon="language">
+    Localize content into 16 Indic languages, including Hindi, Bengali, Tamil, Telugu, Marathi, 
+    and more, ensuring broad accessibility across diverse regions.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="High-Quality Localization" icon="waveform">
+    Deliver clear, natural, and culturally relevant translations that align with user expectations, 
+    enhancing comprehension and engagement.
+  </Card>
+  <Card title="Custom Localization Solutions" icon="star">
+    Collaborate with us to tailor localization for your brand, ensuring the tone, style, 
+    and terminology align with your specific needs and audience.
+  </Card>
+</CardGroup>
+
+### Supported Languages
+| Language   | Language Code |
+|------------|---------------|
+| Hindi      | hi            |
+| English    | en            |
+| Assamese   | as            |
+| Bengali    | bn            |
+| Gujarati   | gu            |
+| Kannada    | kn            |
+| Konkani    | kok           |
+| Malayalam  | ml            |
+| Marathi    | mr            |
+| Maithili   | mai           |
+| Odia       | or            |
+| Punjabi    | pa            |
+| Tamil      | ta            |
+| Telugu     | te            |
+| Nepali     | ne            |
+| Urdu       | ur            |
+
+### Supported Domains
+| Domain ID (For v3.0) | Domain ID (For v2.0) | Description                                                                 |
+|----------------------|----------------------|-----------------------------------------------------------------------------|
+| generic              | 0                    | Default domain; localizes content regardless of specific domain.             |
+| government           | 1                    | Trained for accurate localization of government terminologies.               |
+| travel               | 2                    | Localizes travel industry terminologies accurately.                          |
+| ecommerce            | 3                    | Localizes content for the ecommerce domain.                                  |
+| infotainment         | 4                    | Translates content for the media and entertainment domain.                   |
+| bfsi                 | 5                    | Accurately translates banking, financial services, and insurance content.    |
+| food                 | 6                    | Translates grocery industry terminologies into target languages.             |
+| education            | 7                    | Translates content from academic books.                                      |
+| medical              | 8                    | Serves the healthcare industry with accurate translations.                   |
+
+### Sample Code
+
+<CardGroup cols={2}>
+  <a
+    href="https://github.com/reverieinc/python-sdk/tree/main/translation"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Card title="Python" icon="python">
+      Access Python SDK samples for seamless content localization using Reverie’s Localization API. Perfect for server-side translation tasks.
+    </Card>
+  </a>
+
+  <a
+    href="https://github.com/reverieinc/javascript-sdk/tree/main/translation"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Card title="JavaScript" icon="js">
+      Explore JavaScript SDK examples to integrate real-time localization into web applications and browser-based experiences.
+    </Card>
+  </a>
+
+  <a
+    href="https://github.com/reverieinc/golang-sdk/tree/main/translation"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Card title="GoLang" icon="golang">
+      Find GoLang SDK samples for fast, scalable localization solutions in backend systems and APIs.
+    </Card>
+  </a>
+</CardGroup>
+
+### FAQs
+
+<AccordionGroup>
+  <Accordion title="What languages are supported by the Localization API?" icon="language">
+    The Localization API supports **16 Indic languages**, including Hindi, Bengali, Tamil, Telugu, Marathi, and more, ensuring broad regional coverage.
+  </Accordion>
+
+  <Accordion title="Can I customize translations for specific domains?" icon="code">
+    **Yes**, the API supports domain-specific localization (e.g., government, travel, ecommerce) to accurately adapt content based on context and industry.
+  </Accordion>
+
+  <Accordion title="Does the API handle cultural nuances?" icon="globe">
+    Absolutely. The API goes beyond translation, adapting content for **cultural references**, local conventions, and simplicity to resonate with target audiences.
+  </Accordion>
+
+  <Accordion title="Can I create custom localization for my brand?" icon="star">
+    Yes, Reverie offers **custom localization solutions**, allowing you to tailor tone, style, and terminology to align with your brand’s identity.
+  </Accordion>
+
+  <Accordion title="How fast is the localization process?" icon="bolt">
+    The Localization API provides **rapid localization**, translating single or multiple sentences in a fraction of the time for seamless integration.
+  </Accordion>
+</AccordionGroup>
+
+### API Messages
+| Status Code | Status Type | Status                              | Description                                                                 |
+|-------------|-------------|-------------------------------------|-----------------------------------------------------------------------------|
+| 2           | Success     | LOOKUP_MODERATED                    | API fetched localization content from the database.                         |
+| 3           | Success     | MT_SUCCESS                          | Source content translated using Neural Machine Translation (NMT).           |
+| 4           | Success     | LOOKUP_UNMODERATED                  | Localized content in database, but verification status is "unmoderated."    |
+| 5           | Success     | LOOKUP_INPROGRESS                   | Localized content in database; content moderation in progress.              |
+| 6           | Success     | LOOKUP_PARTIAL                      | API partially localized a segment from LookUp DB.                           |
+| 10          | Success     | T13N_SUCCESS                        | API fetched content from transliteration.                                   |
+| -2          | Error       | UNLOCALIZED                         | Requested content is transliterated, not translated.                        |
+| -3          | Error       | ROSETTA_ERROR                       | Error occurred while preprocessing the sentence.                            |
+| -4          | Error       | MT_ERROR                            | Error occurred during NMT translation.                                      |
+| -5          | Error       | MT_TIME_OUT                         | Timeout error while fetching response from NMT Engine.                      |
+| -6          | Error       | LOCMAN_ERROR                        | Error occurred while processing content in LocMan.                          |
+| -7          | Error       | SEGMENTATION_API_ERROR              | Error while segmenting the sentence.                                        |
+| 403         | Error       | unauthorized to use this src/tgt language | Invalid or unauthorized language code provided.                        |
+| 403         | Error       | Invalid REV-API-KEY or REV-APP-ID   | Invalid credentials provided.                                               |
+| 403         | Error       | usage exhausted                     | Provided credit limit is exhausted.                                         |
+| 403         | Error       | API key expired                     | API key provided has expired.                                               |
+| 403         | Error       | unauthorized to use this API        | User is not authorized to use the Localization API.                         |
+| 403         | Error       | Please provide data string          | Data is missing.                                                            |
+| 403         | Error       | Target language is mandatory        | Target language (tgt_lang) is missing.                                      |
+| 403         | Error       | Source language is mandatory        | Source language (src_lang) is missing.                                      |

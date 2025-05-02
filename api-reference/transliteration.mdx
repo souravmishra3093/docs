@@ -1,8 +1,279 @@
 ---
-title: Transliteration
-description: Description for transliteration
+title: "Transliteration API"
+description: "The Transliteration API is a REST API used to transliterate the content from English to Indic languages and vice-versa. 
+The solution is an automated solution that converts the content in real-time. It is easy to integrate into your applications and display content in the 11 most popular Indian languages"
+
 ---
 
-# Transliteration
+# How Does API Work?
 
-Write your content here...
+The Transliteration API will use the App Id and API key to authenticate requests. Your credentials carry many privileges, so be sure to keep them secure. 
+
+- **Pass valid login credentials**:
+  - Rev App ID
+  - App Key
+
+- Select Source language & Target language
+
+- Post Source Content
+
+- Validate user credentials & load default account settings
+
+- Return content in Target language
+
+
+## cURL for Integration
+### Translate content to one target language
+#### Request
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'cnt_lang: en' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Reverie Language Technologies ltd website address is www.reverieinc.com"],
+"isBulk" :false,
+"ignoreTaggedEntities" : false
+}'
+```
+#### Response
+```json
+{
+	"responseList": [
+    	{
+        	"inString": "Reverie Language Technologies ltd website address is www.reverieinc.com ",
+        	"outString": [
+            	"रेवरी लैंग्वेज टेक्नोलॉजीस लिमिटेड वेबसाइट एड्रेस इज़ www.reverieinc.com"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+```
+### Transliterating Multiple sentences
+#### Request
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'REV-APPNAME: transliteration' \
+--header 'domain: generic' \
+--header 'cnt_lang: en' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": [
+	"Reverie Language Technologies is located in Bengaluru ",
+	"The address is Jio Avana, Bellandur, Bengaluru -560102",
+	"The website address is www.reverieinc.com."
+  ],
+  "isBulk": false,
+  "ignoreTaggedEntities": false
+}'
+```
+#### Response
+```json
+{
+	"responseList": [
+    	{
+        	"inString": "Reverie Language Technologies is located in Bengaluru ",
+        	"outString": [
+            	"रेवरी लैंग्वेज टेक्नोलॉजीस इज़ लोकेटेड इन बेंगलुरु "
+        	],
+        	"status": 2
+    	},
+    	{
+        	"inString": "The address is Jio Avana, Bellandur, Bengaluru -560102",
+        	"outString": [
+            	"द एड्रेस इज़ जियो अवाना, बेल्लन्दूर, बेंगलूरु -560102"
+        	],
+        	"status": 2
+    	},
+    	{
+        	"inString": "The website address is www.reverieinc.com",
+        	"outString": [
+            	"द वेबसाइट ऍड्रेस इज़ www.reverieinc.com"
+        	],
+        	"status": 2
+    	}
+	]
+}
+```
+## API References
+### HTTP Request URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | https://revapi.reverieinc.com/ |
+
+
+### Headers
+<ParamField header="Content-Type" type="string" required>
+  {" "}
+  The format of the data to be posted: `application/json`
+</ParamField> 
+
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  A unique key/token provided by Reverie to identify the user using the Localization API.
+</ParamField> 
+
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  The unique account ID to identify the user and the default account settings.
+</ParamField> 
+
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  The parameter to identify the API : `transliteration`
+</ParamField> 
+
+<ParamField header="REV-APPVERSION" type="string" required>
+  {" "}
+  - The version refers to the specific iteration of the API that is being called.
+  - Note: The default version is **2.0**.
+</ParamField> 
+
+<ParamField header="src_lang" type="string" required>
+  {" "}
+  - The script used in the input text.
+  - Example : `or`, `hi`, `bn`
+  - Refer to section [Language Codes](/usage-guides/transliteration#supported-languages) for valid language code.
+</ParamField> 
+
+<ParamField header="tgt_lang" type="string" required>
+  {" "}
+  - The script to which you want to convert the input text.
+  - Example : `or`, `hi`, `bn`
+  - Refer to section [Language Codes](/usage-guides/transliteration#supported-domains) for valid language code.
+</ParamField> 
+
+<ParamField header="domain" type="string" required>
+  {" "}
+  - The Domain refers to the universe in which you use the Transliteration . Example- Health Care, Insurance, Legal, etc.
+  - Refer to section [Domain Codes](/usage-guides/transliteration#supported-domains) for valid language code.
+</ParamField> 
+
+<ParamField header="cnt_lang" type="string">
+  - The language of the words in the input text.
+  - Refer to section [Domain Codes](/usage-guides/transliteration#supported-languages) for valid language code.
+  - **Example**:  
+    `data: "Singh Sahab aap Kahan the."`  
+    In the example above, the Hindi language words are written in the English language script (Roman Script). So `cnt_lang = "hi"`.
+  - **Note**: This is an optional parameter. If no value is provided, by default the value is the same as `src_lang`.
+</ParamField>
+
+### Request
+<ParamField header="data" type="array[]" required>
+  {" "}
+  - List of input text for transliteration.
+</ParamField> 
+
+<ParamField header="isBulk" type="boolean">
+  {" "}
+  - Specify whether the API should initially search in the Exception DB to transliterate the input text.
+  - **Note** - By default, the `isBulk`= `true` and will not search in the Exception DB.
+</ParamField> 
+
+<ParamField header="noOfSuggestions" type="integer">
+  - Mention the number of transliteration suggestions the API should return for the input text.
+  - **Note** - By default, the `noOfSuggestions` = 1, means the API will return only one transliteration suggestion for the input string.
+  - **Example**: Consider `noOfSuggestions = 2`  
+    | **Source Content** | **Target Content** |
+    |--------------------|---------------------|
+    | Rama              | 1. रामा            |
+    |                    | 2. रमा            |
+</ParamField>
+
+<ParamField header="abbreviate" type="boolean">
+  {" "}
+  - The abbreviate will Validate whether any Abbreviations/ Acronyms are passed in the input text and will transliterate it accurately.
+  - **Note** -  By default, the `abbreviate` = `true`
+  - **Note** -  If the value is false, the API will consider the abbreviation as a word and transliterate it to the nearest available word.
+  - **Note** -  In the input text, pass the abbreviations in upper case.
+</ParamField> 
+
+<ParamField header="convertNumber" type="string">
+  - The feature to screen the non-dictionary words used in a sentence. In other words, the mask will indicate the words that should not be translated into the target language.
+  - **Note** - By default, the `enableLookup` = `true`.
+  - **Note** - To set the `nmtMask` = `true`, it is mandatory the `src_lang` = `en` (English).
+  - **Description**: Specify whether to convert the numbers in the input text to the target language script based on the value type.
+  - **Three types of values for this parameter:**
+    - **local**: This value can convert the input number to the target language script.  
+      **Example**:  
+      | **Source String** | **Target String** |
+      |-------------------|-------------------|
+      | 2020.04          | २०२०.०४          |
+    - **words**: This value can convert numbers into words with respect to the target language.  
+      **Example**:  
+      | **Source String** | **Target String** |
+      |-------------------|-------------------|
+      | 505              | पांच सौ पांच    |
+    - **roman**: This value can convert Roman numbers to English numbers.  
+      **Example**:  
+      - If the user types `sector V` in English, the transliteration would be `सेक्टर 5` in Hindi.  
+      - `Block II` will be transliterated as `ब्लॉक 2`.
+</ParamField>
+<ParamField header="ignoreTaggedEntities" type="boolean" >
+  - Specify whether you want to retain the entities like email ID and URL in the input script.
+  - **Note**: By default, the `ignoreTaggedEntities` = `true` and will transliterate the email ID and URL into the target language script.
+  - **Example**: Consider `ignoreTaggedEntities = false`  
+    | **Source String**                     | **Target String**                     |
+    |---------------------------------------|---------------------------------------|
+    | Check product details in www.reverieinc.com | चेक प्रोडक्ट डिटेल्स इन www.reverieinc.com |
+</ParamField>
+
+<ParamField header="convertOrdinal" type="boolean" >
+  - This is used for transliterating ordinal values to English numbers.
+  - **Note** - Default value = `False`.
+  - **Example**: If the user types `15th Main` in English, the transliteration would be `15 मेन` in Hindi.
+</ParamField>
+
+<ParamField header="abbreviationWithoutDot" type="boolean" >
+  - This is used to produce the abbreviation output without a dot.
+  - **Note** - Default value = `False`.
+  - **Example**: If a user wants an abbreviation output without a dot and is given `SMS` as an input, then the result would be `एसएमएस`.
+</ParamField>
+
+### Response
+
+<ParamField header="responseList" type="array[]">
+  - The API will return the string(s) in the target language script.
+</ParamField>
+
+
+<ParamField header="inString" type="string">
+  - The input text in the source language script.
+</ParamField>
+
+
+<ParamField header="outString" type="string">
+  - A string which is the result of converting the input text to the output script
+</ParamField>
+
+
+<ParamField header="api_status" type="integer">
+  - Status of API – successful/fail. 
+  - By default, the `api_status` = 2 for all the successful transactions.
+
+</ParamField>
+
+### Handling Errors
+
+The Transliteration API raises exceptions for many reasons, such as failed conversions, invalid parameters, authentication errors, and network unavailability. It will provide more specific machine-readable messages with an error response so that users can react to errors more effectively. 
+
+Refer to: [API Messages](/usage-guides/transliteration#api-messages) section to know the error code and corresponding messages.
+
+```json
+{
+    "documentation": "https://revup.reverieinc.com/dashboard/documentation",
+    "message": "Oops! Something wrong happened",
+    "error_cause": "Required String parameter 'target_lang' is not present",
+    "status": "BAD_REQUEST"
+}
+```

@@ -1,0 +1,310 @@
+---
+title: "OCR"
+description: "This API service provides OCR (Optical Character Recognition) capabilities for PDF documents and images, with support for multiple languages and processing
+modes."
+---
+### Getting Started
+
+In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
+
+<Note>
+  Before you start, you'll need to follow the steps in the [Get your API
+  Credentials](/authentication) to obtain your API KEY & APP ID.
+</Note>
+
+### Make your First Call!
+
+Make your first API Call using the cURL request. Add your own API Credentials where it says `<YOUR-APP-ID>` & `<YOUR-API-KEY>`
+and then run the following example in a terminal or your favorite API client.
+
+```bash
+curl -X POST https://revapi.reverieinc.com/process_doc \
+  --header 'REV-API-KEY: YOUR-API-KEY' \
+  --header 'REV-APP-ID: YOUR-APPID' \
+  --header 'REV-APPNAME: ocr' \
+  -F "file=@document.pdf" \
+  -F "file_type=pdf" \
+  -F "languages=en,hi" \
+  -F "ocr_type=layout_ocr"
+```
+
+By default, The API will return the extracted text from the source file
+
+### SDKs
+
+Reverie has several SDKs that can make it easier to use the API.
+Follow these steps to use the SDK of your choice to make a Reverie Localization request.
+
+### Install Dependencies
+
+<CodeGroup>
+
+```bash JavaScript
+npm i @reverieit/reverie-client
+```
+
+```bash Python
+pip install reverie-sdk
+```
+
+</CodeGroup>
+
+### Process the Document
+
+The following code shows how to process the document.
+
+<CodeGroup>
+```javascript JavaScript
+const ReverieClient = require("reverie-client");
+
+const reverieClient = new ReverieClient({
+  apiKey: "YOUR-API-KEY",
+  appId: "YOUR-APP-ID",
+});
+
+async function uploadOCRDocument(file) {
+  try {
+    const ocrResult = await reverieClient.uploadDocument({
+      file: file,                 
+      file_type: "img",        
+      selectedLanguages: "en",   
+      ocrType: "only_ocr",        
+    });
+    console.log("OCR Result:", ocrResult);
+  } catch (error) {
+    console.error("OCR upload failed:", error);
+  }
+}
+
+```
+```python Python
+import requests
+
+url = "https://revapi.reverieinc.com/process_doc"
+
+headers = {
+    "REV-API-KEY": "<YOUR-API-KEY",
+    "REV-APP-ID": "<YOUR-APP-ID",
+    "REV-APPNAME": "ocr",
+}
+
+file_path = "<YOUR-FILE-PATH>"
+files = {"file": open(file_path, "rb")}
+data = {
+    "file_type": "pdf",
+    "languages": "en",
+    "ocr_type": "layout_ocr",
+}
+
+response = requests.post(url, headers=headers, files=files, data=data)
+
+print(response.text)
+```
+```go Go
+package main
+
+import (
+	"bytes"
+	"fmt"
+	"io"
+	"mime/multipart"
+	"net/http"
+	"os"
+	"path/filepath"
+)
+
+func main() {
+	url := "https://revapi.reverieinc.com/process_doc"
+
+	filePath := "<YOUR-FILE-PATH>"
+	file, err := os.Open(filePath)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return
+	}
+	defer file.Close()
+
+	var requestBody bytes.Buffer
+	writer := multipart.NewWriter(&requestBody)
+
+	part, err := writer.CreateFormFile("file", filepath.Base(filePath))
+	if err != nil {
+		fmt.Println("Error creating form file:", err)
+		return
+	}
+	_, err = io.Copy(part, file)
+
+	writer.WriteField("file_type", "pdf")
+	writer.WriteField("languages", "en")
+	writer.WriteField("ocr_type", "layout_ocr")
+	writer.Close()
+
+	req, err := http.NewRequest("POST", url, &requestBody)
+	if err != nil {
+		fmt.Println("Error creating request:", err)
+		return
+	}
+
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	req.Header.Set("REV-API-KEY", "<YOUR-API-KEY>")
+	req.Header.Set("REV-APP-ID", "<YOUR-APP-ID>")
+	req.Header.Set("REV-APPNAME", "ocr")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Error sending request:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+	fmt.Println(string(body))
+}
+```
+</CodeGroup>
+### Results
+
+In order to see the results from Reverie, you must run the application. Run your application from the terminal. Your transcripts will appear in your shell.
+
+<CodeGroup>
+
+```bash JavaScript
+# Run your application using the file you created in the previous step
+# Example:
+npm start
+```
+
+```python Python
+# Run your application using the file you created in the previous step
+# Example:
+python main.py
+```
+
+```go GoLang
+// Run your application using the file you created in the previous step
+// Example:
+go run main.go
+```
+</CodeGroup>
+
+### Analyzing the Response
+
+The API returns different content types based on the selected OCR processing mode. When using `layout_ocr`, the response is a Microsoft Word file (`example.docx`) with `Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document`, preserving the document's layout. In contrast, with `only_ocr`, the response is plain text (`example.txt`) with `Content-Type: text/plain`, providing just the extracted text without formatting.
+
+### Key Features
+
+<CardGroup cols={2}>
+  <Card title="Multi-Format OCR Support" icon="bolt">
+    Supports both PDF and image files for OCR processing, making it versatile for various document types.
+  </Card>
+  <Card title="Language-Aware Text Extraction" icon="language">
+    Extracts text from documents in multiple Indian languages such as Hindi, Bengali, Tamil, and more.
+  </Card>
+  <Card title="Dual Processing Modes" icon="brain">
+    Choose between `only_ocr` for plain text or `layout_ocr` for structure-preserved output like DOCX files.
+  </Card>
+  <Card title="Smart Layout Recognition" icon="waveform">
+    Performs intelligent layout analysis for PDFs with complex formatting, tables, and sections.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="Flexible Deployment Options" icon="cloud">
+    Available as a REST API with support for both cloud and on-premise deployments.
+  </Card>
+  <Card title="Comprehensive Error Feedback" icon="star">
+    Returns clear status codes and messages for invalid inputs, unsupported file types, or missing parameters.
+  </Card>
+</CardGroup>
+
+### Supported Languages
+| Language   | Language Code |
+|------------|------|
+| English    | en   |
+| Bengali    | bn   |
+| Gujarati   | gu   |
+| Hindi      | hi   |
+| Kannada    | kn   |
+| Malayalam  | ml   |
+| Oriya      | or   |
+| Punjabi    | pa   |
+| Sanskrit   | sa   |
+| Tamil      | ta   |
+| Telugu     | te   |
+
+### Processing Modes
+1. `layout_ocr`:
+    -  For PDFs: Performs layout analysis and OCR with structure preservation
+    -  For images: Currently not supported
+    -  Returns: DOCX file with preserved layout
+2. `only_ocr`
+    -  For PDFs and images: Performs basic OCR
+    -  Returns: Plain text file
+
+### Sample Codes
+<CardGroup cols={2}>
+  <a
+    href="https://github.com/reverieinc/python-sdk/tree/main/ocr"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Card title="Python" icon="python">
+      Access Python SDK samples for efficient text extraction from images using Reverie’s OCR API. Ideal for server-side document processing.
+    </Card>
+  </a>
+
+  <a
+    href="https://github.com/reverieinc/javascript-sdk/tree/main/ocr"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Card title="JavaScript" icon="js">
+      Explore JavaScript SDK examples to integrate real-time OCR capabilities into web applications for image-based text recognition.
+    </Card>
+  </a>
+
+  <a
+    href="https://github.com/reverieinc/golang-sdk/tree/main/ocr"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Card title="GoLang" icon="golang">
+      Find GoLang SDK samples for high-performance OCR solutions in backend systems and APIs for text extraction from images.
+    </Card>
+  </a>
+</CardGroup>
+
+### FAQs
+<AccordionGroup>
+  <Accordion title="What languages are supported by the OCR API?" icon="language">
+    The OCR API supports **11 languages**, including English, Hindi, Bengali, Tamil, Telugu, Gujarati, Kannada, Malayalam, Oriya, Punjabi, and Sanskrit, ensuring robust regional text recognition.
+  </Accordion>
+
+  <Accordion title="What types of files can the OCR API process?" icon="file">
+    The API processes **PDF documents** and **images** (`pdf` or `img` file types), allowing text extraction from various document formats.
+  </Accordion>
+
+  <Accordion title="What are the available OCR processing modes?" icon="code">
+    The API offers two modes: **layout_ocr** (for PDFs, preserves layout and returns a DOCX file) and **only_ocr** (for PDFs and images, returns plain text). Note that `layout_ocr` is not supported for images.
+  </Accordion>
+
+  <Accordion title="Can the OCR API handle complex document layouts?" icon="microphone">
+    Yes, the **layout_ocr** mode performs layout analysis for PDFs, preserving document structure and formatting in the output DOCX file.
+  </Accordion>
+
+  <Accordion title="How fast is the OCR processing?" icon="bolt">
+    The OCR API delivers **rapid text extraction**, processing PDFs and images efficiently for seamless integration into applications.
+  </Accordion>
+</AccordionGroup>
+
+### API Messages
+| Error Message                     | Status Code | Description                                           |
+|-----------------------------------|-------------|-------------------------------------------------------|
+| No PDF file provided              | 400         | No file was uploaded                                  |
+| Wrong type provided               | 400         | Invalid OCR type specified                            |
+| Provides only_ocr                 | 400         | Layout OCR not supported for images                   |
+| Missing required form fields      | 400         | One or more required parameters are missing           |
+| Invalid language selection        | 400         | The specified languages are not supported              |
+| Unsupported file type             | 400         | File type is not supported (must be pdf or img)       |
+| Server error                      | 500         | Internal server error occurred during processing      |

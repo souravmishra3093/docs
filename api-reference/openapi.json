@@ -1,238 +1,1234 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-      "title": "Localization API",
-      "description": "An API for translating text content into multiple languages",
-      "version": "1.0.0"
-    },
-    "servers": [
-      {
-        "url": "https://revapi.reverieinc.com"
-      }
-    ],
-    "paths": {
-      "/localization": {
-        "post": {
-          "description": "Translates text content to one or multiple target languages",
-          "requestBody": {
-            "description": "Text content to be translated",
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Localization API",
+    "description": "An API for translating text content into multiple languages",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://revapi.reverieinc.com"
+    }
+  ],
+  "paths": {
+    "/": {
+      "post": {
+        "requestBody": {
+          "description": "Text content to be generated to speech",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TTSRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "TTS response",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TranslationRequest"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {
-              "description": "Translation response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/TranslationResponse"
-                  }
-                }
-              }
-            },
-            "403": {
-              "description": "Unauthorized to use this src/tgt language",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Error"
-                  }
+                  "$ref": "#/components/schemas/TTSResponse"
                 }
               }
             }
           },
-          
-          "parameters": [
-            
-            {
-              "name": "Content-Type",
-              "in": "header",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "example": "application/json",
-                "description":"The format of the data to be posted."
-              }
-            },
-            {
-              "name": "REV-API-KEY",
-              "in": "header",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "example": "<YOUR API KEY>",
-                "description":"A unique key/token provided by Reverie to identify the user using the Localization API."
-              }
-            },
-            {
-              "name": "REV-APP-ID",
-              "in": "header",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "example": "<YOUR APP-ID>",
-                "description":"The unique account ID to identify the user and the default account settings."
-              }
-            },
-            {
-              "name": "src_lang",
-              "in": "header",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "example": "en",
-                "description": "The language of the input text\n\n **Available Language Codes:**\n\n * `hi` : Hindi\n * `en` : English\n * `as` : Assamese\n * `bn` : Bengali\n * `gu` : Gujarati\n * `kn` : Kannada\n * `kok` : Konkani\n * `ml` : Malayalam\n * `mr` : Marathi\n * `mai` : Maithili\n * `or` : Odia\n * `pa` : Punjabi\n * `ta` : Tamil\n * `te` : Telugu\n * `ne` : Nepali\n * `ur` : Urdu\n\n **Note**: The user is allowed to use only the authorized language codes configured while sharing the REV-APP-ID and REV-API-KEY."
-  
-              }
-            },
-            {
-              "name": "tgt_lang",
-              "in": "header",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "example": "hi",
-                "description": "Language to which you want to localize the input text Note- To enter multiple target languages, separate the value using the comma separator(,). For example: “tgt_lang” : “hi, ta”\n\n **Available Language Codes:**\n\n * `hi` : Hindi\n * `en` : English\n * `as` : Assamese\n * `bn` : Bengali\n * `gu` : Gujarati\n * `kn` : Kannada\n * `kok` : Konkani\n * `ml` : Malayalam\n * `mr` : Marathi\n * `mai` : Maithili\n * `or` : Odia\n * `pa` : Punjabi\n * `ta` : Tamil\n * `te` : Telugu\n * `ne` : Nepali\n * `ur` : Urdu\n\n **Note**: The user is allowed to use only the authorized language codes configured while sharing the REV-APP-ID and REV-API-KEY."
-  
-              }
-            },
-            {
-              "name": "domain",
-              "in": "header",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "example": "generic",
-                "description": "The Domain refers to the universe in which you use the Transliteration API. Example - Health Care, Insurance, Legal, etc.\n\n **Available Domains:**\n\n * `General`: The default domain. Localizes content irrespective of the domain.\n * `Travel`: Trained for travel industry terminologies.\n * `Ecommerce`: Helps localize content in the Ecommerce domain.\n * `Music`: Trained for Media & Entertainment domain translations.\n * `Banking`: Accurately translates BFSI domain content.\n * `Grocery`: Specially built for grocery industry terminologies.\n * `Education`: Helps translate academic content.\n * `Medical`: Serves the healthcare industry.\n\n **Note**: Mention the domain ID. Refer to Supporting Domain above for valid domain ID. The default domain 1"
-              }
-            },
-            {
-              "name": "REV-APPNAME",
-              "in": "header",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "example": "localization",
-                "description":"The parameter to identify the API."
-              }
-            },
-            {
-              "name": "REV-APPVERSION",
-              "in": "header",
-              "required": true,
-              "schema": {
-                "type": "string",
-                "example": "3.0",
-                "description":"The version refers to the specific iteration of the API that is being called."
-              }
-            }
-          ],
-           "x-codeSamples": [
-            {
-              "lang": "curl",
-              "source": "curl --request POST \\\n--url https://revapi.reverieinc.com/localization \\\n--header 'Content-Type: application/json' \\\n--header 'REV-API-KEY: <YOUR API KEY>' \\\n--header 'REV-APP-ID: <YOUR APP-ID>' \\\n--header 'REV-APPNAME: localization' \\\n--header 'REV-APPVERSION: 3.0' \\\n--header 'domain: generic' \\\n--header 'src_lang: en' \\\n--header 'tgt_lang: hi' \\\n--data '{\n  \"data\": [\"Hello, how are you?\"],\n  \"nmtMask\": true,\n  \"enableNmt\": true,\n  \"enableLookup\": false\n}'"
-            },
-            {
-              "lang": "python",
-              "source": "import requests\n\nurl = \"https://revapi.reverieinc.com/localization\"\n\nheaders = {\n    \"Content-Type\": \"application/json\",\n    \"REV-API-KEY\": \"<YOUR API KEY>\",\n    \"REV-APP-ID\": \"<YOUR APP-ID>\",\n    \"src_lang\": \"en\",\n    \"tgt_lang\": \"hi\",\n    \"domain\": \"generic\",\n    \"REV-APPNAME\": \"localization\",\n    \"REV-APPVERSION\": \"3.0\"\n}\n\nresponse = requests.post(url, headers=headers)\nprint(response.text)"
-            },
-            {
-              "lang": "java",
-              "source": "HttpResponse<String> response = Unirest.post(\"https://revapi.reverieinc.com/localization\")\n  .header(\"Content-Type\", \"application/json\")\n  .header(\"REV-API-KEY\", \"<YOUR API KEY>\")\n  .header(\"REV-APP-ID\", \"<YOUR APP-ID>\")\n  .header(\"src_lang\", \"en\")\n  .header(\"tgt_lang\", \"hi\")\n  .header(\"domain\", \"generic\")\n  .header(\"REV-APPNAME\", \"localization\")\n  .header(\"REV-APPVERSION\", \"3.0\")\n  .asString();"
-            },
-            {
-              "lang": "javascript",
-              "source": "const options = {\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n    'REV-API-KEY': '<YOUR API KEY>',\n    'REV-APP-ID': '<YOUR APP-ID>',\n    'src_lang': 'en',\n    'tgt_lang': 'hi',\n    'domain': 'generic',\n    'REV-APPNAME': 'localization',\n    'REV-APPVERSION': '3.0'\n  }\n};\nfetch('https://revapi.reverieinc.com/localization', options)\n  .then(response => response.json())\n  .then(response => console.log(response))\n  .catch(err => console.error(err));"
-            },
-            {
-              "lang": "go",
-              "source": "package main\n\nimport (\n  \"fmt\"\n  \"net/http\"\n  \"io/ioutil\"\n)\n\nfunc main() {\n  url := \"https://revapi.reverieinc.com/localization\"\n  req, _ := http.NewRequest(\"POST\", url, nil)\n  req.Header.Add(\"Content-Type\", \"application/json\")\n  req.Header.Add(\"REV-API-KEY\", \"<YOUR API KEY>\")\n  req.Header.Add(\"REV-APP-ID\", \"<YOUR APP-ID>\")\n  req.Header.Add(\"src_lang\", \"en\")\n  req.Header.Add(\"tgt_lang\", \"hi\")\n  req.Header.Add(\"domain\", \"generic\")\n  req.Header.Add(\"REV-APPNAME\", \"localization\")\n  req.Header.Add(\"REV-APPVERSION\", \"3.0\")\n  res, _ := http.DefaultClient.Do(req)\n  defer res.Body.Close()\n  body, _ := ioutil.ReadAll(res.Body)\n  fmt.Println(string(body))\n}"
-            },
-            {
-              "lang": "php",
-              "source": "<?php\n$curl = curl_init();\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://revapi.reverieinc.com/localization\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_HTTPHEADER => [\n    \"Content-Type: application/json\",\n    \"REV-API-KEY: <YOUR API KEY>\",\n    \"REV-APP-ID: <YOUR APP-ID>\",\n    \"REV-APPNAME: localization\",\n    \"REV-APPVERSION: 3.0\",\n    \"domain: generic\",\n    \"src_lang: en\",\n    \"tgt_lang: hi\"\n  ],\n]);\n$response = curl_exec($curl);\n$err = curl_error($curl);\ncurl_close($curl);\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-            }
-          ]
-        }
-      }
-    },
-    "components": {
-      "schemas": {
-        "TranslationRequest": 
-        {
-          "type": "object",
-          "properties": {
-            "data": {
-              "type": "array",
-              "description": "The text you want to translate. This is the input text that will be processed by the translation model.",
-              "items": {
-                "type": "string"
-              }
-            },
-            "nmtMask": {
-          "type": "boolean",
-          "description": "Determines the Words that are to be masked.\n\n **Note** - On defining values in the nmtMaskTerms, then automatically the nmtMask is set to true.\n\n **Example** - Masking a term - `nmtMaskTerms`: [`Reverie Language Technologies`] Here, the API will mask the term Reverie Language Technologies, if found in the source content, and will transliterate the word.",
-          "example": false
-        },
-            "nmtMaskTerms": {
-              "type": "object"
-            },
-            "enableNmt": {
-              "type": "boolean",
-              "example": true
-            },
-            "enableLookup": {
-              "type": "boolean",
-              "example": false
-            }
-          },
-          "required": ["data", "domain"]
-        },
-        "TranslationResponse": {
-          "type": "object",
-          "properties": {
-            "responseList": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "inString": {
-                    "type": "string"
-                  },
-                  "outStrings": {
-                    "type": "object",
-                    "additionalProperties": {
-                      "type": "string"
+          "400": {
+            "description": "no spkr given",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message describing the issue.",
+                      "example": "no spkr given"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "A detailed description of the error.",
+                      "example": "Speaker code not entered"
                     }
                   },
-                  "apiStatus": {
-                    "type": "integer"
-                  }
+                  "required": [
+                    "error",
+                    "description"
+                  ]
                 }
               }
-            },
-            "tokenConsumed": {
-              "type": "integer"
+            }
+          },
+          "403": {
+            "description": "Invalid REV-API-KEY or REV-APP-ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message describing the issue.",
+                      "example": "Invalid REV-API-KEY or REV-APP-ID"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "A detailed description of the error.",
+                      "example": "Entered Invalid credentials"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "description"
+                  ]
+                }
+              }
             }
           }
         },
-        "Error": {
-          "type": "object",
-          "properties": {
-            "message": {
-              "type": "string"
-            },
-            "status": {
-              "type": "integer"
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "application/json",
+              "description": "The format of the data to be posted."
             }
+          },
+          {
+            "name": "REV-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "<YOUR API KEY>",
+              "description": "A unique key/token provided by Reverie to identify the user using the Localization API."
+            }
+          },
+          {
+            "name": "REV-APP-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "<YOUR APP-ID>",
+              "description": "The unique account ID to identify the user and the default account settings."
+            }
+          },
+          {
+            "name": "REV-APPNAME",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "tts"
+              ],
+              "example": "tts",
+              "description": "The parameter to identify the API."
+            }
+          },
+          {
+            "name": "speaker",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "hi_male",
+              "enum": [
+                "hi_male",
+                "hi_male_2",
+                "hi_male_3",
+                "hi_male_4",
+                "hi_female",
+                "hi_female_2",
+                "hi_female_3",
+                "bn_male",
+                "bn_male_2",
+                "bn_female",
+                "bn_female_2",
+                "kn_male",
+                "kn_male_2",
+                "kn_female",
+                "kn_female_2",
+                "ml_male",
+                "ml_female",
+                "ta_male",
+                "ta_female",
+                "te_male",
+                "te_male_2",
+                "te_female",
+                "te_female_2",
+                "gu_male",
+                "gu_female",
+                "or_male",
+                "or_female",
+                "as_male",
+                "as_female",
+                "mr_male",
+                "mr_male_2",
+                "mr_male_3",
+                "mr_female",
+                "mr_female_2",
+                "mr_female_3",
+                "pa_male",
+                "pa_female",
+                "en_male",
+                "en_male_2",
+                "en_female",
+                "en_female_2"
+              ],
+              "description": "The desired language and voice code for synthesizing the audio file"
+            }
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "curl",
+            "source": "curl --location --request POST 'https://revapi.reverieinc.com/' \\\n--header 'REV-API-KEY: <YOUR API KEY>' \\\n--header 'REV-APP-ID: <YOUR APP-ID>' \\\n--header 'REV-APPNAME: tts' \\\n--header 'speaker: hi_female' \\\n--header 'Content-Type: application/json' \\\n--data-raw '{\n  \"text\": [\"भारत मेरा देश है।\", \"मेरी कंपनी का नाम रेवेरी लैंग्वेज टेक्नोलॉजीज है।\"],\n  \"speed\": 1,\n  \"pitch\": 0,\n  \"format\": \"WAV\"\n}'"
+          },
+          {
+            "lang": "javascript",
+            "source": "const ReverieClient = require(\"reverie-client\");\n\nconst reverieClient = new ReverieClient({\n  apiKey: \"YOUR-API-KEY\",\n  appId: \"YOUR-APP-ID\",\n});\n\ntry {\n  const audioBlob = await reverieClient.text_to_speech({\n    text: text,\n    speaker: speaker,\n    speed: speed,\n    pitch: pitch,\n  });\n\n  const audioUrl = URL.createObjectURL(audioBlob);\n  console.log(\"Audio URL is:\", audioUrl);\n} catch (error) {\n  console.error(\"Error:\", error);\n}"
+          },
+          {
+            "lang": "python",
+            "source": "from reverie_sdk import ReverieClient\n\nclient = ReverieClient(\n    api_key=\"MY_API_KEY\",\n    app_id=\"MY_APP_ID\",\n)\n\nwith open(\"./big_text.txt\", encoding=\"utf-8\") as f:\n    text = f.read()\n\nfor resp_idx, resp in enumerate(\n    client.tts.tts_streaming(\n        text=text,\n        speaker=\"en_male\",\n        max_words_per_chunk=5,\n        fast_sentence_fragment=False,\n    )\n):\n    print(f\"{resp_idx:08d} {resp.duration:10.3f}\")\n    resp.save_audio(\n        f\".path/to/output/{resp_idx:08d}.wav\",\n        create_parents=True,\n        overwrite_existing=True,\n    )"
+          },
+          {
+            "lang": "go",
+            "source": "package main\n\nimport (\n\t\"bytes\"\n\t\"fmt\"\n\t\"io\"\n\t\"net/http\"\n\t\"os\"\n)\n\nfunc sendRequest(payload string, filename string) {\n\turl := \"https://revapi.reverieinc.com/\"\n\n\treq, err := http.NewRequest(\"POST\", url, bytes.NewBuffer([]byte(payload)))\n\tif err != nil {\n\t\tfmt.Println(\"Request creation error:\", err)\n\t\treturn\n\t}\n\n\t// Set Headers\n\treq.Header.Set(\"REV-API-KEY\", \"<YOUR-API-KEY>\")\n\treq.Header.Set(\"REV-APP-ID\", \"<YOUR-APP-ID>\")\n\treq.Header.Set(\"REV-APPNAME\", \"tts\")\n\treq.Header.Set(\"speaker\", \"hi_female\") //Set Speaker\n\treq.Header.Set(\"Content-Type\", \"application/json\")\n\n\tclient := &http.Client{}\n\tresp, err := client.Do(req)\n\tif err != nil {\n\t\tfmt.Println(\"Request error:\", err)\n\t\treturn\n\t}\n\tdefer resp.Body.Close()\n\n\t// Create a file to save the response\n\tfile, err := os.Create(filename)\n\tif err != nil {\n\t\tfmt.Println(\"File creation error:\", err)\n\t\treturn\n\t}\n\tdefer file.Close()\n\n\t// Copy response body to file\n\t_, err = io.Copy(file, resp.Body)\n\tif err != nil {\n\t\tfmt.Println(\"File write error:\", err)\n\t\treturn\n\t}\n\tfmt.Println(\"Audio saved as\", filename)\n}\n\nfunc main() {\n\t// Request 1: Plain text TTS\n\tpayload1 := `{\\n\\t\"text\": [\"भारत मेरा देश है।\", \"मेरी कंपनी का नाम रेवेरी लैंग्वेज टेक्नोलॉजीज है।\"],\\n\\t\"speed\": 1,\\n\\t\"pitch\": 0,\\n\\t\"format\": \"WAV\"\\n}`\nsendRequest(payload1, \"output1.wav\")\n\n\t// Request 2: SSML-based TTS\n\tpayload2 := `{\\n\\t\"ssml\": \"<speak> <voice name=\\\"en_female\\\"> Hello. </voice> </speak>\",\\n\\t\"speed\": 1,\\n\\t\"pitch\": 0,\\n\\t\"format\": \"mp3\"\\n}`\nsendRequest(payload2, \"output2.mp3\")\n}"
+          }
+        ]
+      }
+    },
+    "/localization": {
+      "post": {
+        "description": "Translates text content to one or multiple target languages",
+        "requestBody": {
+          "description": "Text content to be translated",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Translation response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TranslationResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized to use this src/tgt language",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "application/json",
+              "description": "The format of the data to be posted."
+            }
+          },
+          {
+            "name": "REV-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "<YOUR API KEY>",
+              "description": "A unique key/token provided by Reverie to identify the user using the Localization API."
+            }
+          },
+          {
+            "name": "REV-APP-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "<YOUR APP-ID>",
+              "description": "The unique account ID to identify the user and the default account settings."
+            }
+          },
+          {
+            "name": "src_lang",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "en",
+              "description": "The language of the input text\n\n **Available Language Codes:**\n\n * `hi` : Hindi\n * `en` : English\n * `as` : Assamese\n * `bn` : Bengali\n * `gu` : Gujarati\n * `kn` : Kannada\n * `kok` : Konkani\n * `ml` : Malayalam\n * `mr` : Marathi\n * `mai` : Maithili\n * `or` : Odia\n * `pa` : Punjabi\n * `ta` : Tamil\n * `te` : Telugu\n * `ne` : Nepali\n * `ur` : Urdu\n\n **Note**: The user is allowed to use only the authorized language codes configured while sharing the REV-APP-ID and REV-API-KEY."
+            }
+          },
+          {
+            "name": "tgt_lang",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "hi",
+              "description": "Language to which you want to localize the input text Note- To enter multiple target languages, separate the value using the comma separator(,). For example: “tgt_lang” : “hi, ta”\n\n **Available Language Codes:**\n\n * `hi` : Hindi\n * `en` : English\n * `as` : Assamese\n * `bn` : Bengali\n * `gu` : Gujarati\n * `kn` : Kannada\n * `kok` : Konkani\n * `ml` : Malayalam\n * `mr` : Marathi\n * `mai` : Maithili\n * `or` : Odia\n * `pa` : Punjabi\n * `ta` : Tamil\n * `te` : Telugu\n * `ne` : Nepali\n * `ur` : Urdu\n\n **Note**: The user is allowed to use only the authorized language codes configured while sharing the REV-APP-ID and REV-API-KEY."
+            }
+          },
+          {
+            "name": "domain",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "generic",
+              "description": "The Domain refers to the universe in which you use the Transliteration API. Example - Health Care, Insurance, Legal, etc.\n\n **Available Domains:**\n\n * `General`: The default domain. Localizes content irrespective of the domain.\n * `Travel`: Trained for travel industry terminologies.\n * `Ecommerce`: Helps localize content in the Ecommerce domain.\n * `Music`: Trained for Media & Entertainment domain translations.\n * `Banking`: Accurately translates BFSI domain content.\n * `Grocery`: Specially built for grocery industry terminologies.\n * `Education`: Helps translate academic content.\n * `Medical`: Serves the healthcare industry.\n\n **Note**: Mention the domain ID. Refer to Supporting Domain above for valid domain ID. The default domain 1"
+            }
+          },
+          {
+            "name": "REV-APPNAME",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "localization",
+              "description": "The parameter to identify the API."
+            }
+          },
+          {
+            "name": "REV-APPVERSION",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "3.0",
+              "description": "The version refers to the specific iteration of the API that is being called."
+            }
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "curl",
+            "source": "curl --request POST \\\n--url https://revapi.reverieinc.com/localization \\\n--header 'Content-Type: application/json' \\\n--header 'REV-API-KEY: <YOUR API KEY>' \\\n--header 'REV-APP-ID: <YOUR APP-ID>' \\\n--header 'REV-APPNAME: localization' \\\n--header 'REV-APPVERSION: 3.0' \\\n--header 'domain: generic' \\\n--header 'src_lang: en' \\\n--header 'tgt_lang: hi' \\\n--data '{\n  \"data\": [\"Hello, how are you?\"],\n  \"nmtMask\": true,\n  \"enableNmt\": true,\n  \"enableLookup\": false\n}'"
+          },
+          {
+            "lang": "python",
+            "source": "import requests\n\nurl = \"https://revapi.reverieinc.com/localization\"\n\nheaders = {\n    \"Content-Type\": \"application/json\",\n    \"REV-API-KEY\": \"<YOUR API KEY>\",\n    \"REV-APP-ID\": \"<YOUR APP-ID>\",\n    \"src_lang\": \"en\",\n    \"tgt_lang\": \"hi\",\n    \"domain\": \"generic\",\n    \"REV-APPNAME\": \"localization\",\n    \"REV-APPVERSION\": \"3.0\"\n}\n\nresponse = requests.post(url, headers=headers)\nprint(response.text)"
+          },
+          {
+            "lang": "java",
+            "source": "HttpResponse<String> response = Unirest.post(\"https://revapi.reverieinc.com/localization\")\n  .header(\"Content-Type\", \"application/json\")\n  .header(\"REV-API-KEY\", \"<YOUR API KEY>\")\n  .header(\"REV-APP-ID\", \"<YOUR APP-ID>\")\n  .header(\"src_lang\", \"en\")\n  .header(\"tgt_lang\", \"hi\")\n  .header(\"domain\", \"generic\")\n  .header(\"REV-APPNAME\", \"localization\")\n  .header(\"REV-APPVERSION\", \"3.0\")\n  .asString();"
+          },
+          {
+            "lang": "javascript",
+            "source": "const options = {\n  method: 'POST',\n  headers: {\n    'Content-Type': 'application/json',\n    'REV-API-KEY': '<YOUR API KEY>',\n    'REV-APP-ID': '<YOUR APP-ID>',\n    'src_lang': 'en',\n    'tgt_lang': 'hi',\n    'domain': 'generic',\n    'REV-APPNAME': 'localization',\n    'REV-APPVERSION': '3.0'\n  }\n};\nfetch('https://revapi.reverieinc.com/localization', options)\n  .then(response => response.json())\n  .then(response => console.log(response))\n  .catch(err => console.error(err));"
+          },
+          {
+            "lang": "go",
+            "source": "package main\n\nimport (\n  \"fmt\"\n  \"net/http\"\n  \"io/ioutil\"\n)\n\nfunc main() {\n  url := \"https://revapi.reverieinc.com/localization\"\n  req, _ := http.NewRequest(\"POST\", url, nil)\n  req.Header.Add(\"Content-Type\", \"application/json\")\n  req.Header.Add(\"REV-API-KEY\", \"<YOUR API KEY>\")\n  req.Header.Add(\"REV-APP-ID\", \"<YOUR APP-ID>\")\n  req.Header.Add(\"src_lang\", \"en\")\n  req.Header.Add(\"tgt_lang\", \"hi\")\n  req.Header.Add(\"domain\", \"generic\")\n  req.Header.Add(\"REV-APPNAME\", \"localization\")\n  req.Header.Add(\"REV-APPVERSION\", \"3.0\")\n  res, _ := http.DefaultClient.Do(req)\n  defer res.Body.Close()\n  body, _ := ioutil.ReadAll(res.Body)\n  fmt.Println(string(body))\n}"
+          },
+          {
+            "lang": "php",
+            "source": "<?php\n$curl = curl_init();\ncurl_setopt_array($curl, [\n  CURLOPT_URL => \"https://revapi.reverieinc.com/localization\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_HTTPHEADER => [\n    \"Content-Type: application/json\",\n    \"REV-API-KEY: <YOUR API KEY>\",\n    \"REV-APP-ID: <YOUR APP-ID>\",\n    \"REV-APPNAME: localization\",\n    \"REV-APPVERSION: 3.0\",\n    \"domain: generic\",\n    \"src_lang: en\",\n    \"tgt_lang: hi\"\n  ],\n]);\n$response = curl_exec($curl);\n$err = curl_error($curl);\ncurl_close($curl);\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
+          }
+        ]
+      }
+    },
+    "/process_doc": {
+      "post": {
+        "summary": "Process OCR on a file",
+        "description": "Upload a PDF or image file for OCR processing, specifying the file type, languages, and OCR processing type. Requires authentication headers.",
+        "operationId": "processOCR",
+        "parameters": [
+          {
+            "name": "REV-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "<YOUR API KEY>",
+              "description": "A unique key/token provided by Reverie to identify the user using the Localization API."
+            }
+          },
+          {
+            "name": "REV-APP-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "<YOUR APP-ID>",
+              "description": "The unique account ID to identify the user and the default account settings."
+            }
+          },
+          {
+            "name": "REV-APPNAME",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ocr"
+              ],
+              "example": "ocr",
+              "description": "The parameter to identify the API."
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "File and metadata for OCR processing",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/OCRRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful OCR processing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OCRResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message describing the issue.",
+                      "example": "Invalid file_type"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "A detailed description of the error.",
+                      "example": "File type must be 'pdf' or 'img'"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "description"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid REV-API-KEY or REV-APP-ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message describing the issue.",
+                      "example": "Invalid REV-API-KEY or REV-APP-ID"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "A detailed description of the error.",
+                      "example": "Entered Invalid credentials"
+                    }
+                  },
+                  "required": [
+                    "error",
+                    "description"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "curl",
+            "source": "curl -X POST /process_doc \\\n  --header 'REV-API-KEY: YOUR-API-KEY' \\\n  --header 'REV-APP-ID: YOUR-APPID' \\\n  --header 'REV-APPNAME: ocr' \\\n  -F \"file=@document.pdf\" \\\n  -F \"file_type=pdf\" \\\n  -F \"languages=en,hi\" \\\n  -F \"ocr_type=layout_ocr\""
+          },
+          {
+            "lang": "python",
+            "source": "import requests\n\nurl = \"/process_doc\"\n\nheaders = {\n    \"REV-API-KEY\": \"<YOUR-API-KEY>\",\n    \"REV-APP-ID\": \"<YOUR-APP-ID>\",\n    \"REV-APPNAME\": \"ocr\",\n}\n\nfile_path = \"<YOUR-FILE-PATH>\"\nfiles = {\"file\": open(file_path, \"rb\")}\ndata = {\n    \"file_type\": \"pdf\",\n    \"languages\": \"en,hi\",\n    \"ocr_type\": \"layout_ocr\",\n}\n\nresponse = requests.post(url, headers=headers, files=files, data=data)\n\nprint(response.text)"
+          },
+          {
+            "lang": "javascript",
+            "source": "const ReverieClient = require(\"reverie-client\");\n\nconst reverieClient = new ReverieClient({\n  apiKey: \"YOUR-API-KEY\",\n  appId: \"YOUR-APP-ID\",\n});\n\nasync function uploadOCRDocument(file) {\n  try {\n    const ocrResult = await reverieClient.uploadDocument({\n      file: file,\n      file_type: \"img\",\n      selectedLanguages: \"en\",\n      ocrType: \"only_ocr\"\n    });\n    console.log(\"OCR Result:\", ocrResult);\n  } catch (error) {\n    console.error(\"OCR upload failed:\", error);\n  }\n}"
+          },
+          {
+            "lang": "go",
+            "source": "package main\n\nimport (\n\t\"bytes\"\n\t\"fmt\"\n\t\"io\"\n\t\"mime/multipart\"\n\t\"net/http\"\n\t\"os\"\n\t\"path/filepath\"\n)\n\nfunc main() {\n\turl := \"/process_doc\"\n\n\tfilePath := \"<YOUR-FILE-PATH>\"\n\tfile, err := os.Open(filePath)\n\tif err != nil {\n\t\tfmt.Println(\"Error opening file:\", err)\n\t\treturn\n\t}\n\tdefer file.Close()\n\n\tvar requestBody bytes.Buffer\n\twriter := multipart.NewWriter(&requestBody)\n\n\tpart, err := writer.CreateFormFile(\"file\", filepath.Base(filePath))\n\tif err != nil {\n\t\tfmt.Println(\"Error creating form file:\", err)\n\t\treturn\n\t}\n\t_, err = io.Copy(part, file)\n\n\twriter.WriteField(\"file_type\", \"pdf\")\n\twriter.WriteField(\"languages\", \"en,hi\")\n\twriter.WriteField(\"ocr_type\", \"layout_ocr\")\n\twriter.Close()\n\n\treq, err := http.NewRequest(\"POST\", url, &requestBody)\n\tif err != nil {\n\t\tfmt.Println(\"Error creating request:\", err)\n\t\treturn\n\t}\n\n\treq.Header.Set(\"Content-Type\", writer.FormDataContentType())\n\treq.Header.Set(\"REV-API-KEY\", \"<YOUR-API-KEY>\")\n\treq.Header.Set(\"REV-APP-ID\", \"<YOUR-APP-ID>\")\n\treq.Header.Set(\"REV-APPNAME\", \"ocr\")\n\n\tclient := &http.Client{}\n\tresp, err := client.Do(req)\n\tif err != nil {\n\t\tfmt.Println(\"Error sending request:\", err)\n\t\treturn\n\t}\n\tdefer resp.Body.Close()\n\n\tbody, _ := io.ReadAll(resp.Body)\n\tfmt.Println(string(body))\n}"
+          }
+        ]
+      }
+    },
+    "/api/v2/text-analyse": {
+      "post": {
+        "summary": "Analyze text for translation, summarization, sentiment, entities, content safety, and PII redaction",
+        "operationId": "textAnalyse",
+        "parameters": [
+          {
+            "name": "translate",
+            "in": "query",
+            "description": "Enable translation of the text into a specified language.",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "summary",
+            "in": "query",
+            "description": "Enable summarization of the text.",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "sentiment",
+            "in": "query",
+            "description": "Enable sentiment analysis of the text.",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "detect_entities",
+            "in": "query",
+            "description": "Enable detection of named entities (e.g., people, organizations, locations).",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "content_safety",
+            "in": "query",
+            "description": "Enable content safety checks for harmful or inappropriate content.",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "pii_redaction",
+            "in": "query",
+            "description": "Enable redaction of personally identifiable information (PII).",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "REV-API-KEY",
+            "in": "header",
+            "description": "Unique key/token to identify the user.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "REV-APP-ID",
+            "in": "header",
+            "description": "Unique account ID for user settings.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "REV-APPNAME",
+            "in": "header",
+            "description": "API identifier (e.g., 'text-analysis').",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["text-analysis"]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextAnalysisRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Text analysis completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextAnalysisResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request due to invalid input, parameters, or unsupported language",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-codeSamples":[
+          {
+            "lang": "curl",
+            "source": "curl -X POST 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=true&summary=true&sentiment=true&detect_entities=true&content_safety=true&pii_redaction=true' \\\n  --header 'Content-Type: application/json' \\\n  --header 'REV-API-KEY: <YOUR-API-KEY>' \\\n  --header 'REV-APP-ID: <YOUR-APP-KEY>' \\\n  --header 'REV-APPNAME: text-analysis' \\\n  --data '{\n    \"text\": \"The sun was shining brightly in the sky. Birds were singing, and a gentle breeze moved through the trees. Emma walked along the path, enjoying the fresh air and the scent of blooming flowers. It was a perfect day for a walk in the park.\",\n    \"language\": \"en\",\n    \"translation\": {\n      \"target_language\": \"or\",\n      \"translation_domain\": \"generic\"\n    },\n    \"pii_redaction\": {\n      \"redact_pii_sub\": \"entity_name\",\n      \"redact_pii_types\": []\n    },\n    \"summary\": {\n      \"summary_model\": \"gemma2:2b\",\n      \"summary_type\": \"gist\"\n    },\n    \"entity_recognition\": {\n      \"entity_types\": []\n    },\n    \"sentiment\": {\n      \"level\": \"whole\"\n    },\n    \"content_moderation\": {\n      \"moderation_types\": [\n        \"hate_speech\",\n        \"profanity\"\n      ]\n    }\n  }'"
+          }
+          
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TextAnalysisRequest": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The input text to be analyzed."
+          },
+          "language": {
+            "type": "string",
+            "description": "Language code of the input text. Supported languages: 'hi' (Hindi), 'en' (English), 'bn' (Bengali), 'ta' (Tamil), 'te' (Telugu), 'ml' (Malayalam), 'kn' (Kannada), 'gu' (Gujarati), 'mr' (Marathi), 'or' (Odia), 'pa' (Punjabi), 'as' (Assamese).",
+            "enum": ["hi", "en", "bn", "ta", "te", "ml", "kn", "gu", "mr", "or", "pa", "as"]
+          },
+          "translation": {
+            "type": "object",
+            "properties": {
+              "target_language": {
+                "type": "string",
+                "description": "Target language code for translation. Supported languages: 'hi' (Hindi), 'en' (English), 'bn' (Bengali), 'ta' (Tamil), 'te' (Telugu), 'ml' (Malayalam), 'kn' (Kannada), 'gu' (Gujarati), 'mr' (Marathi), 'or' (Odia), 'pa' (Punjabi), 'as' (Assamese).",
+                "enum": ["hi", "en", "bn", "ta", "te", "ml", "kn", "gu", "mr", "or", "pa", "as"]
+              },
+              "translation_domain": {
+                "type": "string",
+                "description": "Domain for translation to improve accuracy (e.g., 'generic').",
+                "enum": ["generic"]
+              }
+            },
+            "required": ["target_language", "translation_domain"]
+          },
+          "pii_redaction": {
+            "type": "object",
+            "properties": {
+              "redact_pii_sub": {
+                "type": "string",
+                "description": "The replacement string or type name to substitute redacted PII (e.g., 'entity_name' or 'Hash' for '#' replacement).",
+                "enum": ["entity_name", "Hash"]
+              },
+              "redact_pii_types": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["location", "amount", "money", "number", "organization", "person_name", "date", "time", "phone_number", "email_ids"]
+                },
+                "description": "List of specific PII types to redact (empty means all). Valid types: 'location', 'amount', 'money', 'number', 'organization', 'person_name', 'date', 'time', 'phone_number', 'email_ids'."
+              }
+            },
+            "required": ["redact_pii_sub", "redact_pii_types"]
+          },
+          "summary": {
+            "type": "object",
+            "properties": {
+              "summary_model": {
+                "type": "string",
+                "description": "Specifies which model to use for summarization (e.g., 'gemma2:2b').",
+                "enum": ["gemma2:2b"]
+              },
+              "summary_type": {
+                "type": "string",
+                "description": "Type of summary to produce. Valid types: 'bullets', 'bullets_verbose', 'gist', 'headline', 'paragraph'. Default: 'gist'.",
+                "enum": ["bullets", "bullets_verbose", "gist", "headline", "paragraph"],
+                "default": "gist"
+              }
+            },
+            "required": ["summary_model", "summary_type"]
+          },
+          "entity_recognition": {
+            "type": "object",
+            "properties": {
+              "entity_types": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["name", "location", "date", "organisation", "amount", "number", "time", "phone_number", "emails", "urls", "hashtags"]
+                },
+                "description": "List of entity types to detect (empty means all). Valid types: 'name', 'location', 'date', 'organisation', 'amount', 'number', 'time', 'phone_number', 'emails', 'urls', 'hashtags'."
+              }
+            },
+            "required": ["entity_types"]
+          },
+          "sentiment": {
+            "type": "object",
+            "properties": {
+              "level": {
+                "type": "string",
+                "description": "Level at which sentiment is analyzed. Currently supports only 'whole'. Valid options: 'sentence', 'paragraph', 'whole text'.",
+                "enum": ["sentence", "paragraph", "whole text"],
+                "default": "whole text"
+              }
+            },
+            "required": ["level"]
+          },
+          "content_moderation": {
+            "type": "object",
+            "properties": {
+              "moderation_types": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["hate_speech", "profanity"]
+                },
+                "description": "List of content types to check. Valid types: 'hate_speech', 'profanity'. Default: ['profanity'].",
+                "default": ["profanity"]
+              }
+            },
+            "required": ["moderation_types"]
+          }
+        },
+        "required": [
+          "text",
+          "language",
+          "translation",
+          "pii_redaction",
+          "summary",
+          "entity_recognition",
+          "sentiment",
+          "content_moderation"
+        ]
+      },
+     "TextAnalysisResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "object",
+            "properties": {
+              "translation": {
+                "type": "object",
+                "properties": {
+                  "translated_text": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "example":"ଆକାଶରେ ସୂର୍ଯ୍ୟ କିରଣ ଝଲସି ଉଠିଲା । ପକ୍ଷୀମାନେ ଗୀତ ଗାଉଥିଲେ ଏବଂ ଗଛରେ ପବନ ବହୁଥିଲା। ଏମା ତାଜା ପବନ ଏବଂ ଫୁଲର ସୁଗନ୍ଧକୁ ଉପଭୋଗ କରି ରାସ୍ତାରେ ଚାଲିଲେ । ପାର୍କରେ ବୁଲିବା ପାଇଁ ଏହା ଏକ ଭଲ ଦିନ।"                        
+                      }
+                    },
+                    "description": "List of translated sentences for the input text, nested as arrays."
+                  }
+                }
+              },
+              "summary": {
+                "type": "object",
+                "properties": {
+                  "summarised_text": {
+                    "type": "string",
+                    "example":"A description of a beautiful, sunny day in the park that Emma is enjoying.",
+                    "description": "Generated summary of the input text (e.g., gist, bullets, headline)."
+                  }
+                }
+              },
+              "entity_recognition": {
+                "type": "object",
+                "properties": {
+                  "entities": {
+                    "type": "object",
+                    "properties": {
+                      "date": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "dd": {
+                              "type": "integer",
+                              "description": "Day of the date."
+                            },
+                            "mm": {
+                              "type": "integer",
+                              "description": "Month of the date."
+                            },
+                            "yy": {
+                              "type": "integer",
+                              "description": "Year of the date."
+                            },
+                            "type": {
+                              "type": "string",
+                              "description": "Type of date (e.g., 'day_within_one_week').",
+                              "example":"04.05.2025"
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "Text identified as a date (e.g., 'sun').",
+                              "example":"4th December"
+                            }
+                          }
+                        },
+                        "description": "List of detected date expressions."
+                      },
+                      "person_name": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example":"Emma"
+                        },
+                        "description": "List of detected person names (e.g., 'Emma')."
+                      },
+                      "location": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example":"New Jersey"
+                        },
+                        "description": "List of detected locations."
+                      },
+                      "organisation": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example":"Reverie"
+                        },
+                        "description": "List of detected organizations."
+                      },
+                      "amount": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example":"Rs 10000"
+                        },
+                        "description": "List of detected amounts or money."
+                      },
+                      "number": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example":"123"
+                        },
+                        "description": "List of detected numbers."
+                      },
+                      "time": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example":"4 PM"
+                        },
+                        "description": "List of detected time expressions."
+                      },
+                      "phone_number": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example":"1236547895"
+                        },
+                        "description": "List of detected phone numbers."
+                      },
+                      "emails": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example":"xyz@gmail.com"
+                        },
+                        "description": "List of detected email addresses."
+                      },
+                      "urls": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example":"www.hello.com"
+                        },
+                        "description": "List of detected URLs."
+                      },
+                      "hashtags": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "example":"#### Company"
+                        },
+                        "description": "List of detected hashtags."
+                      }
+                    }
+                  }
+                }
+              },
+              "sentiment": {
+                "type": "object",
+                "properties": {
+                  "sentiments": {
+                    "type": "object",
+                    "properties": {
+                      "results": {
+                        "type": "object",
+                        "properties": {
+                          "sentiment": {
+                            "type": "object",
+                            "properties": {
+                              "level": {
+                                "type": "string",
+                                "description": "Level of sentiment analysis (e.g., 'whole').",
+                                "example":"whole"
+
+                              },
+                              "average": {
+                                "type": "object",
+                                "properties": {
+                                  "sentiment": {
+                                    "type": "string",
+                                    "description": "Overall sentiment result (e.g., 'positive').",
+                                    "example":"positive"
+                                  },
+                                  "confidence": {
+                                    "type": "number",
+                                    "format": "float",
+                                    "description": "Confidence score of the sentiment classification (0 to 1 scale).",
+                                    "example":"0.92"
+                                  }
+                                }
+                              },
+                              "sentiment_results": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "text": {
+                                      "type": "string",
+                                      "description": "Sentence analyzed for sentiment.",
+                                      "example":"The sun was shining brightly in the sky."
+                                    },
+                                    "sentiment": {
+                                      "type": "string",
+                                      "description": "Sentiment of the sentence (e.g., 'positive').",
+                                      "example":"positive"
+                                    },
+                                    "confidence": {
+                                      "type": "number",
+                                      "format": "float",
+                                      "description": "Confidence score of the sentence sentiment (0 to 1 scale).",
+                                      "example":"0.92"
+                                    }
+                                  }
+                                },
+                                "description": "Per-sentence sentiment analysis results."
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "pii_redaction": {
+                "type": "object",
+                "properties": {
+                  "redacted_text": {
+                    "type": "string",
+                    "description": "Text with redacted personally identifiable information (e.g., names replaced with '###').",
+                    "example":"the ### was shining brightly in the sky. birds were singing and a gentle breeze moved through the trees. #### walked along the path enjoying the fresh air and the scent of blooming flowers. it was a perfect day for a walk in the park."
+                  },
+                  "redaction_results": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "pii_type": {
+                          "type": "string",
+                          "description": "Type of redacted PII (e.g., 'person_name', 'date').",
+                          "enum": ["location", "amount", "money", "number", "organization", "person_name", "date", "time", "phone_number", "email_ids"],
+                          "example":"person_name"
+                        },
+                        "text": {
+                          "type": "string",
+                          "description": "The actual text that was redacted.",
+                          "example":"Emma"
+                        }
+                      }
+                    },
+                    "description": "List of redacted PII instances and their types."
+                  }
+                }
+              },
+              "content_moderation": {
+                "type": "object",
+                "properties": {
+                  "moderated_text": {
+                    "type": "string",
+                    "description": "Moderated version of the input text (e.g., cleaned of offensive content).",
+                    "example":"The sun was shining brightly in the sky. Birds were singing and a gentle breeze moved through the trees. Emma walked along the path enjoying the fresh air and the scent of blooming flowers. It was a perfect day for a walk in the park."
+                  },
+                  "moderation_results": {
+                    "type": "object",
+                    "properties": {
+                      "results": {
+                        "type": "object",
+                        "properties": {
+                          "moderation_results": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {},
+                              "example":"[]"
+                            },
+                            "description": "List of content moderation flags (empty if no issues found)."
+                          }
+                        }
+                      }
+                    },
+                    "description": "Results of content moderation checks."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "OCRRequest": {
+        "type": "object",
+        "required": [
+          "file",
+          "file_type",
+          "languages",
+          "ocr_type"
+        ],
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "The PDF or image file to process"
+          },
+          "file_type": {
+            "type": "string",
+            "enum": [
+              "pdf",
+              "img"
+            ],
+            "description": "Type of file, either 'pdf' or 'img'"
+          },
+          "languages": {
+            "type": "string",
+            "description": "Comma-separated list of language codes ('en', 'bn', 'gu', 'hi', 'kn', 'ml', 'or', 'pa', 'sa', 'ta', 'te')",
+            "example": "en,hi"
+          },
+          "ocr_type": {
+            "type": "string",
+            "enum": [
+              "only_ocr",
+              "layout_ocr"
+            ],
+            "description": "Type of OCR processing",
+            "example": "layout_ocr"
+          }
+        }
+      },
+      "OCRResponse": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "example":"image.jpg",
+            "description": "The name of the processed file (e.g., 'maxresdefault.jpg')."
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example":"en"
+            },
+            "description": "List of detected languages in the processed text (e.g., ['en'] for English)."
+          },
+          "text": {
+            "type": "string",
+            "description": "The OCR-processed text extracted from the file.",
+            "example":"Your Processed Text"
+          },
+          "processing_time_sec": {
+            "type": "number",
+            "format": "float",
+            "description": "The time taken to process the file in seconds (e.g., 0.92).",
+            "example":"0.92"
+          }
+        },
+        "required": [
+          "filename",
+          "languages",
+          "text",
+          "processing_time_sec"
+        ]
+      },
+      "TTSRequest": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "array",
+            "description": "The text you want to process to generate the speech.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "speed": {
+            "type": "number",
+            "description": "The speech rate of the audio file. Allows values from 0.5 (slowest speed) up to 1.5 (fastest speed)."
+          },
+          "pitch": {
+            "type": "number",
+            "description": "Speaking pitch, in the range from -3 to 3. 3 indicates an increase of 3 semitones; -3 indicates a decrease of 3 semitones."
+          },
+          "sample_rate": {
+            "type": "integer",
+            "description": "The sampling rate (in hertz) to synthesize the audio output."
+          },
+          "format": {
+            "type": "string",
+            "description": "The speech audio format to generate the audio file (e.g., WAV, MP3)."
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "TransliterationRequest": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "The text you want to translate. This is the input text that will be processed by the translation model.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "isBulk": {
+            "type": "boolean",
+            "description": "Determines the Words that are to be masked.\n\n **Note** - On defining values in the nmtMaskTerms, then automatically the nmtMask is set to true.\n\n **Example** - Masking a term - `nmtMaskTerms`: [`Reverie Language Technologies`] Here, the API will mask the term Reverie Language Technologies, if found in the source content, and will transliterate the word.",
+            "example": false
+          },
+          "ignoreTaggedEntities": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "data",
+          "domain"
+        ]
+      },
+      "TranslationRequest": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "The text you want to translate. This is the input text that will be processed by the translation model.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nmtMask": {
+            "type": "boolean",
+            "description": "Determines the Words that are to be masked.\n\n **Note** - On defining values in the nmtMaskTerms, then automatically the nmtMask is set to true.\n\n **Example** - Masking a term - `nmtMaskTerms`: [`Reverie Language Technologies`] Here, the API will mask the term Reverie Language Technologies, if found in the source content, and will transliterate the word.",
+            "example": false
+          },
+          "nmtMaskTerms": {
+            "type": "object"
+          },
+          "enableNmt": {
+            "type": "boolean",
+            "example": true
+          },
+          "enableLookup": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "data",
+          "domain"
+        ]
+      },
+      "TranslationResponse": {
+        "type": "object",
+        "properties": {
+          "responseList": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "inString": {
+                  "type": "string",
+                  "example": "Hey"
+                },
+                "outStrings": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "apiStatus": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "tokenConsumed": {
+            "type": "integer"
+          }
+        }
+      },
+      "TTSResponse": {
+        "type": "string",
+        "format": "binary",
+        "description": "Audio data in MP3 format",
+        "example": "Audio Response"
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
           }
         }
       }
     }
   }
+}

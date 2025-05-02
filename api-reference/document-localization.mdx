@@ -1,0 +1,294 @@
+---
+title: "Document Localization API"
+description: "The Document Localization API allows you to upload documents (PDFs, Word files, Text, etc.) and receive fully translated versions in the desired language. "
+---
+
+# How Does API Work?
+
+The process to trasnlate a file:
+
+- Post the request by:
+  - Enter the valid `REV-APPNAME`, `REV-APP-ID`, and `REV-API-KEY`.
+  - Define the Source & Target Language Code.
+  - Upload the file to translate the contents.
+- The API will return a translated file in the requested Indian language.
+
+## cURL for Integration
+### Step 1: Import the Document
+#### Request
+```bash
+curl --location 'https://revapi.reverieinc.com/translate_doc_import' \
+  --header 'REV-APP-ID: YOUR_APP_ID' \
+  --header 'REV-APPNAME: nmt' \
+  --header 'REV-API-KEY: YOUR_API_KEY' \
+  --form sourceLanguage="english" \
+  --form targetLanguage="hindi" \
+  --form projectFiles=@"/path/to/your/file/Movie.txt"
+```
+#### Response
+```json
+{
+  "message": "Project created successfully",
+  "projectId": "986bfe40-bd7c-47ca-9c77-4c0e7e5977e0",
+  "wordCount": {
+    "source": 312,
+    "unique": 155
+  }
+}
+```
+### Step 2: Check the Status
+#### Request
+```bash
+curl --location 'https://revapi.reverieinc.com/translate_doc_status?doc_id=YOUR_DOCUMENT_ID' \
+  --header 'REV-APP-ID: YOUR_APP_ID' \
+  --header 'REV-APPNAME: nmt' \
+  --header 'REV-API-KEY: YOUR_API_KEY'
+
+```
+#### Response
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "completed",
+  "data": "77ce6311-a230-4095-a59a-92a6c1c4bafd",
+  "timestamp": 1736750459198
+}
+```
+### Step 3: Export the Translated Document
+#### Request
+```bash
+curl --location 'https://revapi.reverieinc.com/download_translated_doc' \
+  --header 'Content-Type: application/json' \
+  --header 'REV-APP-ID: YOUR_APP_ID' \
+  --header 'REV-APPNAME: nmt' \
+  --header 'REV-API-KEY: YOUR_API_KEY' \
+  --data-raw '{
+    "unitId": "77ce6311-a230-4095-a59a-92a6c1c4bafd",
+    "targetLanguages": ["hindi"]
+}'
+
+```
+#### Response
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": "Translation files fetched successfully",
+  "data": {
+    "projectId": "77ce6311-a230-4095-a59a-92a6c1c4bafd",
+    "targetURLS": {
+      "Movie.txt": {
+        "hindi": "https://prabandhak.blob.core.windows.net/prabprod/8a954c1a-1462-47ad-99e6-6909a64017f7/77ce6311-a230-4095-a59a-92a6c1c4bafd/exports/Project_Level_1736750610592/hi_Movie.txt"
+      }
+    }
+  },
+  "timestamp": 1736750610962
+}
+
+```
+
+## API References
+
+### HTTP Import URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | https://revapi.reverieinc.com/translate_doc_import |
+
+#### Headers
+
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  API key shared by the Reverie team
+</ParamField> 
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  APP ID shared by the Reverie team
+</ParamField>
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  Value if this string should always be `doc_translation` 
+</ParamField>
+
+#### Request
+<ParamField body="sourceLanguage" type="string" required>
+  {" "}
+    -  Source Language of the file
+    -  Refer to section [Language Codes](/usage-guides/document-localization#supported-languages) for valid language code.
+</ParamField> 
+
+<ParamField body="targetLanguage" type="string" required>
+  {" "}
+    -  Target Language of the file
+    -  Refer to section [Language Codes](/usage-guides/document-localization#supported-languages) for valid language code.
+</ParamField> 
+
+<ParamField body="projectFiles" type="file" required>
+  {" "}
+    -  The file for which the translation is desired.
+</ParamField> 
+
+#### Response
+<ParamField body="message" type="string">
+  {" "}
+    -  Indicates that the document upload and translation job has been successfully created.
+</ParamField> 
+
+<ParamField body="projectId" type="string">
+  {" "}
+    -  A unique identifier for the submitted translation project. This ID can be used to track the status or retrieve the translated document.
+</ParamField> 
+
+<ParamField body="wordCount" type="[]">
+  {" "}
+    -  Contains a breakdown of the words in the uploaded source document
+</ParamField> 
+
+<ParamField body="source" type="integer">
+  {" "}
+    -  Total number of words in the source document.
+</ParamField> 
+
+<ParamField body="unique" type="integer">
+  {" "}
+    -  Number of unique words in the source document.
+</ParamField> 
+
+### HTTP Status URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | `https://revapi.reverieinc.com/translate_doc_status?doc_id=<YOUR-PROJECT-ID>` |
+
+#### Headers
+
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  API key shared by the Reverie team
+</ParamField> 
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  APP ID shared by the Reverie team
+</ParamField>
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  Value if this string should always be `doc_translation` 
+</ParamField>
+
+#### Query Parameter
+<ParamField query="doc_id" type="string" required>
+  {" "}
+  
+- `project_id` received after uploading the file.
+
+</ParamField> 
+
+
+#### Response
+<ParamField body="success" type="boolean">
+  {" "}
+    -  Indicates that the API request was successfully processed.
+</ParamField> 
+
+<ParamField body="statusCode" type="integer">
+  {" "}
+    -  Standard HTTP success status.
+</ParamField> 
+
+<ParamField body="message" type="string">
+  {" "}
+    -  Signifies that the translation job has finished or in process.
+</ParamField> 
+
+<ParamField body="data" type="string">
+  {" "}
+    - The ID of the completed document/project, confirming which job this status refers to.
+</ParamField> 
+
+<ParamField body="timestamp" type="string">
+  {" "}
+    -  A Unix timestamp indicating when the response was generated (in milliseconds).
+</ParamField> 
+
+### HTTP Export URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | `https://revapi.reverieinc.com/translate_doc_export` |
+
+#### Headers
+
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  API key shared by the Reverie team
+</ParamField> 
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  APP ID shared by the Reverie team
+</ParamField>
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  Value if this string should always be `doc_translation` 
+</ParamField>
+
+#### Request
+<ParamField body="unitId" type="string" required>
+  {" "}
+  
+- `data` received after successfully getting `completed` status of the translation.
+
+</ParamField> 
+
+<ParamField body="targetLanguages" type="array" required>
+  {" "}
+  
+- Array of target languages you need the translated file in.
+- Refer to section [Language Codes](/usage-guides/document-localization#supported-languages) for valid language code.
+
+</ParamField> 
+
+
+#### Response
+<ParamField body="success" type="boolean">
+  {" "}
+    -  Indicates that the API request was successfully processed.
+</ParamField> 
+
+<ParamField body="statusCode" type="integer">
+  {" "}
+    -  Standard HTTP success status.
+</ParamField> 
+
+<ParamField body="message" type="string">
+  {" "}
+    -  Indicates that the translated file URL has been retrieved.
+</ParamField> 
+
+<ParamField body="data" type="object">
+  {" "}
+    - Contains the actual response data related to the translated document(s).
+
+</ParamField> 
+
+<ParamField body="projectId" type="string">
+  {" "}
+    -  A unique identifier for the translation project. You can use this ID to track the project or request other resources related to it.
+</ParamField> 
+
+<ParamField body="targetURLS" type="object">
+  {" "}
+    -  Holds the list of translated file URLs, grouped by filename and target language.
+</ParamField> 
+
+<ParamField body="Movie.txt" type="object">
+  {" "}
+    -  The key here is the original filename. This contains translated versions mapped to their respective language codes.
+</ParamField> 
+
+<ParamField body="hindi" type="string">
+  {" "}
+    -  A downloadable URL for the Hindi translation of `Movie.txt`.
+</ParamField> 
+
+<ParamField body="timestamp" type="string">
+  {" "}
+    -  A Unix timestamp indicating when the response was generated (in milliseconds).
+</ParamField> 
