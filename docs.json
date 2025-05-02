@@ -71,7 +71,7 @@
         ]
       },
       {
-        "group": "Endpoint",
+        "group": "Endpoints",
         "pages": [
            "endpoints/transliteration",
            "endpoints/localization",
@@ -84,21 +84,31 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Visit our Site",
-          "href": "https://reverieinc.com",
-          "icon": "globe"
-        },
-        {
           "anchor": "Discord Community",
           "href": "https://discord.com/invite/ba8TT9UYfu",
-          "icon": "slack"
+          "icon": "discord"
+        },
+        {
+          "anchor": "Postman Collections",
+          "href": "https://www.postman.com/reverieinc/reverie-apis/collection/6fpi068/reverie-apis?action=share&creator=529945",
+          "icon": "code"
+        },
+        {
+          "anchor": "NPM Packages",
+          "href": "https://www.npmjs.com/package/@reverieit/reverie-client",
+          "icon": "js"
+        },
+        {
+          "anchor": "Python SDK",
+          "href": "https://pypi.org/project/reverie-sdk/",
+          "icon": "python"
         }
       ]
     }
   },
   "logo": {
     "light": "/logo/revLogo.svg",
-    "dark": "/logo/revLogo.svg"
+    "dark": "/logo/revLogoWhite.svg"
   },
   "navbar": {
     "primary": {
