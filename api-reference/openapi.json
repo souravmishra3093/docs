@@ -95,6 +95,7 @@
             "required": true,
             "schema": {
               "type": "string",
+              "enum":["application/json"],
               "example": "application/json",
               "description": "The format of the data to be posted."
             }
