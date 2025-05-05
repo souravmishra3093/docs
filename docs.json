@@ -34,7 +34,7 @@
         ]
       },
       {
-        "group": "API Reference",
+        "group": "API References",
         "pages": [
           "api-reference/speech-to-text-streaming",
           "api-reference/speech-to-text-batch",
@@ -118,11 +118,13 @@
     }
   },
   "footer": {
-    "socials": {
-      "x": "https://x.com/ReverieTech",
-      "github": "https://github.com/reverieinc",
-      "linkedin": "https://www.linkedin.com/company/reverie-language-technologies-pvt-ltd/posts/?feedView=all",
-      "youtube": "https://www.youtube.com/@reverielanguagetechnologie2440"
+    "socials": {      
+      "github": "https://github.com/reverieinc",      
+      "linkedin": "https://www.linkedin.com/company/reverie-language-technologies-pvt-ltd/",      
+      "youtube": "https://www.youtube.com/@reverielanguagetechnologie2440",
+      "x": "https://x.com/ReverieTech",      
+      "instagram": "https://www.instagram.com/reverietech/?next=%2F",
+      "facebook": "https://www.facebook.com/reverietech"
     }
   }
 }
