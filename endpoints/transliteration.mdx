@@ -253,3 +253,30 @@ func main() {
  
  
  </ResponseExample>
+
+ ### Response
+
+
+<ResponseField name="responseList" type="Object" required>
+  An array of translation responses
+  <Expandable title="ResponseList">
+    <ResponseField name="inString" type="string">
+      The input text in the source language script.
+
+      Example: `Reverie Language Technologies ltd website address is www.reverieinc.com`
+
+    </ResponseField>
+    <ResponseField name="outString" type="string[]">
+      The result of converting the input text to the output script.
+
+      Example: `["रेवरी लैंग्वेज टेक्नोलॉजीस लिमिटेड वेबसाइट एड्रेस इज़ www.reverieinc.com"]`
+
+    </ResponseField>
+    <ResponseField name="status" type="integer">
+      Status of API – successful/fail. By default, 2 for successful transactions.
+
+      Example: `2`
+
+    </ResponseField>
+  </Expandable>
+</ResponseField>

@@ -340,3 +340,33 @@ func main() {
  
  
  </ResponseExample>
+
+ ### Response
+<ResponseField name="responseList" type="Object" required>
+  An array of translation responses
+  <Expandable title="ResponseList">
+    <ResponseField name="inString" type="string">
+      The input text in the source language.
+
+      Example: `Reverie Language Technologies was established in 2009.`
+
+    </ResponseField>
+    <ResponseField name="outString" type="string">
+      The localized content in the requested target language.
+
+      Example: `Reverie Language Technologies की स्थापना 2009 में की गई थी।`
+
+    </ResponseField>
+    <ResponseField name="apiStatus" type="integer">
+      Status of API Moderated / Partial / Unmoderated (Aggregate of all segments). Refer to API Messages for available apiStatus and its description.
+
+      Example: `3`
+
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+<ResponseField name="tokenConsumed" type="integer" required>
+  The payload length served by NMT. Note: If LookUp DB serves the payload and the content is moderated, then tokenConsumed = 0.
+
+  Example: `102`
+</ResponseField>
