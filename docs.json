@@ -60,7 +60,14 @@
       {
         "group": "SDKs",
         "pages": [
-          "sdk/all-sdks"
+          {
+            "group": "Reverie's SDKs",
+            "pages": [
+              "sdk/javascript",
+              "sdk/python",
+              "sdk/go"
+            ]
+          }
         ]
       },
       {
