@@ -3,7 +3,7 @@ title: "Transliteration"
 description: "The Transliteration API is a REST API used to transliterate the content from English to Indic languages and vice-versa. "
 ---
 
-### Getting Started
+## Getting Started
 
 In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
 
@@ -214,7 +214,7 @@ go run main.go
 
 The API returns a `responseList`, which is an array containing the transliterated content. Each item includes the `inString`, representing the original text in the source script, and the corresponding `outString`, which is the result of converting that text into the target script. Additionally, the response includes an `api_status` field, where a value of `2` indicates a successful transaction.
 
-### Key Features
+## Key Features
 
 <CardGroup cols={2}>
   <Card title="Real-Time Transliteration" icon="bolt">
@@ -240,7 +240,7 @@ The API returns a `responseList`, which is an array containing the transliterate
   </Card>
 </CardGroup>
 
-### Supported Languages
+## Supported Languages
 | Language   | Language Code |
 |------------|---------------|
 | Hindi      | hi            |
@@ -266,7 +266,7 @@ The API returns a `responseList`, which is an array containing the transliterate
 | Sanskrit   | sa            |
 | Santhali   | sat           |
 
-### Supported Domains
+## Supported Domains
 | Domain ID       | Description                                                                 |
 |------------------|-----------------------------------------------------------------------------|
 | generic          | Transliterates generic content regardless of specific domain.                |
@@ -280,7 +280,7 @@ The API returns a `responseList`, which is an array containing the transliterate
 | medical          | Transliterates healthcare terms like medicine names and insurance (Hindi only). |
 | enterprise       | Transliterates job titles, company names, and corporate terminology.         |
 
-### Sample Code
+## Sample Code
 
 <CardGroup cols={2}>
   <a
@@ -314,7 +314,7 @@ The API returns a `responseList`, which is an array containing the transliterate
   </a>
 </CardGroup>
 
-### FAQs
+## FAQs
 
 <AccordionGroup>
   <Accordion title="What languages are supported by the Transliteration API?" icon="language">
@@ -338,7 +338,7 @@ The API returns a `responseList`, which is an array containing the transliterate
   </Accordion>
 </AccordionGroup>
 
-### API Messages
+## API Messages
 | Status Code | Status Type           | Message                                      | Description                                                                 |
 |-------------|-----------------------|----------------------------------------------|-----------------------------------------------------------------------------|
 | 200         | Success/OK            | -                                            | Successfully executed the request.                                          |

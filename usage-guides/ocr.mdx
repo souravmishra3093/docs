@@ -3,7 +3,7 @@ title: "OCR"
 description: "This API service provides OCR (Optical Character Recognition) capabilities for PDF documents and images, with support for multiple languages and processing
 modes."
 ---
-### Getting Started
+## Getting Started
 
 In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
 
@@ -192,7 +192,7 @@ go run main.go
 
 The API returns different content types based on the selected OCR processing mode. When using `layout_ocr`, the response is a Microsoft Word file (`example.docx`) with `Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document`, preserving the document's layout. In contrast, with `only_ocr`, the response is plain text (`example.txt`) with `Content-Type: text/plain`, providing just the extracted text without formatting.
 
-### Key Features
+## Key Features
 
 <CardGroup cols={2}>
   <Card title="Multi-Format OCR Support" icon="bolt">
@@ -218,7 +218,7 @@ The API returns different content types based on the selected OCR processing mod
   </Card>
 </CardGroup>
 
-### Supported Languages
+## Supported Languages
 | Language   | Language Code |
 |------------|------|
 | English    | en   |
@@ -233,7 +233,7 @@ The API returns different content types based on the selected OCR processing mod
 | Tamil      | ta   |
 | Telugu     | te   |
 
-### Processing Modes
+## Processing Modes
 1. `layout_ocr`:
     -  For PDFs: Performs layout analysis and OCR with structure preservation
     -  For images: Currently not supported
@@ -242,7 +242,7 @@ The API returns different content types based on the selected OCR processing mod
     -  For PDFs and images: Performs basic OCR
     -  Returns: Plain text file
 
-### Sample Codes
+## Sample Codes
 <CardGroup cols={2}>
   <a
     href="https://github.com/reverieinc/python-sdk/tree/main/ocr"
@@ -275,7 +275,7 @@ The API returns different content types based on the selected OCR processing mod
   </a>
 </CardGroup>
 
-### FAQs
+## FAQs
 <AccordionGroup>
   <Accordion title="What languages are supported by the OCR API?" icon="language">
     The OCR API supports **11 languages**, including English, Hindi, Bengali, Tamil, Telugu, Gujarati, Kannada, Malayalam, Oriya, Punjabi, and Sanskrit, ensuring robust regional text recognition.
@@ -298,7 +298,7 @@ The API returns different content types based on the selected OCR processing mod
   </Accordion>
 </AccordionGroup>
 
-### API Messages
+## API Messages
 | Error Message                     | Status Code | Description                                           |
 |-----------------------------------|-------------|-------------------------------------------------------|
 | No PDF file provided              | 400         | No file was uploaded                                  |

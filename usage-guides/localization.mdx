@@ -3,7 +3,7 @@ title: "Localization"
 description: "Localization is a REST API that quickly translates English content into Indic languages, supporting single or multiple sentences."
 ---
 
-### Getting Started
+## Getting Started
 
 In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
 
@@ -246,7 +246,7 @@ go run main.go
 
 The API returns a `responseList`, which is an array containing the localized content. Each item includes the `inString`, representing the original input text in the source language, and the corresponding `outString`, which contains the translated text in the requested target language.
 
-### Key Features
+## Key Features
 <CardGroup cols={2}>
   <Card title="Rapid Content Localization" icon="bolt">
     The Localization API quickly adapts English content into Indic languages, 
@@ -277,7 +277,7 @@ The API returns a `responseList`, which is an array containing the localized con
   </Card>
 </CardGroup>
 
-### Supported Languages
+## Supported Languages
 | Language   | Language Code |
 |------------|---------------|
 | Hindi      | hi            |
@@ -297,7 +297,7 @@ The API returns a `responseList`, which is an array containing the localized con
 | Nepali     | ne            |
 | Urdu       | ur            |
 
-### Supported Domains
+## Supported Domains
 | Domain ID (For v3.0) | Domain ID (For v2.0) | Description                                                                 |
 |----------------------|----------------------|-----------------------------------------------------------------------------|
 | generic              | 0                    | Default domain; localizes content regardless of specific domain.             |
@@ -310,7 +310,7 @@ The API returns a `responseList`, which is an array containing the localized con
 | education            | 7                    | Translates content from academic books.                                      |
 | medical              | 8                    | Serves the healthcare industry with accurate translations.                   |
 
-### Sample Code
+## Sample Code
 
 <CardGroup cols={2}>
   <a
@@ -344,7 +344,7 @@ The API returns a `responseList`, which is an array containing the localized con
   </a>
 </CardGroup>
 
-### FAQs
+## FAQs
 
 <AccordionGroup>
   <Accordion title="What languages are supported by the Localization API?" icon="language">
@@ -368,7 +368,7 @@ The API returns a `responseList`, which is an array containing the localized con
   </Accordion>
 </AccordionGroup>
 
-### API Messages
+## API Messages
 | Status Code | Status Type | Status                              | Description                                                                 |
 |-------------|-------------|-------------------------------------|-----------------------------------------------------------------------------|
 | 2           | Success     | LOOKUP_MODERATED                    | API fetched localization content from the database.                         |

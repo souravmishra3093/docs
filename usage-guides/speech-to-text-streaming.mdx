@@ -3,7 +3,7 @@ title: "Speech-to-Text (Streaming)"
 description: "An introduction to getting transcription data from live streaming audio in real time."
 ---
 
-### Getting Started
+## Getting Started
 
 In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
 
@@ -15,11 +15,16 @@ In this guide, you’ll learn how to automatically transcribe live streaming aud
 ### Include the SDK
 
 To use Reverie's Speech-to-Text Streaming SDK, include the following CDN in your project:
-
-```html
+<CodeGroup>
+```html JavaScript
 <!-- If you are using STT stream, add the following script to the head section of your index.html -->
 <script src="https://cdn.jsdelivr.net/npm/reverie-stt-sdk/dist/bundle.js"></script>
 ```
+```python Python
+# No need to include any script
+```
+
+</CodeGroup>
 
 ### Install Dependencies
 
@@ -168,7 +173,7 @@ In this response we see:
 - `confidence` : The level of confidence that Streaming STT API has in the accuracy of the transcription.
 - `display_text` : The beautified text of the final transcript. If the final transcript consists of digits, URL, app names, it is quickly converted to a readable format for the user.
 
-### Key Features
+## Key Features
 
 <CardGroup cols={2}>
   <Card title="Real-time Transcription" icon="microphone">
@@ -197,7 +202,7 @@ In this response we see:
   </Card>
 </CardGroup>
 
-### Sample Code
+## Sample Code
 
 <CardGroup cols={2}>
   <a
@@ -233,7 +238,7 @@ In this response we see:
   </a>
 </CardGroup>
 
-### FAQs
+## FAQs
 
 <AccordionGroup>
   <Accordion
@@ -269,7 +274,7 @@ In this response we see:
   </Accordion>
 </AccordionGroup>
 
-### Supported Domains
+## Supported Domains
 
 | Domain       | Description                                                      |
 | ------------ | ---------------------------------------------------------------- |
@@ -285,7 +290,7 @@ In this response we see:
 | yes-no       | Recognizes diverse yes/no responses (e.g., 'Haan', 'Yes').       |
 | email        | Precisely transcribes email addresses.                           |
 
-### Supported Languages
+## Supported Languages
 
 The Speech-to-Text solution supports transcription in multiple languages, tailored for diverse regional and linguistic needs:
 
@@ -302,7 +307,7 @@ The Speech-to-Text solution supports transcription in multiple languages, tailor
 - `as` - Assamese
 - `or` - Odia
 
-### Supported Audio Formats
+## Supported Audio Formats
 
 The Speech-to-Text solution supports various audio formats for flexible integration:
 
@@ -318,7 +323,7 @@ The Speech-to-Text solution supports various audio formats for flexible integrat
 | 16k_ulaw     | µ-Law audio frames, 16KHz sampling rate                          |
 | 8k_ulaw      | µ-Law audio frames, 8KHz sampling rate                           |
 
-### API Messages
+## API Messages
 
 | Message Code | Message              | Description                                                      |
 |--------------|----------------------|------------------------------------------------------------------|
