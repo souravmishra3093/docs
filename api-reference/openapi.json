@@ -355,7 +355,6 @@
     },
     "/process_doc": {
       "post": {
-        "summary": "Process OCR on a file",
         "description": "Upload a PDF or image file for OCR processing, specifying the file type, languages, and OCR processing type. Requires authentication headers.",
         "operationId": "processOCR",
         "parameters": [
@@ -493,7 +492,6 @@
     },
     "/api/v2/text-analyse": {
       "post": {
-        "summary": "Analyze text for translation, summarization, sentiment, entities, content safety, and PII redaction",
         "operationId": "textAnalyse",
         "parameters": [
           {
