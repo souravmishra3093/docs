@@ -1,0 +1,13 @@
+---
+title: "API Messages"
+---
+| Status Code | Status Type           | Message                                      | Description                                                                 |
+|-------------|-----------------------|----------------------------------------------|-----------------------------------------------------------------------------|
+| 200         | Success/OK            | -                                            | Successfully executed the request.                                          |
+| 400         | Bad Request           | Message depending on the missing parameter   | Incorrect request format or data posted incorrectly.                        |
+| 403         | Forbidden             | Invalid REV-API-KEY or REV-APP-ID            | Entered invalid credentials.                                                |
+| 403         | Forbidden             | usage exhausted                              | The provided credits or character limit is exhausted.                       |
+| 403         | Forbidden             | API key expired                              | The API key provided to a user is expired.                                  |
+| 403         | Forbidden             | unauthorized to use this src/tgt language    | Invalid language code passed or user cannot use the defined language code.  |
+| 403         | Forbidden             | unauthorized to use this API                 | The REV-APPNAME entered is invalid, or the user is not authorized to use it.|
+| 500         | Internal Server Error | Internal Server Error                        | An error occurred with the API.                                             |

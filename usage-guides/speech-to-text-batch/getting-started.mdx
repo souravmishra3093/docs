@@ -1,0 +1,229 @@
+---
+title: "Getting Started"
+description: "An introduction to getting transcription data from pre-recorded audio files."
+---
+This guide will walk you through how to transcribe pre-recorded audio with the Reverie API. We provide two scenarios to try: transcribe a remote file and transcribe a local file.
+
+<Note>
+  Before you start, you'll need to follow the steps in the [Get your API
+  Credentials](/authentication) to obtain your API key.
+</Note>
+
+### Install Dependencies
+
+<CodeGroup>
+
+```bash JavaScript
+npm i @reverieit/reverie-client
+```
+
+```bash Python
+pip install reverie-sdk
+```
+
+</CodeGroup>
+### Transcribe Audio from a Remote Stream
+
+To transcribe pre-recorded audio using one of Reverie's API, follow these steps.
+
+<CodeGroup>
+```javascript Javascript
+const ReverieClient = require("reverie-client");
+
+const reverieClient = new ReverieClient({
+apiKey: "YOUR-API-KEY",
+appId: "YOUR-APP-ID",
+});
+
+const response = await reverieClient.transcribeAudio({
+audioFile: file,
+language: lang,
+subtitles: subtitles
+});
+
+console.log("Response from API:", response);
+
+````
+
+```python Python
+from reverie_sdk import ReverieClient
+
+client = ReverieClient(
+    api_key="<YOUR API KEY>",
+    app_id="<YOUR APP ID>",
+)
+
+resp = client.asr.stt_file(
+    src_lang="en",
+    data=open("./path/to/audio.wav", "rb").read(),
+)
+print(resp)
+```
+```go GoLang
+package main
+
+import (
+"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"mime/multipart"
+	"net/http"
+	"os"
+)
+
+const (
+	apiURL     = "https://revapi.reverieinc.com/"
+	apiKey     = "your_api_key"   
+	appID      = "your_app_id"
+	appName    = "stt_file"
+	srcLang    = "en"
+	domain     = "generic"
+	audioPath  = "audio.wav"
+)
+
+type ApiResponse struct {
+	DisplayText string `json:"display_text"`
+}
+
+func transcribeAudio(filePath string) (string, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return "", fmt.Errorf("error opening file: %v", err)
+	}
+	defer file.Close()
+
+	var requestBody bytes.Buffer
+	writer := multipart.NewWriter(&requestBody)
+	part, err := writer.CreateFormFile("audio_file", filePath)
+	if err != nil {
+		return "", fmt.Errorf("error creating form file: %v", err)
+	}
+
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		return "", fmt.Errorf("error reading file: %v", err)
+	}
+	part.Write(fileBytes)
+	writer.Close()
+
+	req, err := http.NewRequest("POST", apiURL, &requestBody)
+	if err != nil {
+		return "", fmt.Errorf("error creating request: %v", err)
+	}
+
+	req.Header.Set("src_lang", srcLang)
+	req.Header.Set("domain", domain)
+	req.Header.Set("REV-API-KEY", apiKey)
+	req.Header.Set("REV-APPNAME", appName)
+	req.Header.Set("REV-APP-ID", appID)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("error sending request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("error reading response: %v", err)
+	}
+
+	var apiResponse ApiResponse
+	if err := json.Unmarshal(body, &apiResponse); err != nil {
+		return "", fmt.Errorf("error parsing JSON: %v", err)
+	}
+
+	return apiResponse.DisplayText, nil
+}
+
+func main() {
+	transcription, err := transcribeAudio(audioPath)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("Transcription:", transcription)
+}
+```
+
+</CodeGroup>
+
+### Results
+
+In order to see the results from Reverie, you must run the application. Run your application from the terminal. Your transcripts will appear in your shell.
+
+<CodeGroup>
+
+```bash JavaScript
+# Run your application using the file you created in the previous step
+# Example:
+npm start
+```
+
+```python Python
+# Run your application using the file you created in the previous step
+# Example:
+python main.py
+```
+
+```go GoLang
+// Run your application using the file you created in the previous step
+// Example:
+go run main.go
+```
+
+</CodeGroup>
+
+### Analyzing the Response
+
+```json
+{
+  "job_id": "e21f356d-cbf9-4d62-a960-1e9da1805d19",
+  "code": "000",
+  "message": "Transcript ready.",
+  "result": {
+    "transcript": "Hello. Welcome to Reverie.",
+    "original_transcript": "HELLO. WELCOME TO REVERIE.",
+    "channel_number": 1,
+    "words": [
+      [
+        {
+          "conf": 0.991683,
+          "end": 0.21,
+          "start": 0.09,
+          "word": "HELLO"
+        },
+        {
+          "conf": 1.0,
+          "end": 0.6,
+          "start": 0.21,
+          "word": "WELCOME"
+        },
+        {
+          "conf": 0.99723,
+          "end": 0.72,
+          "start": 0.6,
+          "word": "TO"
+        },
+        {
+          "conf": 1.0,
+          "end": 1.320315,
+          "start": 0.72,
+          "word": "REVERIE"
+        }
+      ]
+    ],
+    "subtitles": "1\n00:00:00,090 --> 00:00:06,900\nHELLO. WELCOME TO REVERIE.\n\n"
+  }
+}
+```
+
+In this response we see:
+
+- `job_id` : A unique Identity number auto-assigned by the API for each request.
+- `code` : Provides a message code which can be used to look up the nature of the response returned by the API.
+- `message` :Provides a brief description about the response returned by the API.
+- `result` : An array of transcript objects including, channel_number, transcript, list of words with start time, end time and confidence.Please check the sample response.

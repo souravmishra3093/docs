@@ -114,18 +114,20 @@ curl --location 'https://revapi.reverieinc.com/download_translated_doc' \
 <ParamField body="sourceLanguage" type="string" required>
   {" "}
     -  Source Language of the file
-    -  Refer to section [Language Codes](/usage-guides/document-localization#supported-languages) for valid language code.
+    -  Refer to section [Language Codes](/usage-guides/usage-guides/document-localization/supported-languages) for valid language code.
 </ParamField> 
 
 <ParamField body="targetLanguage" type="string" required>
   {" "}
     -  Target Language of the file
-    -  Refer to section [Language Codes](/usage-guides/document-localization#supported-languages) for valid language code.
+    -  Refer to section [Language Codes](/usage-guides/document-localization/supported-languages) for valid language code.
 </ParamField> 
 
 <ParamField body="projectFiles" type="file" required>
   {" "}
     -  The file for which the translation is desired.
+    - Refer to section [Supported Extensions](/usage-guides/document-localization/supported-extensions) for all the supported extensions.
+    - Refer to section [File Size](/usage-guides/document-localization/file-size) for maximum size limit.
 </ParamField> 
 
 #### Response
@@ -241,7 +243,7 @@ curl --location 'https://revapi.reverieinc.com/download_translated_doc' \
   {" "}
   
 - Array of target languages you need the translated file in.
-- Refer to section [Language Codes](/usage-guides/document-localization#supported-languages) for valid language code.
+- Refer to section [Language Codes](/usage-guides/document-localization/supported-languages) for valid language code.
 
 </ParamField> 
 

@@ -1,0 +1,171 @@
+---
+title: "Getting Started"
+description: "An introduction to getting transcription data from live streaming audio in real time."
+---
+In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
+
+<Note>
+  Before you start, you'll need to follow the steps in the [Get your API
+  Credentials](/authentication) to obtain your API key.
+</Note>
+
+### Include the SDK
+
+To use Reverie's Speech-to-Text Streaming SDK, include the following CDN in your project:
+<CodeGroup>
+```html JavaScript
+<!-- If you are using STT stream, add the following script to the head section of your index.html -->
+<script src="https://cdn.jsdelivr.net/npm/reverie-stt-sdk/dist/bundle.js"></script>
+```
+```python Python
+# No need to include any script
+```
+
+</CodeGroup>
+
+### Install Dependencies
+
+<CodeGroup>
+
+```bash JavaScript
+npm i @reverieit/reverie-client
+```
+
+```bash Python
+pip install reverie-sdk
+pip install pyaudio
+```
+
+</CodeGroup>
+### Transcribe Audio from a Remote Stream
+
+The following code shows how to transcribe audio from a remote audio stream. If you would like to learn how to stream audio from a microphone.
+
+<CodeGroup>
+```javascript Javascript
+const ReverieClient = require("reverie-client");
+
+const reverieClient = new ReverieClient({
+apiKey: "YOUR-API-KEY",
+appId: "YOUR-APP-ID",
+});
+
+await reverieClient.init_stt({
+src_lang: "hi",
+callback: (event) => {
+console.log("STT event:", event);
+},
+element: document.getElementById("transcript"),
+domain: "generic"
+
+});
+
+// Start/Stop streaming
+await reverieClient.start_stt();
+await reverieClient.stop_stt();
+
+````
+
+```python Python
+import pyaudio, asyncio
+from reverie_sdk import ReverieClient, AudioStream
+
+client = ReverieClient(
+    api_key="<YOUR-API-KEY>",
+    app_id="<YOUR-APP-ID>",
+)
+
+stream = AudioStream()
+pa = pyaudio.PyAudio()
+
+def mic_callback(in_data, frame_count, time_info, status):
+    try:
+        asyncio.run(stream.add_chunk_async(in_data))
+    except:
+        return (None, pyaudio.paAbort)
+    return (None, pyaudio.paContinue)
+
+async def main():
+    pa_stream = pa.open(
+        rate=16000,
+        channels=1,
+        format=pyaudio.paInt16,
+        frames_per_buffer=1024,
+        input=True,
+        stream_callback=mic_callback,
+    )
+    pa_stream.start_stream()
+
+    print("listening... press ctrl+C to stop", flush=True)
+
+    try:
+        await client.asr.stt_stream_async(
+            src_lang="en",  # Language code
+            bytes_or_stream=stream,
+            callback=print,  # Handle transcription results
+        )
+    except Exception as err:
+        print(err)
+    finally:
+        pa_stream.stop_stream()
+        pa_stream.close()
+
+asyncio.run(main())
+pa.terminate()
+````
+
+</CodeGroup>
+
+### Results
+
+In order to see the results from Reverie, you must run the application. Run your application from the terminal. Your transcripts will appear in your shell.
+
+<CodeGroup>
+
+```bash JavaScript
+# Run your application using the file you created in the previous step
+# Example:
+npm start
+```
+
+```python Python
+# Run your application using the file you created in the previous step
+# Example:
+python main.py
+```
+
+```go GoLang
+// Run your application using the file you created in the previous step
+// Example:
+go run main.go
+```
+
+</CodeGroup>
+
+### Analyzing the Response
+
+```json
+{
+  "id": "bb261bd789af4ba487a2667f8d942d4d7e0195fd1c8e4073",
+  "success": true,
+  "text": "आत्म निर्भर योजना इस योजना अथवा अभियान का उद्देश्य एक सौ तीस करोड़ भारतवासियों को आत्मनिर्भर बनाना है ताकि देश का हर नागरिक संकट की इस घड़ी में कदम से कदम मिलाकर चल सके",
+  "display_text": "आत्म निर्भर योजना इस योजना अथवा अभियान का उद्देश्य 130 करोड़ भारतवासियों को आत्मनिर्भर बनाना है",
+  "final": true,
+  "confidence": 0.743304,
+  "cause": "EOF received"
+}
+```
+
+In this response we see:
+
+- `id` : API will auto-assign assign a unique identification number for each request.
+- `success` : Will indicate the functional status of the API:
+  - If the `success` = true, then the API is functioning and ready to generate output.
+  - If the `success` = false, then the API is not functional and has some errors
+- `final` : Will report whether the received output is partial or final:
+  - If the `final` = true, then the received text is the final output.
+  - If the `final` = false, then the text received is partial and is still processing the file.
+- `cause` : Reason for obtaining the final output.
+- `text` : The streaming audio input is converted into text format in the requested language.
+- `confidence` : The level of confidence that Streaming STT API has in the accuracy of the transcription.
+- `display_text` : The beautified text of the final transcript. If the final transcript consists of digits, URL, app names, it is quickly converted to a readable format for the user.

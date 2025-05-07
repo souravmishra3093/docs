@@ -83,13 +83,13 @@ curl -X POST https://revapi.reverieinc.com/process_doc \
 <ParamField body="languages" type="string" required>
   {" "}
     -  Comma-separated list of language codes
-    -  Refer to section [Language Codes](/usage-guides/ocr#supported-languages) for valid language code.
+    -  Refer to section [Language Codes](/usage-guides/ocr/supported-languages) for valid language code.
 </ParamField> 
 
 <ParamField body="ocr_type" type="string" required>
   {" "}
     -  Type of OCR processing
-    -  Refer to section [OCR Codes](/usage-guides/ocr#processing-modes) for valid processing code.
+    -  Refer to section [OCR Codes](/usage-guides/ocr/processing-modes) for valid processing code.
 </ParamField> 
 
 ### Response
@@ -118,4 +118,4 @@ curl -X POST https://revapi.reverieinc.com/process_doc \
 
 The OCR API can raise exceptions for various reasons, such as failed OCR processing, invalid parameters, authentication errors, and network unavailability. The API provides detailed, machine-readable error responses to help users diagnose issues and respond more effectively. 
 
-Refer to: [API Messages](/usage-guides/ocr#api-messages) section to know the error code and corresponding messages.
+Refer to: [API Messages](/usage-guides/ocr/api-messages) section to know the error code and corresponding messages.

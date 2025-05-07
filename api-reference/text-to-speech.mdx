@@ -97,7 +97,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
   {" "}  
 - The desired language and voice code for synthesizing the audio file  <br />
 - Example: `hi_male` <br />
-- Specify the speaker’s code with respect to the language. Refer to [Supporting Speaker](/usage-guides/text-to-speech#speakers) Code section for valid speaker code.
+- Specify the speaker’s code with respect to the language. Refer to [Supporting Speaker](/usage-guides/text-to-speech/supported-speakers) Code section for valid speaker code.
 </ParamField>  
 
 #### Request
@@ -105,7 +105,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
   {" "}
   - The plain text or SSML input to synthesize an audio output.
   - If you want to follow W3 standards, the ssml field must be used and not the text field.
-  - For SSML input Refer to the [SSML Tags](/usage-guides/text-to-speech#core-ssml-tags)
+  - For SSML input Refer to the [SSML Tags](/usage-guides/text-to-speech/ssml-tags#core-ssml-tags)
 </ParamField> 
 
 <ParamField header="speed" type="float">
@@ -129,7 +129,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 <ParamField header="format" type="string">
   {" "}
   
-- The speech audio format to generate the audio file. Refer to [Supporting Audio Format](/usage-guides/text-to-speech#supported-audio-formats) section, to know the supporting audio formats.   <br />
+- The speech audio format to generate the audio file. Refer to [Supporting Audio Format](/usage-guides/text-to-speech/supported-audio-formats) section, to know the supporting audio formats.   <br />
 - Note: By default, the format = WAV
 </ParamField> 
 
@@ -137,7 +137,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 
 The TTS API raises exceptions for many reasons, such as failed conversions, invalid parameters, authentication errors, and network unavailability. It will provide more specific machine-readable messages with an error response so that users can react to errors more effectively. 
 
-Refer to [API Codes](/usage-guides/text-to-speech#api-messages) 
+Refer to [API Codes](/usage-guides/text-to-speech/api-messages) 
 to view the list of error messages and its description.
 
 ```json 

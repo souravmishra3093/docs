@@ -1,0 +1,25 @@
+---
+title: "API Messages"
+---
+| Status Code | Status Type | Status                              | Description                                                                 |
+|-------------|-------------|-------------------------------------|-----------------------------------------------------------------------------|
+| 2           | Success     | LOOKUP_MODERATED                    | API fetched localization content from the database.                         |
+| 3           | Success     | MT_SUCCESS                          | Source content translated using Neural Machine Translation (NMT).           |
+| 4           | Success     | LOOKUP_UNMODERATED                  | Localized content in database, but verification status is "unmoderated."    |
+| 5           | Success     | LOOKUP_INPROGRESS                   | Localized content in database; content moderation in progress.              |
+| 6           | Success     | LOOKUP_PARTIAL                      | API partially localized a segment from LookUp DB.                           |
+| 10          | Success     | T13N_SUCCESS                        | API fetched content from transliteration.                                   |
+| -2          | Error       | UNLOCALIZED                         | Requested content is transliterated, not translated.                        |
+| -3          | Error       | ROSETTA_ERROR                       | Error occurred while preprocessing the sentence.                            |
+| -4          | Error       | MT_ERROR                            | Error occurred during NMT translation.                                      |
+| -5          | Error       | MT_TIME_OUT                         | Timeout error while fetching response from NMT Engine.                      |
+| -6          | Error       | LOCMAN_ERROR                        | Error occurred while processing content in LocMan.                          |
+| -7          | Error       | SEGMENTATION_API_ERROR              | Error while segmenting the sentence.                                        |
+| 403         | Error       | unauthorized to use this src/tgt language | Invalid or unauthorized language code provided.                        |
+| 403         | Error       | Invalid REV-API-KEY or REV-APP-ID   | Invalid credentials provided.                                               |
+| 403         | Error       | usage exhausted                     | Provided credit limit is exhausted.                                         |
+| 403         | Error       | API key expired                     | API key provided has expired.                                               |
+| 403         | Error       | unauthorized to use this API        | User is not authorized to use the Localization API.                         |
+| 403         | Error       | Please provide data string          | Data is missing.                                                            |
+| 403         | Error       | Target language is mandatory        | Target language (tgt_lang) is missing.                                      |
+| 403         | Error       | Source language is mandatory        | Source language (src_lang) is missing.                                      |

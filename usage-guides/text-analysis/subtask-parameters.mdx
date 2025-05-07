@@ -1,0 +1,100 @@
+---
+title: "Subtask Parameters"
+---
+### Translation
+Translates text from one language to another.
+
+**Parameters:**
+- **Text**: `Text` - The input text to be translated.
+- **Source Language**: `Language` - Language code of the input text (e.g., `hi`, `en`, `bn`).
+- **Target Language**: `Language` - Language code for the output text (e.g., `hi`, `en`, `bn`).
+
+**Supported Languages**: All languages listed [here](/usage-guides/text-analysis/supported-languages)
+
+### PII Redaction
+Identifies and redacts personally identifiable information (PII) in the text.
+
+**Parameters:**
+- **Text**: `Text` - The input text to be processed.
+- **Language**: `Language` - Language code of the input text.
+- **Redaction Method**: `'Hash'` (Default) - Redacted values are replaced with a string of the same length containing `#`.
+- **PII Types**: Optional list of PII types to redact. Available types:
+  - `location`
+  - `amount`
+  - `money`
+  - `number`
+  - `organization`
+  - `person_name`
+  - `date`
+  - `time`
+  - `phone_number`
+  - `email_ids`
+
+**Supported Languages**: All languages listed [here](/usage-guides/text-analysis/supported-languages)
+
+<Note>If an empty list is provided, all identified PII types are redacted.</Note>
+
+### Summarization
+Generates a concise summary of the input text.
+
+**Parameters:**
+- **Text**: `Text` - The input text to be summarized.
+- **Language**: `Language` - Language code of the input text.
+- **Summary Type**: 
+  - `'bullets'` - Summary in bullet points.
+  - `'bullets_verbose'` - Detailed bullet points.
+  - `'gist'` - Brief summary (default).
+  - `'headline'` - One-line summary.
+  - `'paragraph'` - Summary in paragraph form.
+
+
+**Supported Languages**: All languages listed [here](/usage-guides/text-analysis/supported-languages)
+
+<Note> Summarization is disabled for text containing profane or abusive words. </Note> 
+
+### Named Entity Recognition (NER)
+Identifies and classifies named entities within the text.
+
+**Parameters:**
+- **Text**: `Text` - The input text to be processed.
+- **Language**: `Language` - Language code of the input text.
+- **Entity Types**: Optional list of entity types to identify. Available types:
+  - `location`
+  - `amount`
+  - `money`
+  - `number`
+  - `organization`
+  - `person_name`
+  - `date`
+  - `time`
+  - `phone_number`
+  - `email_ids`
+  - `hashtags`
+  - `urls`
+
+**Supported Languages**: All languages listed [here](/usage-guides/text-analysis/supported-languages)
+
+<Note> If an empty list is provided, all identified entity types are included in the response.</Note> 
+
+### Sentiment Analysis
+Analyzes the sentiment of the text, classifying it as positive, negative, or neutral.
+
+**Parameters:**
+- **Text**: `Text` - The input text to be analyzed.
+- **Language**: `Language` - Language code of the input text.
+- **Level**: 
+  - `'sentence'` - Sentence-level analysis.
+  - `'paragraph'` - Paragraph-level analysis.
+  - `'whole text'` - Analysis of the entire text (currently the only supported level).
+
+**Supported Languages**: All languages listed [here](/usage-guides/text-analysis/supported-languages)
+
+### Content Moderation
+Detects and categorizes offensive content such as profanity and hate speech.
+
+**Parameters:**
+- **Text**: `Text` - The input text to be analyzed.
+- **Language**: `Language` - Language code of the input text.
+- **Default Setting**: `"Profanity"` - Focuses on detecting profane content.
+
+**Supported Languages**: All languages listed [here](/usage-guides/text-analysis/supported-languages)

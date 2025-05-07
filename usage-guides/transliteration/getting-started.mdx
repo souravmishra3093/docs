@@ -1,0 +1,214 @@
+---
+title: "Getting Started"
+description: "The Transliteration API is a REST API used to transliterate the content from English to Indic languages and vice-versa. "
+---
+
+
+In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
+
+<Note>
+  Before you start, you'll need to follow the steps in the [Get your API
+  Credentials](/authentication) to obtain your API KEY & APP ID.
+</Note>
+
+### Make your First Call!
+
+Make your first API Call using the cURL request. Add your own API Credentials where it says `<YOUR-APP-ID>` & `<YOUR-API-KEY>`
+and then run the following example in a terminal or your favorite API client.
+
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'cnt_lang: en' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Reverie Language Technologies ltd website address is www.reverieinc.com"],
+}'
+```
+
+By default, The API will return the strings in the target language.
+
+### SDKs
+
+Reverie has several SDKs that can make it easier to use the API.
+Follow these steps to use the SDK of your choice to make a Reverie Transliteration request.
+
+### Install Dependencies
+
+<CodeGroup>
+
+```bash JavaScript
+npm i @reverieit/reverie-client
+```
+
+```bash Python
+pip install reverie-sdk
+```
+
+</CodeGroup>
+
+### Transliterate Text to your preferred language
+
+The following code shows how to convert the text to your preferred language.
+
+<CodeGroup>
+```javascript JavaScript
+const ReverieClient = require("reverie-client");
+
+const reverieClient = new ReverieClient({
+  apiKey: "YOUR-API-KEY",
+  appId: "YOUR-APP-ID",
+});
+
+async function transliterateText() {
+  const translation = await reverieClient.transliterate({
+    text: "Namaste",
+    src_lang: "en",
+    tgt_lang: "ta",
+  });
+  console.log(translation);
+}
+
+transliterateText();
+```
+```python Python
+from reverie_sdk import ReverieClient
+
+client = ReverieClient(
+    api_key="MY_API_KEY",
+    app_id="MY_APP_ID",
+)
+
+res = client.t13n.transliteration(
+    data=[
+        "Reverie Language Technologies is located in Bengaluru ",
+        "The address is Jio Avana, Bellandur, Bengaluru -560102",
+        "The website address is www.reverieinc.com.",
+    ],
+    src_lang="en",
+    cnt_lang="en",
+    tgt_lang="hi",
+    noOfSuggestions=2,
+)
+
+print(res)
+```
+```go Go
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+)
+
+const (
+	apiURL     = "https://revapi.reverieinc.com/"
+	apiKey     = "<YOUR API KEY>"
+	appID      = "<YOUR APP ID>"
+)
+
+type RequestBody struct {
+	Data                 []string `json:"data"`
+	IsBulk               bool     `json:"isBulk"`
+	IgnoreTaggedEntities bool     `json:"ignoreTaggedEntities"`
+}
+
+type APIResponse struct {
+	ResponseList []struct {
+		APIStatus int      `json:"apiStatus"`
+		InString  string   `json:"inString"`
+		OutString []string `json:"outString"`
+	} `json:"responseList"`
+}
+func main() {
+	text := "Reverie Language Technologies ltd website address is www.reverieinc.com"
+	requestBody := map[string]interface{}{
+		"data":                 []string{text},
+		"isBulk":               false,
+		"ignoreTaggedEntities": false,
+	}
+
+	jsonData, err := json.Marshal(requestBody)
+	if err != nil {
+		log.Fatalf("Error marshaling JSON: %v", err)
+	}
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Fatalf("Error creating request: %v", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("REV-API-KEY", apiKey)
+	req.Header.Set("REV-APP-ID", appID)
+	req.Header.Set("src_lang", "en")
+	req.Header.Set("tgt_lang", "hi")
+	req.Header.Set("domain", "generic")
+	req.Header.Set("cnt_lang", "en")
+	req.Header.Set("REV-APPNAME", "transliteration")
+	req.Header.Set("REV-APPVERSION", "2.0")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatalf("Error making request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Error reading response body: %v", err)
+	}
+
+	var apiResponse APIResponse
+	err = json.Unmarshal(body, &apiResponse)
+	if err != nil {
+		log.Fatalf("Error unmarshaling response: %v", err)
+	}
+
+	if len(apiResponse.ResponseList) > 0 && len(apiResponse.ResponseList[0].OutString) > 0 {
+		fmt.Println("Transliterated text:", apiResponse.ResponseList[0].OutString[0])
+	} else {
+		fmt.Println("No response from API")
+	}
+}
+```
+</CodeGroup>
+
+### Results
+
+In order to see the results from Reverie, you must run the application. Run your application from the terminal. Your transcripts will appear in your shell.
+
+<CodeGroup>
+
+```bash JavaScript
+# Run your application using the file you created in the previous step
+# Example:
+npm start
+```
+
+```python Python
+# Run your application using the file you created in the previous step
+# Example:
+python main.py
+```
+
+```go GoLang
+// Run your application using the file you created in the previous step
+// Example:
+go run main.go
+```
+</CodeGroup>
+
+### Analyzing the Response
+
+The API returns a `responseList`, which is an array containing the transliterated content. Each item includes the `inString`, representing the original text in the source script, and the corresponding `outString`, which is the result of converting that text into the target script. Additionally, the response includes an `api_status` field, where a value of `2` indicates a successful transaction.

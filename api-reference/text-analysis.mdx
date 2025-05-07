@@ -172,7 +172,7 @@ curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=fals
 
 <ParamField body="language" type="string" required>
   - Language code of the input text (e.g., "en" for English).
-  - Refer to section [Language Codes](/usage-guides/text-analysis#supported-languages) for valid language code.
+  - Refer to section [Language Codes](/usage-guides/text-analysis/supported-languages) for valid language code.
 </ParamField>
 
 <ParamField body="translation" type="object" required>
@@ -181,12 +181,12 @@ curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=fals
 
 <ParamField body="translation.target_language" type="string" required>
   - Target language code for translation.
-  - Refer to section [Language Codes](/usage-guides/text-analysis#supported-languages) for valid language code.
+  - Refer to section [Language Codes](/usage-guides/text-analysis/supported-languages) for valid language code.
 </ParamField>
 
 <ParamField body="translation.translation_domain" type="string" required>
   - Domain for translation to improve accuracy (e.g., "generic").
-  - Refer to section [Domain Codes](/usage-guides/localization#supported-domains) for valid language code.
+  - Refer to section [Domain Codes](/usage-guides/localization/supported-domains) for valid language code.
 </ParamField>
 
 <ParamField body="pii_redaction" type="object" required>
@@ -199,7 +199,7 @@ curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=fals
 
 <ParamField body="pii_redaction.redact_pii_types" type="array" required>
   - List of specific PII types to redact (empty means all).
-  - Refer to section [Redact Types](/usage-guides/text-analysis#pii-redaction) for valid code.
+  - Refer to section [Redact Types](/usage-guides/text-analysis/subtask-parameters#pii-redaction) for valid code.
 </ParamField>
 
 <ParamField body="summary" type="object" required>
@@ -212,7 +212,7 @@ curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=fals
 
 <ParamField body="summary.summary_type" type="string" required>
  -  Type of summary to produce (e.g., "headline").
- - Refer to section [Summarization Types](/usage-guides/text-analysis#summarization) for valid code.
+ - Refer to section [Summarization Types](/usage-guides/text-analysis/subtask-parameters#summarization) for valid code.
 </ParamField>
 
 <ParamField body="entity_recognition" type="object" required>
@@ -221,7 +221,7 @@ curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=fals
 
 <ParamField body="entity_recognition.entity_types" type="array" required>
   - List of entity types to detect (empty means all types).
-  - Refer to section [Entity Types](/usage-guides/text-analysis#named-entity-recognition-ner) for valid code.
+  - Refer to section [Entity Types](/usage-guides/text-analysis/subtask-parameters#named-entity-recognition-ner) for valid code.
 </ParamField>
 
 <ParamField body="sentiment" type="object" required>
@@ -230,7 +230,7 @@ curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=fals
 
 <ParamField body="sentiment.level" type="string" required>
   - Level at which sentiment is analyzed (e.g., "whole" or "sentence").
-  - Refer to section [Sentiment Level](/usage-guides/text-analysis#sentiment-analysis) for valid code.
+  - Refer to section [Sentiment Level](/usage-guides/text-analysis/subtask-parameters#sentiment-analysis) for valid code.
 </ParamField>
 
 <ParamField body="content_moderation" type="object" required>
@@ -239,7 +239,7 @@ curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=fals
 
 <ParamField body="content_moderation.moderation_types" type="array" required>
   - List of content types to check (e.g., "hate_speech", "profanity").
-  - Refer to section [Content Moderation Types](/usage-guides/text-analysis#content-moderation) for valid code.
+  - Refer to section [Content Moderation Types](/usage-guides/text-analysis/subtask-parameters#content-moderation) for valid code.
 </ParamField>
 
 ### Response

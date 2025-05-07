@@ -1,0 +1,297 @@
+---
+title: "Getting Started"
+description: " The Comprehensive NLP API is designed to handle multiple natural language processing
+NLP tasks through a unified endpoint."
+---
+In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
+
+<Note>
+  Before you start, you'll need to follow the steps in the [Get your API
+  Credentials](/authentication) to obtain your API KEY & APP ID.
+</Note>
+
+### Make your First Call!
+
+Make your first API Call using the cURL request. Add your own API Credentials where it says `<YOUR-APP-ID>` & `<YOUR-API-KEY>`
+and then run the following example in a terminal or your favorite API client.
+
+```bash
+curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=false&summary=false&sentiment=true&detect_entities=true&content_safety=true&pii_redaction=true' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR_REV_API_KEY>' \
+--header 'REV-APP-ID: <YOUR_REV_APP_ID>' \
+--header 'REV-APPNAME: text-analysis' \
+--data-raw '{
+  "text": "Today is a special day. I sent you an email earlier and shared my website link. Please use #ForBetterReach and feel free to contact me around 10 AM.",
+  "language": "en",
+  "translation": {
+    "target_language": "en",
+    "translation_domain": "generic"
+  },
+  "pii_redaction": {
+    "redact_pii_sub": "entity_name",
+    "redact_pii_types": []
+  },
+  "summary": {
+    "summary_model": "gemma2:2b",
+    "summary_type": "headline"
+  },
+  "entity_recognition": {
+    "entity_types": []
+  },
+  "sentiment": {
+    "level": "whole"
+  },
+  "content_moderation": {
+    "moderation_types": [
+      "hate_speech",
+      "profanity"
+    ]
+  }
+}'
+
+```
+This API returns translation, summarization, entity recognition, sentiment analysis, PII redaction, and content moderation results for a given text.
+
+### SDKs
+
+Reverie has several SDKs that can make it easier to use the API.
+Follow these steps to use the SDK of your choice to make a Reverie Localization request.
+
+### Install Dependencies
+
+<CodeGroup>
+
+```bash JavaScript
+npm i @reverieit/reverie-client
+```
+
+```bash Python
+pip install reverie-sdk
+```
+
+</CodeGroup>
+
+### Analyze the Text
+
+The following code shows how to analyze the provided text.
+
+<CodeGroup>
+```javascript JavaScript
+const ReverieClient = require("reverie-client");
+
+const reverieClient = new ReverieClient({
+  apiKey: "YOUR-API-KEY",    
+  appId: "YOUR-APP-ID",  
+});
+
+async function analyzeText() {
+  try {
+    const analysis = await reverieClient.analyze_text({
+      text: "Aap kaise hain?",         
+      src_lang: "hi",                 
+      tgt_lang: "en",                 
+      translation_domain: "generic",  
+      moderation_types: ["hate_speech", "profanity"] 
+    });
+
+    console.log("Analysis Result:", analysis);
+  } catch (error) {
+    console.error("Error during analysis:", error);
+  }
+}
+
+analyzeText();
+```
+```python Python
+import requests
+
+API_URL = "https://revapi.reverieinc.com/api/v2/text-analyse?translate=true&summary=true&sentiment=false&detect_entities=true&content_safety=true&pii_redaction=true"
+API_KEY = "<YOUR-API-KEY>"
+APP_ID = "<YOUR-APP-ID>"
+
+def analyze_text(text, src_lang, tgt_lang=None, translation_domain="generic", moderation_types=None):
+    if not src_lang:
+        raise ValueError("Content language is required")
+    if not text:
+        raise ValueError("Text is required for text analysis")
+
+    headers = {
+        "Content-Type": "application/json",
+        "REV-API-KEY": API_KEY,
+        "REV-APP-ID": APP_ID,
+        "REV-APPNAME": "text-analysis"
+    }
+
+    data = {
+        "text": text,
+        "language": src_lang,
+        "pii_redaction": {
+            "redact_pii_sub": "entity_name",
+            "redact_pii_types": []
+        },
+        "summary": {
+            "summary_model": "gemma2:2b",
+            "summary_type": "gist"
+        },
+        "entity_recognition": {
+            "entity_types": []
+        },
+        "sentiment": {
+            "level": "whole"
+        },
+        "content_moderation": {
+            "moderation_types": moderation_types or ["hate_speech", "profanity"]
+        }
+    }
+
+    if tgt_lang:
+        data["translation"] = {
+            "target_language": tgt_lang,
+            "translation_domain": translation_domain
+        }
+
+    response = requests.post(API_URL, json=data, headers=headers)
+
+    if response.status_code == 200:
+        return response.json().get("results", "No results found")
+    else:
+        raise Exception(f"Error: {response.text}")
+
+# Example Usage
+try:
+    result = analyze_text("<YOUR-TEXT-HERE>", "<SOURCE-LANGUAGE>", "<TARGET-LANGUAGE>")
+    print("Analysis Result:", result)
+except Exception as e:
+    print(e)
+```
+```go Go
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+)
+
+const (
+	apiURL = "https://revapi.reverieinc.com/api/v2/text-analyse?translate=true&summary=true&sentiment=false&detect_entities=true&content_safety=true&pii_redaction=true"
+	apiKey = "<YOUR-API-KEY>"
+	appID  = "<YOUR-APP-ID>"
+)
+
+func analyzeText(text, srcLang, tgtLang string) (interface{}, error) {
+	if srcLang == "" {
+		return nil, fmt.Errorf("content language is required")
+	}
+	if text == "" {
+		return nil, fmt.Errorf("text is required for text analysis")
+	}
+
+	headers := map[string]string{
+		"Content-Type": "application/json",
+		"REV-API-KEY":  apiKey,
+		"REV-APP-ID":   appID,
+		"REV-APPNAME":  "text-analysis",
+	}
+
+	payload := map[string]interface{}{
+		"text":     text,
+		"language": srcLang,
+		"pii_redaction": map[string]interface{}{
+			"redact_pii_sub":  "entity_name",
+			"redact_pii_types": []string{},
+		},
+		"summary": map[string]interface{}{
+			"summary_model": "gemma2:2b",
+			"summary_type":  "gist",
+		},
+		"entity_recognition": map[string]interface{}{
+			"entity_types": []string{},
+		},
+		"sentiment": map[string]interface{}{
+			"level": "whole",
+		},
+		"content_moderation": map[string]interface{}{
+			"moderation_types": []string{"hate_speech", "profanity"},
+		},
+	}
+
+	if tgtLang != "" {
+		payload["translation"] = map[string]interface{}{
+			"target_language":    tgtLang,
+			"translation_domain": "generic",
+		}
+	}
+
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
+	for key, value := range headers {
+		req.Header.Set(key, value)
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+
+	if resp.StatusCode == 200 {
+		var result map[string]interface{}
+		json.Unmarshal(body, &result)
+		return result["results"], nil
+	} else {
+		return nil, fmt.Errorf("error: %s", string(body))
+	}
+}
+
+func main() {
+	result, err := analyzeText("<YOUR-TEXT-HERE>", "<SOURCE-LANGUAGE>", "<TARGET-LANGUAGE>")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("Analysis Result:", result)
+}
+```
+</CodeGroup>
+
+### Results
+
+In order to see the results from Reverie, you must run the application. Run your application from the terminal. Your transcripts will appear in your shell.
+
+<CodeGroup>
+
+```bash JavaScript
+# Run your application using the file you created in the previous step
+# Example:
+npm start
+```
+
+```python Python
+# Run your application using the file you created in the previous step
+# Example:
+python main.py
+```
+
+```go GoLang
+// Run your application using the file you created in the previous step
+// Example:
+go run main.go
+```
+</CodeGroup>
+
+### Analyzing the Response
+The API returns various types of analysis results based on the selected parameters. When the text is analyzed, the response includes multiple components: `translation` provides the translated text in the target language, `summary` gives a condensed version of the input, `entity_recognition` identifies specific entities such as names and locations, `sentiment_analysis` evaluates the tone of the text, `pii_redaction` masks sensitive information like names and locations, and `content_moderation `ensures that the text complies with safety standards. Each of these results is provided in a structured format, giving comprehensive insights into the input text's content.

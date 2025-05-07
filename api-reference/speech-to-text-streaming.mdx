@@ -182,7 +182,7 @@ pa.terminate()
 - Indicates the language in which the audio is spoken. <br />
 - Specify the ISO language code. <br />
 - Example: `hi` <br />
-- Refer to section [Language Codes](/usage-guides/speech-to-text-streaming#supported-languages) for valid language code.
+- Refer to section [Language Codes](/usage-guides/speech-to-text-streaming/supported-languages) for valid language code.
 </ParamField>  
 
 <ParamField header="domain" type="string" required>
@@ -191,7 +191,7 @@ pa.terminate()
 - The universe in which the Streaming STT API is used for transcribing the speech.  <br />
 - Specify the domain ID. <br />
 - Example: `generic` <br />
-- Refer to section [Domains](/usage-guides/speech-to-text-streaming#supported-domains) for valid domain code.
+- Refer to section [Domains](/usage-guides/speech-to-text-streaming/supported-domains) for valid domain code.
 </ParamField> 
 
 <ParamField header="timeout" type="float">
@@ -214,7 +214,7 @@ pa.terminate()
   {" "}
   
 - The audio sampling rate and the data format of the speech.    <br />
-- Refer to section [Supported Audio Formats](/usage-guides/speech-to-text-streaming#supported-audio-formats) for valid audio format code. <br />
+- Refer to section [Supported Audio Formats](/usage-guides/speech-to-text-streaming/supported-audio-formats) for valid audio format code. <br />
 - Note: By default, the format = `16k_int16`. (WAV, Signed 16 bit, 16,000 or 16K Hz).
 </ParamField> 
 
@@ -321,7 +321,7 @@ pa.terminate()
 
 The Streaming STT API raises exceptions for many reasons, such as a failed connection, invalid parameters, authentication errors, and network unavailability. We provide more specific human-readable messages with an error response so that users can react to errors more. 
 
-In the API response, if the `success` = `false`, then the cause will display the reason for the error. Refer to [API Codes](/usage-guides/speech-to-text-streaming#api-messages) 
+In the API response, if the `success` = `false`, then the cause will display the reason for the error. Refer to [API Codes](/usage-guides/speech-to-text-streaming/api-messages) 
 to view the list of error messages and its description.
 
 ```json 

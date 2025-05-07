@@ -169,7 +169,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
   {" "}
   - The language of the input text 
   - Example : `or`, `hi`, `bn`
-  - Refer to section [Language Codes](/usage-guides/localization#supported-languages) for valid language code.
+  - Refer to section [Language Codes](/usage-guides/localization/supported-languages) for valid language code.
 </ParamField> 
 
 <ParamField header="tgt_lang" type="string" required>
@@ -177,13 +177,13 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
   - Language to which you want to localize the input text 
   - Note: To enter multiple target languages, separate the value using the comma separator(,). For example: `tgt_lang` : `hi, ta`
   - Example : `or`, `hi`, `bn`
-  - Refer to section [Language Codes](/usage-guides/localization#supported-languages) for valid language code.
+  - Refer to section [Language Codes](/usage-guides/localization/supported-languages) for valid language code.
 </ParamField> 
 
 <ParamField header="domain" type="string" required>
   {" "}
   - The Domain refers to the universe in which you use the Localization API. Example- Health Care, Insurance, Legal, etc.
-  - Refer to section [Domain Codes](/usage-guides/localization#supported-domains) for valid language code.
+  - Refer to section [Domain Codes](/usage-guides/localization/supported-domains) for valid language code.
 </ParamField> 
 
 ### Request
@@ -252,7 +252,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 
 <ParamField header="apiStatus" type="integer">
   {" "}
-  - Status of API Moderated / Partial /Unmoderated (Aggregate of all segments). Refer to [API Messages](/usage-guides/localization#api-messages) to know about the available apiStatus and its description.
+  - Status of API Moderated / Partial /Unmoderated (Aggregate of all segments). Refer to [API Messages](/usage-guides/localization/api-messages) to know about the available apiStatus and its description.
 </ParamField> 
 
 
@@ -261,7 +261,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
   - A dictionary/object with language codes as keys and integer status codes as values. Represents the status of the API output for each language, indicating the moderation level of the response content. Each key is a language code (e.g.,”hi” for Hindi,”ta” for Tamil), and each value is an integer status code representing the moderation level.
   - **Note**: This `api_statuses` field will be displayed only if multiple languages are requested in the same API payload.
   - Refer to section [Language Codes](/usage-guides/localization#supported-languages) for valid language code.
-  - Refer to [API Messages](/usage-guides/localization#api-messages) to know about the available apiStatus and its description.
+  - Refer to [API Messages](/usage-guides/localization/api-messages) to know about the available apiStatus and its description.
 
 </ParamField> 
 
@@ -274,7 +274,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 <ParamField header="msg" type="string">
   {" "}
   - A Human-readable error message.
-  - Refer to [API Messages](/usage-guides/localization#api-messages) to know about the available apiStatus and its description.
+  - Refer to [API Messages](/usage-guides/localization/api-messages) to know about the available apiStatus and its description.
 </ParamField> 
 
 <ParamField header="tokenConsumed" type="integer">
@@ -293,7 +293,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 
 The Localization API raises exceptions for many reasons, such as failed conversions, invalid parameters, authentication errors, and network unavailability. It will provide more specific machine-readable messages with an error response so that users can react to errors more effectively.
 
-Refer to: [API Messages](/usage-guides/localization#api-messages) section to know the error code and corresponding messages.
+Refer to: [API Messages](/usage-guides/localization/api-messages) section to know the error code and corresponding messages.
 
 ```json
 { 

@@ -23,14 +23,104 @@
       {
         "group": "Usage Guides",
         "pages": [
-          "usage-guides/speech-to-text-streaming",
-          "usage-guides/speech-to-text-batch",
-          "usage-guides/text-to-speech",
-          "usage-guides/localization",
-          "usage-guides/transliteration",
-          "usage-guides/ocr",
-          "usage-guides/document-localization",
-           "usage-guides/text-analysis"
+          {
+            "group": "Speech-to-Text (Streaming)",
+            "pages": [
+              "usage-guides/speech-to-text-streaming/getting-started",
+              "usage-guides/speech-to-text-streaming/key-features",
+              "usage-guides/speech-to-text-streaming/sample-code",
+              "usage-guides/speech-to-text-streaming/faqs",
+              "usage-guides/speech-to-text-streaming/supported-domains",
+              "usage-guides/speech-to-text-streaming/supported-languages",
+              "usage-guides/speech-to-text-streaming/supported-audio-formats",
+              "usage-guides/speech-to-text-streaming/api-messages"
+            ]
+          },
+          {
+            "group": "Speech-to-Text (Batch)",
+            "pages": [
+              "usage-guides/speech-to-text-batch/getting-started",
+              "usage-guides/speech-to-text-batch/key-features",
+              "usage-guides/speech-to-text-batch/supported-languages",
+              "usage-guides/speech-to-text-batch/supported-audio-formats",              
+              "usage-guides/speech-to-text-batch/sample-code",
+              "usage-guides/speech-to-text-batch/faq",
+              "usage-guides/speech-to-text-batch/api-messages"
+            ]
+          },
+          {
+            "group": "Text-to-Speech",
+            "pages": [
+              "usage-guides/text-to-speech/getting-started",
+              "usage-guides/text-to-speech/key-features",
+              "usage-guides/text-to-speech/supported-speakers",
+              "usage-guides/text-to-speech/ssml-tags", 
+              "usage-guides/text-to-speech/supported-audio-formats",
+              "usage-guides/text-to-speech/supported-sampling-rates",                     
+              "usage-guides/text-to-speech/sample-code",
+              "usage-guides/text-to-speech/faq",
+              "usage-guides/text-to-speech/api-messages"    
+            ]
+          },
+          {
+            "group": "Localization",
+            "pages": [
+              "usage-guides/localization/getting-started",
+              "usage-guides/localization/key-features",
+              "usage-guides/localization/supported-languages",
+              "usage-guides/localization/supported-domains",              
+              "usage-guides/localization/sample-code",
+              "usage-guides/localization/faq",
+              "usage-guides/localization/api-messages"
+            ]
+          },
+          {
+            "group": "Transliteration",
+            "pages": [
+              "usage-guides/transliteration/getting-started",
+              "usage-guides/transliteration/key-features",
+              "usage-guides/transliteration/supported-languages",
+              "usage-guides/transliteration/supported-domains",              
+              "usage-guides/transliteration/sample-code",
+              "usage-guides/transliteration/faq",
+              "usage-guides/transliteration/api-messages"
+            ]
+          },
+          {
+            "group": "OCR",
+            "pages": [
+              "usage-guides/ocr/getting-started",
+              "usage-guides/ocr/key-features",
+              "usage-guides/ocr/supported-languages",
+              "usage-guides/ocr/processing-modes",              
+              "usage-guides/ocr/sample-code",
+              "usage-guides/ocr/faq",
+              "usage-guides/ocr/api-messages"
+            ]
+          },
+          {
+            "group": "Document localization",
+            "pages": [
+              "usage-guides/document-localization/getting-started",
+              "usage-guides/document-localization/key-features",
+              "usage-guides/document-localization/supported-languages",
+              "usage-guides/document-localization/supported-extensions",
+              "usage-guides/document-localization/file-size",
+              "usage-guides/document-localization/sample-code",
+              "usage-guides/document-localization/api-messages"
+            ]
+          },
+          {
+            "group": "Text Analysis",
+            "pages": [
+              "usage-guides/text-analysis/getting-started",
+              "usage-guides/text-analysis/key-features",
+              "usage-guides/text-analysis/supported-languages",
+              "usage-guides/text-analysis/subtask-parameters",              
+              "usage-guides/text-analysis/sample-code",
+              "usage-guides/text-analysis/faq"
+            ]
+          }
         ]
       },
       {

@@ -1,0 +1,241 @@
+---
+title: "SSML Tags"
+---
+## SSML Tags for Text-to-Speech Customization
+
+SSML (Speech Synthesis Markup Language) tags allow you to customize how a text-to-speech engine generates audio. 
+
+<CardGroup cols={2}>
+  <Card title="Why Use SSML?" icon="info">
+    SSML gives you precise control over speech characteristics like pauses, pitch, speed, and pronunciation, enabling natural and context-appropriate audio output.
+  </Card>
+  <Card title="Reverie TTS Support" icon="volume">
+    Reverie’s TTS API supports SSML to structure text, switch voices, and customize pronunciation for various formats like dates, currencies, and units.
+  </Card>
+</CardGroup>
+
+## Core SSML Tags
+
+### `<speak>` and `<voice>`
+
+<CardGroup cols={2}>
+  <Card icon="code">
+    The root element for any SSML document. Surround all text to be spoken with this tag.  
+    **Note**: The `<speak>` tag is mandatory.
+  </Card>
+  <Card icon="user">
+    Encapsulates text and other tags, specifying the voice to use via the `name` attribute. Supports multiple voices in a single request.
+  </Card>
+  <Card icon="user">
+   `<p>` represents a Paragraph. Use the tag to add a pause between paragraphs in the text. 
+   **Note**: By default, the API will separate the paragraphs by 800ms break. 
+  </Card>
+  <Card icon="code">
+ ` <s>` represents a Sentence. Use the tag to add a pause between lines or sentences in the text. 
+  **Note**: By default, the API will separate the sentences within a paragraph by a 400ms break.  
+  </Card>
+</CardGroup>
+
+<Note>
+  Recommend using the `<p>` and `<s>` tags to structure your requests, especially when using `<break>`.
+</Note>
+
+For `<speak>` Tag:
+```xml
+<speak>
+  <p><s>This is a sentence</s></p>
+</speak>
+```
+For `<voice>` Tag:
+```xml
+<speak>
+    <voice name="en_female"> This is an example. </voice>
+    <voice name="hi_female"> यह एक उदाहरण है </voice>
+</speak>
+```
+### `<break>`
+<Card icon="code">
+   It represents a pause in the speech. Set the length of the pause with the time attribute. Add pause of a specified duration, either in seconds or milliseconds.
+</Card>
+<Note>
+`<break>` is currently not supported within a sentence. It can only exist before or between sentences or paragraphs.
+</Note>
+
+| Attribute   | Description                                                                 |
+|-------------|-----------------------------------------------------------------------------|
+| `strength`  | (Optional) Strength of the pause inserted. Values: `none`, `x-weak`, `weak`, `medium`, `strong`, `x-strong`. |
+| `time`      | (Optional) Duration of the pause, e.g., `"1s"`, `"750ms"`. Unit must be specified. Default: `"400ms"`. |
+
+```xml
+<s>Fetching results</s>
+<break time="3s"/>
+<s>Found 3 items</s>
+```
+### `<sub>`
+<Card icon="code">
+Pronounce the specified word or phrase as a different word or phrase. Specify the pronunciation to substitute with the alias attribute.
+</Card>
+
+| Attribute   | Description                                                                 |
+|-------------|-----------------------------------------------------------------------------|
+| `alias`  |  The word or phrase to speak in place of the tagged text |
+
+```xml
+<sub alias='World Wide Web'>www</sub>
+```
+### `<say-as>`
+<Card icon="code">
+The `<say-as>` tag will allow you to provide instructions for how to speak a text file. The TTS engine will automatically detect many of these features, but the say-as command will enable you to mark them specifically.
+Use the `<say-as>` tag with the interpret-as attribute to tell the TTS how to speak certain characters, words, and numbers.
+
+
+</Card>
+
+| Attribute       | Description                                                                 |
+|-----------------|-----------------------------------------------------------------------------|
+| `interpret-as`  |  Uses some available possibility values to speak the given text. In the below section, we provide you the values available interpret-as |
+
+```xml
+<sub alias='World Wide Web'>www</sub>
+```
+
+#### `Cardinal`
+<Card icon="code">
+Interprets the numerical text as a cardinal number, as in 1,2,3,4 
+</Card>
+<Note>
+By default, the API will understand and pronounce the numbers in Cardinal format.
+**Example**: The API will interpret 1234 as One thousand two hundred and thirty-four.
+</Note>
+
+```xml
+<say-as interpret-as='cardinal'>1234</say-as>
+```
+
+#### `Ordinal`
+<Card icon="code">
+This value will interpret and speak the ordinal value for the given digit within the enclosed tag.
+</Card>
+| Value | Interpret Ordinal Value |
+|-------|------------------------|
+| 44    | Forty-Fourth           |
+| 2     | Second                 |
+
+```xml
+<say-as interpret-as='ordinal'>2</say-as>
+```
+
+#### `Character`
+<Card icon="code">
+This value will speak the characters in a given text within the enclosed tag.
+</Card>
+| Value | Interpret Ordinal Value |
+|-------|------------------------|
+| HELLO    |API will pronounce each character separately           |
+| 50WS     | Five Zero W S                 |
+
+```xml
+<say-as interpret-as='characters'>50WS</say-as>
+```
+
+
+#### `Digits`
+<Card icon="code">
+This value spells out the digits in a given number within the enclosed tag.
+</Card>
+| Value | Interpret Digits |
+|-------|------------------------|
+| 44    |Four Four      |
+| 1234     | One Two Three Four                 |
+
+```xml
+<say-as interpret-as='digits'>1234</say-as>
+```
+
+#### `Units`
+<Card icon="code">
+Interpret a value as a measurement. The value should be a number followed by a unit or just a unit. The units supported by the TTS API are:
+</Card>
+| Units                     | Interpreted as    |
+|---------------------------|-------------------|
+| kgs, kg                   | kilograms         |
+| gms, gm, g                | grams             |
+| mgs, mg                   | milligrams        |
+| kms, km                   | kilometers        |
+| cms, cm                   | centimeters       |
+| mtr, m                    | meters            |
+| mm                        | millimeters       |
+| ltrs, ltr, lt, l, ℓ       | liters            |
+| ft                        | feet              |
+| in                        | inches            |
+| lbs, lb                   | pounds            |
+| hrs, hr                   | hours             |
+| min                       | minutes           |
+| sec, s                    | seconds           |
+
+```xml
+<say-as interpret-as='unit'>5l</say-as> of oil is added to your cart.
+```
+
+#### `Date`
+<Card icon="code">
+This value will speak the enclosed tag’s date, using the format given in the associated format attribute. The format attribute is mandatory for use with the date value of interpret-as.
+</Card>
+|              | Denoted as | Digit Length   |
+|--------------|------------|----------------|
+| Date         | d          | 1 or 2 digits  |
+| Month        | m          | 1 or 2 digits  |
+| Year         | y          | 4 digits       |
+
+**Supported Date Formats:**
+
+| Date Format | Interpret Date |
+|-------------|----------------|
+| `dmy` | **day-month-year**<br />Example: 10-02-1990 is read as Tenth February, Nineteen Ninety<br />Sample Code:<br />`<say-as interpret-as='date' format='dmy'>10-2-1990</say-as>` |
+| `mdy` | **month-day-year**<br />Example: 02-10-1990 is read as Tenth February, Nineteen Ninety<br />Sample Code:<br />`<say-as interpret-as='date' format='mdy'>2-10</say-as>` |
+| `dm`  | **day-month**<br />Example: 10-2 is read as Tenth February<br />Sample Code:<br />`<say-as interpret-as='date' format='dm'>10-2</say-as>` |
+| `md`  | **month-day**<br />Example: 02-10 is read as Tenth February<br />Sample Code:<br />`<say-as interpret-as='date' format='md'>2-10</say-as>` |
+
+#### `Currency`
+<Card icon="code">
+Use the currency parameter to control the synthesis of monetary quantities. The currency formats supported and spoken by the API is:
+</Card>
+
+| Currency       | Symbol   | API Interpretation                                              |
+|----------------|----------|-----------------------------------------------------------------|
+| Rupee & Paisa  | `₹, Rs., र` | Example: `₹`10.50 is read as Ten rupees fifty paise. <br /> Sample Code: `<say-as interpret-as='currency'>`₹10.50`</say-as>` |
+| Dollars & Cents| `$`         | Example: `$`10.50 is read as Ten dollars fifty cents. <br /> Sample Code: `<say-as interpret-as='currency'>`$10.50`</say-as>` |
+| Pounds & Pence | `£`         | Example: `£`10.50 is read as Ten pounds fifty pence. <br /> Sample Code: `<say-as interpret-as='currency'>`£10.50`</say-as>` |
+| Euros & Cents  | `€`         | Example: `€`10.50 is read as Ten euros fifty cents. <br /> Sample Code: `<say-as interpret-as='currency'>`€10.50`</say-as>` |
+
+#### `URL`
+<Card icon="code">
+This value is used to control the synthesis of the website address. 
+</Card>
+<Note>
+By default, the API will interpret the website address and speak in the right format. 
+The API will pronounce symbols as present in a web address.
+**Example**: reverieinc.com is pronounced as reverieinc dot com
+</Note>
+
+```xml
+<say-as interpret-as='url'> reverieinc.com</say-as>
+```
+
+### `<prosody>`
+<Card icon="code">
+The prosody element can be used to adjust the below-listed attributes for the text-to-speech output.
+</Card>
+
+| Attribute | Description                                                                                          |
+|-----------|------------------------------------------------------------------------------------------------------|
+| `pitch`   | (optional) Changes the pitch (frequency) of the enclosed text overall.<br />Values:<br />Absolute or relative values in Hertz (Hz). e.g. 350Hz, +20Hz, -10Hz.<br />Relative values in semitones (st). e.g. +1st, -0.5st.<br />Absolute or relative values in percentage. e.g. 90%, +10%, -5%.<br />Labels: default, x-low, low, medium, high, x-high. |
+| `rate`    | (optional) Changes the rate of speaking of the enclosed text overall.<br />Values:<br />Number as a factor. 1.0 being default. e.g. 0.75, 1.2.<br />Absolute or relative values in percentage. e.g. 90%, +20%, -10%.<br />Labels: default, x-slow, slow, medium, fast, x-fast. |
+| `duration`| (optional) Elapsed time of the enclosed text overall. overrides rate.<br />Values:<br />Number with unit (seconds or milliseconds). e.g. 2.5s, 3500ms. |
+| `volume`  | (optional) Changes the loudness of the enclosed text overall.<br />Values:<br />Absolute or relative number, 100 being default. e.g. 80, 120, +5, -10.<br />Absolute or relative values in percentage. e.g. 90%, +20%, -10%.<br />Relative values in decibels (dB). e.g. +6dB, -6dB.<br />Labels: default, silent, x-soft, soft, medium, loud, x-loud. |
+| `contour` | (optional) Changes the pitch at various points as the utterance progresses.<br />Expressed as a space-separated array of parameter pairs. The first value denotes the location in text as a percentage. The second value denotes the desired pitch. See pitch attribute for possible value expressions.<br />e.g. `<prosody contour="(0%,+20Hz)(10%,-2st)(40%,+10Hz)">`<br />Note: This option is available for English and Hindi only. But the request will not fail if this option is used for other languages. It will just not have the intended effect. |
+| `range`   | (optional) Changes the range of pitch variation of the enclosed text. Range refers to the difference between min and max pitch. Refer pitch attribute for possible value expressions.<br />Note: This option is available for English and Hindi only. But the request will not fail if this option is used for other languages. It will just not have the intended effect. |
+
+```xml
+<prosody pitch="value" rate="value" duration="value" volume="value"></prosody>
+```

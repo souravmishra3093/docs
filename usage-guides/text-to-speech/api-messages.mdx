@@ -1,0 +1,16 @@
+---
+title: "API Messages"
+---
+| Status Code | Error Message                | Description                                              |
+|-------------|------------------------------|----------------------------------------------------------|
+| 403         | Invalid REV-API-KEY or REV-APP-ID | Entered Invalid credentials                             |
+| 403         | usage exhausted              | The provided credits or the character limit is exhausted.|
+| 403         | API key expired              | The API key provided to a user is expired.               |
+| 403         | unauthorized to use this API | The REV-APPNAME entered is invalid, or the user is not authorized to use it. |
+| 403         | unauthorized to use this src/tgt language | The invalid speaker code is passed, or the user cannot use the defined speaker code. |
+| 400         | no spkr given                | The speaker code is missing                              |
+| 400         | invalid speed value          | The speed requested in the input is invalid or not supported by the API. |
+| 400         | invalid pitch value          | The audio pitch defined in the input is invalid or not supported by the API. |
+| 400         | invalid format value         | The requested audio format is invalid or not supported by the API. |
+| 400         | invalid sample_rate value    | The requested audio sample rate is invalid or not supported by the API. |
+| 400         | no text given                | The input text is missing                                |
