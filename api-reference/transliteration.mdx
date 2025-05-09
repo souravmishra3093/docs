@@ -267,7 +267,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 
 The Transliteration API raises exceptions for many reasons, such as failed conversions, invalid parameters, authentication errors, and network unavailability. It will provide more specific machine-readable messages with an error response so that users can react to errors more effectively. 
 
-Refer to: [API Messages](/usage-guides/transliteration#api-messages) section to know the error code and corresponding messages.
+Refer to: [API Messages](/api-reference/transliteration#api-messages) section to know the error code and corresponding messages.
 
 ```json
 {
@@ -277,3 +277,15 @@ Refer to: [API Messages](/usage-guides/transliteration#api-messages) section to 
     "status": "BAD_REQUEST"
 }
 ```
+
+### API Messages
+| Status Code | Status Type           | Message                                      | Description                                                                 |
+|-------------|-----------------------|----------------------------------------------|-----------------------------------------------------------------------------|
+| 200         | Success/OK            | -                                            | Successfully executed the request.                                          |
+| 400         | Bad Request           | Message depending on the missing parameter   | Incorrect request format or data posted incorrectly.                        |
+| 403         | Forbidden             | Invalid REV-API-KEY or REV-APP-ID            | Entered invalid credentials.                                                |
+| 403         | Forbidden             | usage exhausted                              | The provided credits or character limit is exhausted.                       |
+| 403         | Forbidden             | API key expired                              | The API key provided to a user is expired.                                  |
+| 403         | Forbidden             | unauthorized to use this src/tgt language    | Invalid language code passed or user cannot use the defined language code.  |
+| 403         | Forbidden             | unauthorized to use this API                 | The REV-APPNAME entered is invalid, or the user is not authorized to use it.|
+| 500         | Internal Server Error | Internal Server Error                        | An error occurred with the API.                                             |

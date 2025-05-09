@@ -118,4 +118,15 @@ curl -X POST https://revapi.reverieinc.com/process_doc \
 
 The OCR API can raise exceptions for various reasons, such as failed OCR processing, invalid parameters, authentication errors, and network unavailability. The API provides detailed, machine-readable error responses to help users diagnose issues and respond more effectively. 
 
-Refer to: [API Messages](/usage-guides/ocr/api-messages) section to know the error code and corresponding messages.
+Refer to: [API Messages](/api-reference/ocr#api-messages) section to know the error code and corresponding messages.
+
+### API Messages
+| Error Message                     | Status Code | Description                                           |
+|-----------------------------------|-------------|-------------------------------------------------------|
+| No PDF file provided              | 400         | No file was uploaded                                  |
+| Wrong type provided               | 400         | Invalid OCR type specified                            |
+| Provides only_ocr                 | 400         | Layout OCR not supported for images                   |
+| Missing required form fields      | 400         | One or more required parameters are missing           |
+| Invalid language selection        | 400         | The specified languages are not supported              |
+| Unsupported file type             | 400         | File type is not supported (must be pdf or img)       |
+| Server error                      | 500         | Internal server error occurred during processing      |

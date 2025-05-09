@@ -1,26 +1,509 @@
 ---
 title: "Key Features"
 ---
-<CardGroup cols={2}>
-  <Card title="Real-Time Transliteration" icon="bolt">
-    Converts English to 22 Indic languages and vice-versa instantly, ensuring seamless integration.
-  </Card>
-  <Card title="Context-Aware Transliteration" icon="brain">
-    Identifies word context for accurate transliteration, reducing editorial work.
-  </Card>
-  <Card title="Custom Vocabulary" icon="microphone">
-    Tailors transliterations for specific use-cases like product names or terminology.
-  </Card>
-  <Card title="Multi-Domain Support" icon="globe">
-    Supports domains like healthcare, ecommerce, and more for precise transliteration.
-  </Card>
-</CardGroup>
 
-<CardGroup cols={2}>
-  <Card title="Wide Language Coverage" icon="language">
-    Supports 22 Indic languages, including rare ones, for forward and reverse transliteration.
-  </Card>
-  <Card title="Flexible Deployment" icon="cloud">
-    Offers cloud-based and on-premise solutions for diverse platform integration.
-  </Card>
-</CardGroup>
+### `domain` 
+The Domain refers to the universe in which you use the Transliteration API. Example- Health Care, Insurance, Legal, etc. Refer to [Supporting Domain](/usage-guides/transliteration/supported-domains) to see the available domains.
+
+**For Example**: 
+<CodeGroup>
+```bash generic
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'cnt_lang: en' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Reverie Language Technologies ltd website address is www.reverieinc.com"],
+
+}'
+```
+```bash bfsi
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: bfsi' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Reverie Language Technologies ltd website address is www.reverieinc.com"],
+}'
+```
+</CodeGroup>
+
+**Response**:
+| Feature             | `generic` Domain     | `bfsi` Domain                     |
+| ------------------- | -------------------- | --------------------------------- |
+| **Purpose**         | General speech       | Finance-specific language         |
+| **Recognized Term** | "130 करोड़ भारतवासी" | "₹1,30,000" or "₹50,000 ट्रांसफर" |
+| **Use Case**        | Schemes, info        | Voice banking, KYC                |
+
+
+### `cnt_lang` 
+The language of the words in the input text. Example -“data”: “Singh Sahab aap Kahan the.” In the example above, the Hindi language words are written in the English language script (Roman Script). So cnt_lang = “hi” This is an optional parameter. If no value is provided, by default the value is the same as src_lang. Note - By default, the enableNmt= true
+
+**For Example**: 
+<CodeGroup>
+```bash cnt_lang = en
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'cnt_lang: en' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Reverie Language Technologies ltd website address is www.reverieinc.com"],
+}'
+```
+</CodeGroup>
+
+### `isBulk` 
+Specify whether the API should initially search in the Exception DB to transliterate the input text. Note: By default, the isBulk= true and will not search in the Exception DB.
+
+**For Example**: 
+<CodeGroup>
+```bash isBulk = true
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Reverie Language Technologies ltd website address is www.reverieinc.com"],
+"isBulk" :true,
+}'
+```
+```bash isBulk = false
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Reverie Language Technologies ltd website address is www.reverieinc.com"],
+"isBulk" :false,
+}'
+```
+</CodeGroup>
+
+### `noOfSuggestions` 
+Mention the number of transliteration suggestions the API should return for the input text. Note: By default, the noOfSuggestions = 1, means the API will return only one transliteration suggestion for the input string. 
+
+**For Example**: 
+<CodeGroup>
+```bash noOfSuggestions = 1
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Rama"],
+"noOfSuggestions" :1,
+}'
+```
+```bash noOfSuggestions = 2
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Rama"],
+"noOfSuggestions" :2,
+}'
+```
+</CodeGroup>
+
+**Response**
+<CodeGroup>
+```json noOfSuggestions = 1
+{
+	"responseList": [
+    	{
+        	"inString": "Rama",
+        	"outString": [
+            	"रामा"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+```
+```json noOfSuggestions = 2
+{
+	"responseList": [
+    	{
+        	"inString": "Rama",
+        	"outString": [
+            	"रामा",
+              "रमा"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+```
+</CodeGroup>
+
+### `abbreviate` 
+The abbreviate will Validate whether any Abbreviations/ Acronyms are passed in the input text and will transliterate it accurately. Note - By default, the abbreviate = true. Note - if the value is false, the API will consider the abbreviation as a word and transliterate it to the nearest available word. Note - In the input text, pass the abbreviations in upper case.
+
+**For Example**: 
+<CodeGroup>
+```bash abbreviate = true
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Rama"],
+"abbreviate" :true,
+}'
+```
+```bash abbreviate = false
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Rama"],
+"abbreviate" :false,
+}'
+```
+</CodeGroup>
+
+### `convertNumber` 
+Specify whether to convert the numbers in the input text to the target language script based on the value type.
+  - Three types of values for this parameter:
+    - local: This value can convert the input number to the target language script.  
+      Example:  
+      | Source String | Target String |
+      |-------------------|-------------------|
+      | 2020.04          | २०२०.०४          |
+    - words: This value can convert numbers into words with respect to the target language.  
+      Example:  
+      | Source String | Target String |
+      |-------------------|-------------------|
+      | 505              | पांच सौ पांच    |
+    - roman: This value can convert Roman numbers to English numbers.  
+      Example:  
+      - If the user types `sector V` in English, the transliteration would be `सेक्टर 5` in Hindi.  
+      - `Block II` will be transliterated as `ब्लॉक 2`.
+
+**For Example**: 
+<CodeGroup>
+```bash convertNumber = local
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["2020.04"],
+"convertNumber" : "local",
+}'
+```
+```bash convertNumber = words
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["505"],
+"convertNumber" : "words",
+}'
+```
+```bash convertNumber = roman
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["sector V"],
+"convertNumber" : "roman",
+}'
+```
+</CodeGroup>
+**Response**
+
+<CodeGroup>
+```json convertNumber = local
+{
+	"responseList": [
+    	{
+        	"inString": "2020.04",
+        	"outString": [
+            	"२०२०.०४"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+
+```
+```json convertNumber = words
+{
+	"responseList": [
+    	{
+        	"inString": "505",
+        	"outString": [
+            	"पांच सौ पांच"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+
+```
+```json convertNumber = romans
+{
+	"responseList": [
+    	{
+        	"inString": "sector V",
+        	"outString": [
+            	"सेक्टर 5"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+
+```
+</CodeGroup>
+
+### `ignoreTaggedEntities` 
+Specify whether you want to retain the entities like email ID and URL in the input script. Note: By default, the ignoreTaggedEntities = true and will transliterate the email ID and URL into the target language script. 
+
+**For Example**: 
+<CodeGroup>
+```bash ignoreTaggedEntities = true
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Check product details in www.reverieinc.com"],
+"ignoreTaggedEntities" :true,
+}'
+```
+```bash ignoreTaggedEntities = false
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["Check product details in www.reverieinc.com"],
+"ignoreTaggedEntities" :false,
+}'
+```
+</CodeGroup>
+
+**Response**
+<CodeGroup>
+```json ignoreTaggedEntities = true
+{
+	"responseList": [
+    	{
+        	"inString": "Check product details in www.reverieinc.com",
+        	"outString": [
+            	"चेक प्रोडक्ट डिटेल्स इन डब्ल्युडब्ल्युडब्ल्यु.रेवरीइंक.कॉम"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+```
+```json ignoreTaggedEntities = false
+{
+	"responseList": [
+    	{
+        	"inString": "Check product details in www.reverieinc.com",
+        	"outString": [
+            	"चेक प्रोडक्ट डिटेल्स इन www.reverieinc.com"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+```
+</CodeGroup>
+
+
+### `convertOrdinal` 
+This is used for transliterating ordinal values to English numbers. Note - Default value = False 
+
+**For Example**: 
+<CodeGroup>
+```bash convertOrdinal = true
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["15th Main"],
+"convertOrdinal" :true,
+}'
+```
+```bash convertOrdinal = false
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["15th Main"],
+"convertOrdinal" :false,
+}'
+```
+</CodeGroup>
+
+**Response**
+<CodeGroup>
+```json convertOrdinal = true
+{
+	"responseList": [
+    	{
+        	"inString": "15th Main",
+        	"outString": [
+            	"15 मेन"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+```
+```json convertOrdinal = false
+{
+	"responseList": [
+    	{
+        	"inString": "15th Main",
+        	"outString": [
+            	"फिफ्टीन्थ मेन"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+```
+</CodeGroup>
+
+### `abbreviationWithoutDot` 
+This is used to produce the abbreviation output without a dot. Note - Default value = False 
+
+**For Example**: 
+<CodeGroup>
+```bash abbreviationWithoutDot = true
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["SMS"],
+"abbreviationWithoutDot" :true,
+}'
+```
+```bash abbreviationWithoutDot = false
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API-KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: transliteration' \
+--header 'REV-APPVERSION: 2.0' \
+--data-raw '{"data": ["SMS"],
+"abbreviationWithoutDot" :false,
+}'
+```
+</CodeGroup>
+
+**Response**
+<CodeGroup>
+```json abbreviationWithoutDot = true
+{
+	"responseList": [
+    	{
+        	"inString": "SMS",
+        	"outString": [
+            	"एसएमएस"
+        	],
+        	"status": 2
+    	}
+   ]
+}
+```
+```json abbreviationWithoutDot = false
+{
+	"responseList": [
+    	{
+        	"inString": "SMS",
+        	"outString": [
+            	"एस.एम.एस."
+        	],
+        	"status": 2
+    	}
+   ]
+}
+```
+</CodeGroup>

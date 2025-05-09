@@ -24,28 +24,29 @@
         "group": "Usage Guides",
         "pages": [
           {
-            "group": "Speech-to-Text (Streaming)",
+            "group": "Speech to Text",
             "pages": [
-              "usage-guides/speech-to-text-streaming/getting-started",
-              "usage-guides/speech-to-text-streaming/key-features",
-              "usage-guides/speech-to-text-streaming/sample-code",
-              "usage-guides/speech-to-text-streaming/faqs",
-              "usage-guides/speech-to-text-streaming/supported-domains",
-              "usage-guides/speech-to-text-streaming/supported-languages",
-              "usage-guides/speech-to-text-streaming/supported-audio-formats",
-              "usage-guides/speech-to-text-streaming/api-messages"
-            ]
-          },
-          {
-            "group": "Speech-to-Text (Batch)",
-            "pages": [
-              "usage-guides/speech-to-text-batch/getting-started",
-              "usage-guides/speech-to-text-batch/key-features",
-              "usage-guides/speech-to-text-batch/supported-languages",
-              "usage-guides/speech-to-text-batch/supported-audio-formats",              
-              "usage-guides/speech-to-text-batch/sample-code",
-              "usage-guides/speech-to-text-batch/faq",
-              "usage-guides/speech-to-text-batch/api-messages"
+              {
+                "group": "Speech-to-Text (Streaming)",
+                "pages": [
+                  "usage-guides/speech-to-text-streaming/getting-started",
+                  "usage-guides/speech-to-text-streaming/key-features",
+                  "usage-guides/speech-to-text-streaming/sample-code",
+                  "usage-guides/speech-to-text-streaming/faqs"
+                ]
+              },
+              {
+                "group": "Speech-to-Text (Batch)",
+                "pages": [
+                  "usage-guides/speech-to-text-batch/getting-started",
+                  "usage-guides/speech-to-text-batch/key-features",
+                  "usage-guides/speech-to-text-batch/sample-code",
+                  "usage-guides/speech-to-text-batch/faq"
+                ]
+              },
+              "usage-guides/speech-to-text/supported-languages",
+              "usage-guides/speech-to-text/supported-domains",
+              "usage-guides/speech-to-text/supported-audio-formats"
             ]
           },
           {
@@ -58,8 +59,7 @@
               "usage-guides/text-to-speech/supported-audio-formats",
               "usage-guides/text-to-speech/supported-sampling-rates",                     
               "usage-guides/text-to-speech/sample-code",
-              "usage-guides/text-to-speech/faq",
-              "usage-guides/text-to-speech/api-messages"    
+              "usage-guides/text-to-speech/faq"   
             ]
           },
           {
@@ -70,8 +70,7 @@
               "usage-guides/localization/supported-languages",
               "usage-guides/localization/supported-domains",              
               "usage-guides/localization/sample-code",
-              "usage-guides/localization/faq",
-              "usage-guides/localization/api-messages"
+              "usage-guides/localization/faq"
             ]
           },
           {
@@ -82,43 +81,7 @@
               "usage-guides/transliteration/supported-languages",
               "usage-guides/transliteration/supported-domains",              
               "usage-guides/transliteration/sample-code",
-              "usage-guides/transliteration/faq",
-              "usage-guides/transliteration/api-messages"
-            ]
-          },
-          {
-            "group": "OCR",
-            "pages": [
-              "usage-guides/ocr/getting-started",
-              "usage-guides/ocr/key-features",
-              "usage-guides/ocr/supported-languages",
-              "usage-guides/ocr/processing-modes",              
-              "usage-guides/ocr/sample-code",
-              "usage-guides/ocr/faq",
-              "usage-guides/ocr/api-messages"
-            ]
-          },
-          {
-            "group": "Document localization",
-            "pages": [
-              "usage-guides/document-localization/getting-started",
-              "usage-guides/document-localization/key-features",
-              "usage-guides/document-localization/supported-languages",
-              "usage-guides/document-localization/supported-extensions",
-              "usage-guides/document-localization/file-size",
-              "usage-guides/document-localization/sample-code",
-              "usage-guides/document-localization/api-messages"
-            ]
-          },
-          {
-            "group": "Text Analysis",
-            "pages": [
-              "usage-guides/text-analysis/getting-started",
-              "usage-guides/text-analysis/key-features",
-              "usage-guides/text-analysis/supported-languages",
-              "usage-guides/text-analysis/subtask-parameters",              
-              "usage-guides/text-analysis/sample-code",
-              "usage-guides/text-analysis/faq"
+              "usage-guides/transliteration/faq"
             ]
           }
         ]
@@ -130,10 +93,7 @@
           "api-reference/speech-to-text-batch",
           "api-reference/text-to-speech",
           "api-reference/localization",
-          "api-reference/transliteration",
-           "api-reference/ocr",
-           "api-reference/document-localization",
-           "api-reference/text-analysis"
+          "api-reference/transliteration"
         ]
       },
       {
@@ -143,21 +103,15 @@
           "use-cases/voice-search",
           "use-cases/call-center-transcription",
           "use-cases/speech-translation",
-          "use-cases/speech-to-speech",
-          "use-cases/web-reader"
+          "use-cases/speech-to-speech"
         ]
       },
       {
         "group": "SDKs",
         "pages": [
-          {
-            "group": "Reverie's SDKs",
-            "pages": [
-              "sdk/javascript",
-              "sdk/python",
-              "sdk/go"
-            ]
-          }
+          "sdk/javascript",
+          "sdk/python",
+          "sdk/go"
         ]
       },
       {
@@ -172,9 +126,7 @@
         "pages": [
            "endpoints/transliteration",
            "endpoints/localization",
-           "endpoints/text-to-speech",
-            "endpoints/ocr",
-            "endpoints/text-analysis"
+           "endpoints/text-to-speech"
         ]
       }
     ],
@@ -211,7 +163,7 @@
     "primary": {
       "type": "button",
       "label": "Visit RevUp Dashboard",
-      "href": "https://revup.reverieinc.com"
+      "href": "https://revup.reverieinc.com?utm_source=documentation&utm_medium=website&utm_campaign=revup_signup"
     }
   },
   "footer": {

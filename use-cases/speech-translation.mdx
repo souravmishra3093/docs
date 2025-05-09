@@ -1,8 +1,228 @@
 ---
 title: Speech Translation
-description: Description for speech-translation
+description: This script demonstrates the integration of real-time Speech-to-Text (STT) and Machine Translation (NMT) using the Reverie SDK. It captures audio input from a microphone, converts the speech into text using the Reverie ASR service, and then translates the transcribed text into a target language using Reverie NMT.
 ---
 
-# Speech Translation
+### How does it Works? 
+The script follows these main steps:<br></br>
+1. **Environment Setup**:<br></br>
+The script loads the required credentials (REVERIE_APP_ID and REVERIE_API_KEY) from environment variables using the dotenv library. These credentials are essential for authenticating API requests to the Reverie SDK.
 
-Write your content here...
+```python
+import os
+import dotenv
+from reverie_sdk import ReverieClient
+
+dotenv.load_dotenv("../.env")
+REVERIE_APP_ID = os.environ.get("REVERIE_APP_ID")
+REVERIE_API_KEY = os.environ.get("REVERIE_API_KEY")
+client = ReverieClient(
+    api_key=REVERIE_API_KEY,
+    app_id=REVERIE_APP_ID,
+)
+```
+
+2. **Real-Time Audio Streaming**:<br></br>
+The script uses pyaudio to capture audio from the microphone in real-time. The captured audio is sent to the Reverie ASR service for continuous transcription via the AudioStream object. The audio data is streamed asynchronously, providing live transcription results.
+
+```python
+import pyaudio
+import asyncio
+from reverie_sdk.services.asr import AudioStream
+
+stream = AudioStream()
+pa = pyaudio.PyAudio()
+
+def mic_callback(in_data, frame_count, time_info, status):
+    try:
+        asyncio.run(stream.add_chunk_async(in_data))
+    except Exception as e:
+        print(f"Error in mic callback: {e}")
+        return (None, pyaudio.paAbort)
+    return (None, pyaudio.paContinue)
+
+pa_stream = pa.open(
+    rate=16000,
+    channels=1,
+    format=pyaudio.paInt16,
+    frames_per_buffer=1024,
+    input=True,
+    stream_callback=mic_callback,
+)
+pa_stream.start_stream()
+```
+
+3. **Speech-to-Text (STT) Conversion**:<br></br>
+The captured audio is processed by the Reverie ASR service, which transcribes the spoken words into text. The transcription happens in real-time, and each segment of the transcribed text is displayed as it is received.
+
+```python
+await client.asr.stt_stream_async(
+    src_lang=source_lang,
+    bytes_or_stream=stream,
+    callback=asr_callback,
+    format="16k_int16",
+    punctuate="true",
+)
+```
+
+4. **Callback Function for ASR Results**:<br></br>
+A callback function is used to handle the ASR responses. Once the transcription is finalized, the transcribed text is returned and printed.
+
+```python
+from reverie_sdk.services.asr import ReverieAsrResult
+
+asr_responses: list[ReverieAsrResult] = []
+
+def asr_callback(resp: ReverieAsrResult):
+    print(resp)
+    asr_responses.append(resp)
+
+while True:
+    if len(asr_responses) == 0:
+        continue
+
+    if asr_responses[-1].final:
+        print(asr_responses[-1].display_text)
+        return asr_responses[-1].display_text
+```        
+
+5. **Text Translation**:<br></br>
+After obtaining the transcribed text, the script sends it to the Reverie NMT service for translation into the specified target language (e.g., from Hindi to English in this case). The translation result is then printed.
+
+```python
+src_lang = "hi"
+tgt_lang = "en"
+
+resp: str = asyncio.run(speech_to_text(src_lang))
+
+if len(resp.strip()) > 0:
+    tgt_resp = (
+        client.nmt.localization(
+            [resp],
+            src_lang=src_lang,
+            tgt_lang=tgt_lang,
+            enableTransliteration=False,
+            enableNmt=True,
+        )
+        .responseList[0]
+        .outString
+    )
+    print(tgt_resp)
+```    
+
+6. **Error Handling**:<br></br>
+Comprehensive error handling is included to ensure smooth operation, including managing microphone input errors and any potential issues during the transcription or translation processes.
+
+```python
+import traceback
+
+try:
+    # [Audio streaming and transcription code]
+except Exception as err:
+    print(f"Error in Speech-to-Text: {err}")
+    traceback.print_exc()
+finally:
+    pa_stream.stop_stream()
+    pa_stream.close()
+```    
+
+### Sample Code 
+
+<CodeGroup>
+```python Python
+import asyncio
+import os
+import traceback
+import pyaudio
+from reverie_sdk import ReverieClient
+from reverie_sdk.services.asr import ReverieAsrResult, AudioStream
+import dotenv
+
+dotenv.load_dotenv("../.env")
+
+REVERIE_APP_ID = os.environ.get("REVERIE_APP_ID")
+REVERIE_API_KEY = os.environ.get("REVERIE_API_KEY")
+
+client = ReverieClient(
+    api_key=REVERIE_API_KEY,
+    app_id=REVERIE_APP_ID,
+)
+
+
+async def speech_to_text(source_lang):
+    stream = AudioStream()
+    pa = pyaudio.PyAudio()
+
+    def mic_callback(in_data, frame_count, time_info, status):
+        try:
+            asyncio.run(stream.add_chunk_async(in_data))
+        except Exception as e:
+            print(f"Error in mic callback: {e}")
+            return (None, pyaudio.paAbort)
+        return (None, pyaudio.paContinue)
+
+    pa_stream = pa.open(
+        rate=16000,
+        channels=1,
+        format=pyaudio.paInt16,
+        frames_per_buffer=1024,
+        input=True,
+        stream_callback=mic_callback,
+    )
+    pa_stream.start_stream()
+
+    print("Listening at STT..")
+
+    asr_responses: list[ReverieAsrResult] = []
+
+    def asr_callback(resp: ReverieAsrResult):
+        print(resp)
+        asr_responses.append(resp)
+
+    try:
+        await client.asr.stt_stream_async(
+            src_lang=source_lang,
+            bytes_or_stream=stream,
+            callback=asr_callback,
+            format="16k_int16",
+            punctuate="true",
+        )
+
+        while True:
+            if len(asr_responses) == 0:
+                continue
+
+            if asr_responses[-1].final:
+                print(asr_responses[-1].display_text)
+                return asr_responses[-1].display_text
+
+    except Exception as err:
+        print(f"Error in Speech-to-Text: {err}")
+        traceback.print_exc()
+
+    finally:
+        pa_stream.stop_stream()
+        pa_stream.close()
+
+
+src_lang = "hi"
+tgt_lang = "en"
+
+
+resp: str = asyncio.run(speech_to_text(src_lang))
+
+if len(resp.strip()) > 0:
+    tgt_resp = (
+        client.nmt.localization(
+            [resp],
+            src_lang=src_lang,
+            tgt_lang=tgt_lang,
+            enableTransliteration=False,
+            enableNmt=True,
+        )
+        .responseList[0]
+        .outString
+    )
+    print(tgt_resp)
+```
+</CodeGroup>

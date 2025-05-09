@@ -294,3 +294,11 @@ curl --location 'https://revapi.reverieinc.com/download_translated_doc' \
   {" "}
     -  A Unix timestamp indicating when the response was generated (in milliseconds).
 </ParamField> 
+
+### API Messages
+| API Message                  | Status Code | Description                                           |
+|-----------------------------|-------------|-------------------------------------------------------|
+| Project created successfully | 200         | The project has been created successfully.            |
+| applying                     | 200         | The localization process is being applied.                     |
+| completed                    | 200         | The localization process has completed successfully.           |
+| error                        | 401         | Some error encountered. |

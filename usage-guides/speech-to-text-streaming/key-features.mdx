@@ -1,29 +1,326 @@
 ---
 title: "Key Features"
 ---
-<CardGroup cols={2}>
-  <Card title="Real-time Transcription" icon="microphone">
-    Transcribe pre-recorded audio into text with high accuracy in real-time,
-    even from lower-quality inputs.
-  </Card>
-  <Card title="Personalized Speech Model" icon="microphone">
-    Customize recognition for domain-specific terms to boost accuracy of unique
-    words or phrases.
-  </Card>
-  <Card title="Noise Resistance" icon="play">
-    Decode moderately noisy audio from various environments without extra noise
-    cancellation.
-  </Card>
-  <Card title="Content Filtering" icon="filter">
-    Filter out inappropriate content with an obscenity detector for clean text
-    output.
-  </Card>
-</CardGroup>
-<CardGroup cols={2}>
-  <Card title="Cloud-based Deployment" icon="cloud">
-    Scalable and accessible from anywhere for dynamic, distributed teams.
-  </Card>
-  <Card title="On-premise Deployment" icon="server">
-    Secure and customizable to integrate with your existing infrastructure.
-  </Card>
-</CardGroup>
+### `domain` 
+The universe in which the Streaming STT API is used for transcribing the speech. Refer to [Supporting Domain](/usage-guides/speech-to-text/supported-domains) to see the available domains.
+
+**For Example**: 
+<CodeGroup>
+```javascript generic
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    domain: 'generic', // <-- Generic domain
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+```javascript bfsi
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    domain: 'bfsi', // <-- BFSI domain
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+</CodeGroup>
+
+**Response**:
+<CodeGroup>
+```json generic
+{
+  "text": "आत्म निर्भर योजना का उद्देश्य 130 करोड़ भारतवासियों को आत्मनिर्भर बनाना है",
+  "confidence": 0.82,
+  "final": true
+}
+```
+```json bfsi
+{
+  "text": "मुझे अपना खाता शेष बताइए और पचास हज़ार का फंड ट्रांसफर करना है",
+  "confidence": 0.93,
+  "final": true
+}
+```
+</CodeGroup>
+
+| Feature             | `generic` Domain     | `bfsi` Domain                     |
+| ------------------- | -------------------- | --------------------------------- |
+| **Purpose**         | General speech       | Finance-specific language         |
+| **Recognized Term** | "130 करोड़ भारतवासी" | "₹1,30,000" or "₹50,000 ट्रांसफर" |
+| **Use Case**        | Schemes, info        | Voice banking, KYC                |
+
+### `timeout`  
+The duration to keep a connection open between the application and the STT server. Note: The default timeout = 15 seconds, and the maximum time allowed = 180 seconds.
+
+**For Example**: 
+<CodeGroup>
+```javascript timeout = 15
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    domain: 'generic',
+    timeout:15, // <-- timeout = 15 seconds
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+```javascript timeout = 180
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    domain: 'generic',
+    timeout:180, // <-- timeout = 180 seconds
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+</CodeGroup>
+
+**Response**:
+<CodeGroup>
+```bash timeout = 15
+The STT socket will remain active for 15 seconds, after which it will automatically close — i.e., the microphone will stop listening.
+```
+```bash timeout = 180
+The STT socket will remain active for 180 seconds, after which it will automatically close — i.e., the microphone will stop listening.
+```
+</CodeGroup>
+
+### `silence`
+The time to determine when to end the connection automatically after detecting the silence after receiving the speech data. For Example: Consider `silence` = 15 seconds i.e., On passing the speech for 60 seconds, and if you remain silent, the connection will be open for the next 15 seconds and then will automatically get disconnected. Note: The default `silence`= 1 second, and the maximum `silence` = 30 seconds.
+
+**For Example**: 
+<CodeGroup>
+```javascript silence = 1
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    domain: 'generic',
+    silence:1, // <-- silence = 1 seconds
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+```javascript silence = 30
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    domain: 'generic',
+    silence:30, // <-- silence = 30 seconds
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+</CodeGroup>
+
+**Response**:
+| `silence`  | Behavior After 60 Seconds of Speech                                                                                                                            |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `1`       | The connection remains active for **1 more second**. If no speech is detected, it auto-closes. If the user speaks again within 1 second, the timer resets.     |
+| `30`     | The connection remains active for **30 more seconds**. If no speech is detected, it auto-closes. If the user speaks again within 30 seconds, the timer resets. |
+
+
+### `format`
+The audio sampling rate and the data format of the speech. Refer to [Supporting Audio Formats](/usage-guides/speech-to-text/supported-audio-formats) to know the supporting audio formats. By default, the `format` = 16k_int16. (WAV, Signed 16 bit, 16,000 or 16K Hz).
+
+**For Example**: 
+<CodeGroup>
+```javascript format = 16k_int16
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    domain: 'generic',
+    format:"16k_int16", // <-- format = 16k_int16 
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+```javascript format = wav
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    domain: 'generic',
+    format: "wav", // <-- format = wav 
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+</CodeGroup>
+
+**Response**: 
+| Format       | Use Case                                                                                  |
+|--------------|-------------------------------------------------------------------------------------------|
+| `16k_int16`  | **Speech Recognition**: Ideal for real-time speech recognition systems like voice assistants or transcription tools.<br></br> **Voice Biometrics**: Used in voice authentication systems due to its balance of audio quality and file size. |
+| `WAV`        | **High-Quality Audio Processing**: Suitable for applications requiring uncompressed audio with full fidelity, like speech synthesis or detailed audio analysis. <br></br> **Archiving**: Used for storing high-quality recordings for long-term archiving or professional audio editing. |
+
+### `logging`
+Possible Values are:
+1. `true` - stores audio and keep transcripts in logs.
+
+2. `no_audio` -  does not store audios but keep transcripts in logs.
+
+3. `no_transcript` - does not keep transcripts in logs but stores audios.
+
+4. `false` - does not keep neither audios nor transcripts in log.
+
+Default value is `true`
+
+**For Example**: 
+<CodeGroup>
+```javascript logging = true
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    logging: true, // <-- logging = true
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+```javascript logging = false
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    logging: false, // <-- logging = false
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+</CodeGroup>
+**Response**
+| Option       | Description                                                                                          
+|--------------|------------------------------------------------------------------------------------------------------|
+| `true`       | Stores both audio and transcripts in the logs. This option is useful for detailed analysis or record-keeping. |
+| `false`      | Does not store either audio or transcripts in the logs. This option is useful for privacy or compliance reasons. |
+
+### `punctuate`
+It will enable punctuation and capitalisation in the transcript. The values it can take are `true` and `false`. Supported languages are: `en`, `hi`. Default value is true
+
+**For Example**: 
+<CodeGroup>
+```javascript punctuate = true
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    punctuate: true, // <-- punctuate = true
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+```javascript punctuate = false
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    punctuate: false, // <-- punctuate = false
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+</CodeGroup>
+
+**Response**
+| Option       | Description                                                                                          | 
+|--------------|------------------------------------------------------------------------------------------------------|
+| `true`       | Enables punctuation and capitalization in the transcript. This option ensures the transcript is more natural and readable. | 
+| `false`      | Disables punctuation and capitalization in the transcript. This option may result in a more raw, unformatted output. | 
+
+### `continuous`
+It will enable continuous decoding even after silence is detected. Can take value `true`/`1` or `false`/`0`. Default value is `false`/`0`
+
+**For Example**: 
+<CodeGroup>
+```javascript continuous = true
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    continuous: true, // <-- continuous = true
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+```javascript continuous = false
+const initGenericSTT = async () => {
+  const config = {
+    apikey: <YOUR-API-KEY>,
+    appId: <YOUR-APP-ID>,
+    language: 'hi',
+    continuous: false, // <-- continuous = false
+    eventHandler: (event) => voiceText(event),
+    errorHandler: (error) => console.log('Generic STT Error:', error),
+  };
+
+  await window.stt_stream.initSTT(config);
+};
+```
+</CodeGroup>
+
+**Response**
+| Option       | Description                                                                                          |
+|--------------|------------------------------------------------------------------------------------------------------|
+| `true` / `1` | Enables continuous decoding even after silence is detected. This option ensures that the system keeps processing audio even during pauses in speech. | 
+| `false` / `0`| Disables continuous decoding after silence. When this option is set to `false`, the system will stop decoding after a period of silence is detected. | 

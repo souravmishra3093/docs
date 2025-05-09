@@ -1,8 +1,79 @@
 ---
 title: Call Center Transcription
-description: Description for call-center-transcription
+description: "This project demonstrates how to leverage the Reverie SDK to process and transcribe audio data from call center interactions using Automatic Speech Recognition (ASR). The overall flow of the code is designed to interact with Reverie's API to perform a variety of tasks related to speech-to-text conversion, including:"
 ---
 
-# Call Center Transcription
+### How does it Works? 
 
-Write your content here...
+1. **Environment Setup**:<br></br>
+All sensitive credentials, such as API keys and application IDs, are securely loaded from environment variables. This ensures that sensitive information is not hardcoded into the script, promoting security and flexibility.
+
+```python
+import os
+import dotenv
+
+dotenv.load_dotenv("../.env")
+REVERIE_APP_ID = os.environ.get("REVERIE_APP_ID")
+REVERIE_API_KEY = os.environ.get("REVERIE_API_KEY")
+```
+
+
+2. **Client Initialization**:<br></br>
+A ReverieClient is initialized with the necessary credentials to interact with Reverie's ASR services. The client is the primary interface through which the transcription and other API services are accessed.
+
+```python
+from reverie_sdk import ReverieClient
+
+client = ReverieClient(
+    api_key=REVERIE_API_KEY,
+    app_id=REVERIE_APP_ID,
+)
+```
+
+3. **Audio Processing and Transcription**:<br></br>
+The project is designed to handle various audio formats, processing them through Reverie’s ASR system. This includes batch processing for handling multiple files, real-time transcription, or other speech-to-text functionalities.
+
+```python
+client.asr.stt_batch(
+    "en",
+    open("/home/rohnak.agarwal/Documents/sdk_sample/sample.en.rev.wav", "rb").read(),
+)
+```
+
+
+4. **Result Management**:
+After transcribing the audio, the system outputs the transcription results. These results can then be stored, analyzed, or used for further processing depending on the use case (e.g., customer service analysis, data extraction, etc.).
+
+```python
+for res in client.asr.stt_batch(
+    "en",
+    open("/home/rohnak.agarwal/Documents/sdk_sample/sample.en.rev.wav", "rb").read(),
+):
+    print(res)
+```    
+
+### Sample Code 
+
+<CodeGroup>
+```python Python
+import os
+from reverie_sdk import ReverieClient
+import dotenv
+
+dotenv.load_dotenv("../.env")
+
+REVERIE_APP_ID = os.environ.get("REVERIE_APP_ID")
+REVERIE_API_KEY = os.environ.get("REVERIE_API_KEY")
+
+client = ReverieClient(
+    api_key=REVERIE_API_KEY,
+    app_id=REVERIE_APP_ID,
+)
+
+for res in client.asr.stt_batch(
+    "en",
+    open("/home/rohnak.agarwal/Documents/sdk_sample/sample.en.rev.wav", "rb").read(),
+):
+    print(res)
+```
+</CodeGroup>

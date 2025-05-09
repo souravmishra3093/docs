@@ -2,29 +2,125 @@
 title: "Key Features"
 ---
 
-<CardGroup cols={2}>
-  <Card title="Real-time Transcription" icon="microphone">
-    Transcribe pre-recorded audio into text with high accuracy in real-time,
-    even from lower-quality inputs.
-  </Card>
-  <Card title="Personalized Speech Model" icon="microphone">
-    Customize recognition for domain-specific terms to boost accuracy of unique
-    words or phrases.
-  </Card>
-  <Card title="Noise Resistance" icon="play">
-    Decode moderately noisy audio from various environments without extra noise
-    cancellation.
-  </Card>
-  <Card title="Content Filtering" icon="filter">
-    Filter out inappropriate content with an obscenity detector for clean text
-    output.
-  </Card>
-</CardGroup>
-<CardGroup cols={2}>
-  <Card title="Cloud-based Deployment" icon="cloud">
-    Scalable and accessible from anywhere for dynamic, distributed teams.
-  </Card>
-  <Card title="On-premise Deployment" icon="server">
-    Secure and customizable to integrate with your existing infrastructure.
-  </Card>
-</CardGroup>
+### `domain` 
+This field identifies your use case type and set of the terminology defined for transcription. e.g. for general audio is ‘generic’. Refer to [Supporting Domain](/usage-guides/speech-to-text/supported-domains) to see the available domains.
+
+**For Example**: 
+<CodeGroup>
+```bash generic
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--form 'file=@"<File Path>"'
+```
+```bash bfsi
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: bfsi' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--form 'file=@"<File Path>"'
+```
+</CodeGroup>
+
+**Response**:
+| Feature             | `generic` Domain     | `bfsi` Domain                     |
+| ------------------- | -------------------- | --------------------------------- |
+| **Purpose**         | General speech       | Finance-specific language         |
+| **Recognized Term** | "130 करोड़ भारतवासी" | "₹1,30,000" or "₹50,000 ट्रांसफर" |
+| **Use Case**        | Schemes, info        | Voice banking, KYC                |
+
+### `format`
+The audio sampling rate and the data format of the speech. Refer to [Supporting Audio Formats](/usage-guides/speech-to-text/supported-audio-formats) to know the supporting audio formats. By default, the `format` = 16k_int16. (WAV, Signed 16 bit, 16,000 or 16K Hz).
+
+**For Example**: 
+<CodeGroup>
+```bash format = 16k_int16
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--header 'format: 16k_int16' \
+--form 'file=@"<File Path>"'
+```
+```bash format = wav
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: bfsi' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--header 'format: wav' \
+--form 'file=@"<File Path>"'
+```
+</CodeGroup>
+
+**Response**: 
+| Format       | Use Case                                                                                  |
+|--------------|-------------------------------------------------------------------------------------------|
+| `16k_int16`  | **Speech Recognition**: Ideal for real-time speech recognition systems like voice assistants or transcription tools.<br></br> **Voice Biometrics**: Used in voice authentication systems due to its balance of audio quality and file size. |
+| `WAV`        | **High-Quality Audio Processing**: Suitable for applications requiring uncompressed audio with full fidelity, like speech synthesis or detailed audio analysis. <br></br> **Archiving**: Used for storing high-quality recordings for long-term archiving or professional audio editing. |
+
+### `subtitles`
+Enables subtitling from the audio file.
+
+**For Example**: 
+<CodeGroup>
+```bash subtitles = true
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--header 'subtitles: true' \
+--form 'file=@"<File Path>"'
+```
+```bash subtitles = false
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: bfsi' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--header 'subtitles: false' \
+--form 'file=@"<File Path>"'
+```
+</CodeGroup>
+
+**Response**: 
+<CodeGroup>
+```json subtitles = true
+{
+    "job_id": "e21f356d-cbf9-4d62-a960-1e9da1805d19",
+    "code": "000",
+    "message": "Transcript ready.",
+    "result": {
+        "transcript": "Hello. Welcome to Reverie.",
+        "original_transcript": "HELLO. WELCOME TO REVERIE.",
+        "channel_number": 1,
+        "subtitles": "1\n00:00:00,090 --> 00:00:06,900\nHELLO. WELCOME TO REVERIE.\n\n"
+    }
+}
+```
+```json subtitles = false
+{
+    "job_id": "e21f356d-cbf9-4d62-a960-1e9da1805d19",
+    "code": "000",
+    "message": "Transcript ready.",
+    "result": {
+        "transcript": "Hello. Welcome to Reverie.",
+        "original_transcript": "HELLO. WELCOME TO REVERIE.",
+        "channel_number": 1,
+    }
+}
+```
+</CodeGroup>
+
+
