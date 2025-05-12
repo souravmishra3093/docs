@@ -27,12 +27,6 @@ curl --location --request POST 'https://revapi.reverieinc.com/upload' \
 ```
 </CodeGroup>
 
-**Response**:
-| Feature             | `generic` Domain     | `bfsi` Domain                     |
-| ------------------- | -------------------- | --------------------------------- |
-| **Purpose**         | General speech       | Finance-specific language         |
-| **Recognized Term** | "130 करोड़ भारतवासी" | "₹1,30,000" or "₹50,000 ट्रांसफर" |
-| **Use Case**        | Schemes, info        | Voice banking, KYC                |
 
 ### `format`
 The audio sampling rate and the data format of the speech. Refer to [Supporting Audio Formats](/usage-guides/speech-to-text/supported-audio-formats) to know the supporting audio formats. By default, the `format` = 16k_int16. (WAV, Signed 16 bit, 16,000 or 16K Hz).
@@ -60,12 +54,6 @@ curl --location --request POST 'https://revapi.reverieinc.com/upload' \
 --form 'file=@"<File Path>"'
 ```
 </CodeGroup>
-
-**Response**: 
-| Format       | Use Case                                                                                  |
-|--------------|-------------------------------------------------------------------------------------------|
-| `16k_int16`  | **Speech Recognition**: Ideal for real-time speech recognition systems like voice assistants or transcription tools.<br></br> **Voice Biometrics**: Used in voice authentication systems due to its balance of audio quality and file size. |
-| `WAV`        | **High-Quality Audio Processing**: Suitable for applications requiring uncompressed audio with full fidelity, like speech synthesis or detailed audio analysis. <br></br> **Archiving**: Used for storing high-quality recordings for long-term archiving or professional audio editing. |
 
 ### `subtitles`
 Enables subtitling from the audio file.

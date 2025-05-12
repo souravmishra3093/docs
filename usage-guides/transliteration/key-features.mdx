@@ -37,14 +37,6 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 ```
 </CodeGroup>
 
-**Response**:
-| Feature             | `generic` Domain     | `bfsi` Domain                     |
-| ------------------- | -------------------- | --------------------------------- |
-| **Purpose**         | General speech       | Finance-specific language         |
-| **Recognized Term** | "130 करोड़ भारतवासी" | "₹1,30,000" or "₹50,000 ट्रांसफर" |
-| **Use Case**        | Schemes, info        | Voice banking, KYC                |
-
-
 ### `cnt_lang` 
 The language of the words in the input text. Example -“data”: “Singh Sahab aap Kahan the.” In the example above, the Hindi language words are written in the English language script (Roman Script). So cnt_lang = “hi” This is an optional parameter. If no value is provided, by default the value is the same as src_lang. Note - By default, the enableNmt= true
 
@@ -296,7 +288,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 }
 
 ```
-```json convertNumber = romans
+```json convertNumber = roman
 {
 	"responseList": [
     	{

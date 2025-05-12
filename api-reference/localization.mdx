@@ -1,11 +1,11 @@
 ---
-title: "Localization API"
-description: "Localization is the REST API developed for localizing the contents from English to Indic languages. Using the Localization API, you can either localize a single sentence or multiple sentences in a fraction of time."
+title: "Translation API"
+description: "Translation is the REST API developed for localizing the contents from English to Indic languages. Using the Translation API, you can either localize a single sentence or multiple sentences in a fraction of time."
 
 ---
 # How Does API Work?
 
-The Localization API will use the App Id and API key to authenticate requests. Your credentials carry many privileges, so be sure to keep them secure.  
+The Translation API will use the App Id and API key to authenticate requests. Your credentials carry many privileges, so be sure to keep them secure.  
 
 - **Post the request by:**
   - Enter the valid `REV-APPNAME`, `REV-APP-ID`, and `REV-API-KEY`.
@@ -146,7 +146,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 
 <ParamField header="REV-API-KEY" type="string" required>
   {" "}
-  A unique key/token provided by Reverie to identify the user using the Localization API.
+  A unique key/token provided by Reverie to identify the user using the Translation API.
 </ParamField> 
 
 <ParamField header="REV-APP-ID" type="string" required>
@@ -182,26 +182,26 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 
 <ParamField header="domain" type="string" required>
   {" "}
-  - The Domain refers to the universe in which you use the Localization API. Example- Health Care, Insurance, Legal, etc.
+  - The Domain refers to the universe in which you use the Translation API. Example- Health Care, Insurance, Legal, etc.
   - Refer to section [Domain Codes](/usage-guides/localization/supported-domains) for valid language code.
 </ParamField> 
 
 ### Request
 <ParamField header="data" type="array[]" required>
   {" "}
-  - List of input text for localization.
+  - List of input text for Translation.
 </ParamField> 
 
 <ParamField header="enableNmt" type="boolean">
   {" "}
-  - Specify whether the content localization process should use NMT technology or not. 
+  - Specify whether the content Translation process should use NMT technology or not. 
   - For Example, When the enableNmt value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then the NMT is used for translation.
   - **Note** - By default, the `enableNmt`= `true`
 </ParamField> 
 
 <ParamField header="enableTransliteration" type="boolean">
   {" "}
-  - Specify whether the content localization process should use transliteration technology or not. 
+  - Specify whether the content Translation process should use transliteration technology or not. 
   - For Example, When the enableTransliteration value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then nmt is used for translation. If nmt fails, transliteration is called.
   - **Note** - By default, the `enableTransliteration`= `true`
 </ParamField> 
@@ -285,13 +285,13 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 
 <ParamField header="uuid" type="string">
   {" "}
-  - It is a 128-bit Universally Unique Identifier. It is likely being used for tracking a request in the localization API.
+  - It is a 128-bit Universally Unique Identifier. It is likely being used for tracking a request in the Translation API.
 
 </ParamField> 
 
 ### Handling Errors
 
-The Localization API raises exceptions for many reasons, such as failed conversions, invalid parameters, authentication errors, and network unavailability. It will provide more specific machine-readable messages with an error response so that users can react to errors more effectively.
+The Translation API raises exceptions for many reasons, such as failed conversions, invalid parameters, authentication errors, and network unavailability. It will provide more specific machine-readable messages with an error response so that users can react to errors more effectively.
 
 Refer to: [API Messages](/api-reference/localization#api-messages) section to know the error code and corresponding messages.
 
@@ -306,7 +306,7 @@ Refer to: [API Messages](/api-reference/localization#api-messages) section to kn
 ### API Messages
 | Status Code | Status Type | Status                              | Description                                                                 |
 |-------------|-------------|-------------------------------------|-----------------------------------------------------------------------------|
-| 2           | Success     | LOOKUP_MODERATED                    | API fetched localization content from the database.                         |
+| 2           | Success     | LOOKUP_MODERATED                    | API fetched Translation content from the database.                         |
 | 3           | Success     | MT_SUCCESS                          | Source content translated using Neural Machine Translation (NMT).           |
 | 4           | Success     | LOOKUP_UNMODERATED                  | Localized content in database, but verification status is "unmoderated."    |
 | 5           | Success     | LOOKUP_INPROGRESS                   | Localized content in database; content moderation in progress.              |
@@ -322,7 +322,7 @@ Refer to: [API Messages](/api-reference/localization#api-messages) section to kn
 | 403         | Error       | Invalid REV-API-KEY or REV-APP-ID   | Invalid credentials provided.                                               |
 | 403         | Error       | usage exhausted                     | Provided credit limit is exhausted.                                         |
 | 403         | Error       | API key expired                     | API key provided has expired.                                               |
-| 403         | Error       | unauthorized to use this API        | User is not authorized to use the Localization API.                         |
+| 403         | Error       | unauthorized to use this API        | User is not authorized to use the Translation API.                         |
 | 403         | Error       | Please provide data string          | Data is missing.                                                            |
 | 403         | Error       | Target language is mandatory        | Target language (tgt_lang) is missing.                                      |
 | 403         | Error       | Source language is mandatory        | Source language (src_lang) is missing.                                      |

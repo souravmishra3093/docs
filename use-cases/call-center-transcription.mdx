@@ -3,12 +3,21 @@ title: Call Center Transcription
 description: "This project demonstrates how to leverage the Reverie SDK to process and transcribe audio data from call center interactions using Automatic Speech Recognition (ASR). The overall flow of the code is designed to interact with Reverie's API to perform a variety of tasks related to speech-to-text conversion, including:"
 ---
 
+### Install Dependencies
+<CodeGroup>
+```bash Python
+pip install pyaudio 
+pip install reverie-sdk
+pip install python-dotenv
+```
+</CodeGroup>
+
 ### How does it Works? 
 
 1. **Environment Setup**:<br></br>
 All sensitive credentials, such as API keys and application IDs, are securely loaded from environment variables. This ensures that sensitive information is not hardcoded into the script, promoting security and flexibility.
 
-```python
+```python Python
 import os
 import dotenv
 
@@ -21,7 +30,7 @@ REVERIE_API_KEY = os.environ.get("REVERIE_API_KEY")
 2. **Client Initialization**:<br></br>
 A ReverieClient is initialized with the necessary credentials to interact with Reverie's ASR services. The client is the primary interface through which the transcription and other API services are accessed.
 
-```python
+```python Python
 from reverie_sdk import ReverieClient
 
 client = ReverieClient(
@@ -33,7 +42,7 @@ client = ReverieClient(
 3. **Audio Processing and Transcription**:<br></br>
 The project is designed to handle various audio formats, processing them through Reverie’s ASR system. This includes batch processing for handling multiple files, real-time transcription, or other speech-to-text functionalities.
 
-```python
+```python Python
 client.asr.stt_batch(
     "en",
     open("/home/rohnak.agarwal/Documents/sdk_sample/sample.en.rev.wav", "rb").read(),
@@ -44,7 +53,7 @@ client.asr.stt_batch(
 4. **Result Management**:
 After transcribing the audio, the system outputs the transcription results. These results can then be stored, analyzed, or used for further processing depending on the use case (e.g., customer service analysis, data extraction, etc.).
 
-```python
+```python Python
 for res in client.asr.stt_batch(
     "en",
     open("/home/rohnak.agarwal/Documents/sdk_sample/sample.en.rev.wav", "rb").read(),

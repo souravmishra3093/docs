@@ -9,7 +9,120 @@ This guide will walk you through how to transcribe pre-recorded audio with the R
   Credentials](/authentication) to obtain your API key.
 </Note>
 
-### Install Dependencies
+## Make your First Call!
+
+Make your first API Call using the cURL request. Add your own API Credentials where it says `<YOUR-APP-ID>` & `<YOUR-API-KEY>`
+and then run the following example in a terminal or your favorite API client. 
+
+## Step 1 : Upload the Audio File
+Upload the Audio File to the API.
+### Request: Transcribing Audio
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--header 'subtitles: true' \
+--form 'file=@"<File Path>"'
+```
+### Response: Success
+```json
+{
+    "job_id": "e21f356d-cbf9-4d62-a960-1e9da1805d19",
+    "code": "000",
+    "message": "Success. Request accepted"
+}
+```
+In the response, you will receive `job_id`. Please note it. 
+## Step 2 : Get the Status 
+Send the `job_id` received in the Step 1 as the query parameter to know the status of the ongoing process of transcription.
+### Request: Get status of the transcription
+```bash
+curl --location --request GET 'https://revapi.reverieinc.com/status?job_id=<job_id>' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>'
+```
+### Response: Success
+```json
+{
+    "job_id": "e21f356d-cbf9-4d62-a960-1e9da1805d19",
+    "code": "000",
+    "message": "Transcript ready.",
+    "status": "completed"
+}
+```
+In the response, you will receive `status` = `completed` and `message` = `Transcript ready` once the transcription is complete. Otherwise, you will receive `status` = `applying`.
+
+## Step 3 : Get the Transcript 
+
+Once the `status` = `completed` in the Step 2, You can use the `job_id` received in the Step 1 or Step 2 as the query parameter to get the Transcript.
+
+### Request: Get transcript of the transcription
+```bash
+curl --location --request GET 'https://revapi.reverieinc.com/transcript?job_id=<job_id>' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>'
+```
+### Response: Success
+```json
+{
+    "job_id": "e21f356d-cbf9-4d62-a960-1e9da1805d19",
+    "code": "000",
+    "message": "Transcript ready.",
+    "result": {
+        "transcript": "Hello. Welcome to Reverie.",
+        "original_transcript": "HELLO. WELCOME TO REVERIE.",
+        "channel_number": 1,
+        "words": [
+            [
+                {
+                    "conf": 0.991683,
+                    "end": 0.21,
+                    "start": 0.09,
+                    "word": "HELLO"
+                },
+                {
+                    "conf": 1.0,
+                    "end": 0.6,
+                    "start": 0.21,
+                    "word": "WELCOME"
+                },
+                {
+                    "conf": 0.99723,
+                    "end": 0.72,
+                    "start": 0.6,
+                    "word": "TO"
+                },
+                {
+                    "conf": 1.0,
+                    "end": 1.320315,
+                    "start": 0.72,
+                    "word": "REVERIE"
+                }
+            ]
+        ],
+        "subtitles": "1\n00:00:00,090 --> 00:00:06,900\nHELLO. WELCOME TO REVERIE.\n\n"
+    }
+}
+```
+
+In this response we see:
+
+- `job_id` : A unique Identity number auto-assigned by the API for each request.
+- `code` : Provides a message code which can be used to look up the nature of the response returned by the API.
+- `message` :Provides a brief description about the response returned by the API.
+- `result` : An array of transcript objects including, channel_number, transcript, list of words with start time, end time and confidence.Please check the sample response.
+
+## SDKs
+
+Reverie has several SDKs that can make it easier to use the API.
+Follow these steps to use the SDK of your choice to make a Reverie Speech-to-Text request.
+
+## Install Dependencies
 
 <CodeGroup>
 
@@ -22,9 +135,9 @@ pip install reverie-sdk
 ```
 
 </CodeGroup>
-### Transcribe Audio from a Remote Stream
+## Transcribe Audio from an Audio File
 
-To transcribe pre-recorded audio using one of Reverie's API, follow these steps.
+To automatically transcribe pre-recorded audio using Reverie’s SDK, follow these steps
 
 <CodeGroup>
 ```javascript Javascript
@@ -151,7 +264,7 @@ func main() {
 
 </CodeGroup>
 
-### Results
+## Results
 
 In order to see the results from Reverie, you must run the application. Run your application from the terminal. Your transcripts will appear in your shell.
 
@@ -177,7 +290,7 @@ go run main.go
 
 </CodeGroup>
 
-### Analyzing the Response
+## Analyzing the Response
 
 ```json
 {

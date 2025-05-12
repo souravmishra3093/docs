@@ -3,13 +3,22 @@ title: Voice Agent
 description: "This Python script demonstrates how to capture real-time audio from a microphone and convert it into text using the Reverie SDK's Speech-to-Text (STT) service. The process is asynchronous and handles audio streaming efficiently to provide real-time transcription."
 ---
 
+### Install Dependencies
+<CodeGroup>
+```bash Python
+pip install pyaudio 
+pip install reverie-sdk
+pip install python-dotenv
+```
+</CodeGroup>
+
 ### How does it Works? 
 The main steps involved in the script are as follows:<br></br>
 
 1. **Environment Configuration**:<br></br>
 The script loads API credentials (REVERIE_APP_ID and REVERIE_API_KEY) from environment variables using the dotenv package. These credentials are essential for interacting with the Reverie SDK's ASR (Automatic Speech Recognition) service.
 
-```python
+```python Python
 import os
 import dotenv
 from reverie_sdk import ReverieClient
@@ -26,7 +35,7 @@ client = ReverieClient(
 2. **Real-Time Audio Capture**:<br></br>
 The script uses the pyaudio library to stream audio from the user's microphone in real-time. The audio is captured in 16kHz, mono format (16-bit signed integer), and streamed asynchronously to Reverie's ASR service for transcription.
 
-```python
+```python Python
 import pyaudio
 import asyncio
 
@@ -55,7 +64,7 @@ pa_stream.start_stream()
 3. **Speech-to-Text (STT) Conversion**:<br></br>
 The captured audio is sent in small chunks to the Reverie ASR system, which transcribes the speech into text. The transcription is processed as it is received, with results updated in real-time.
 
-```python
+```python Python
 from reverie_sdk.services.asr import ReverieAsrResult, AudioStream
 
 await client.asr.stt_stream_async(
@@ -70,7 +79,7 @@ await client.asr.stt_stream_async(
 4. **Asynchronous Processing**:<br></br>
 An asynchronous function handles the audio streaming and transcription. A callback function is used to manage the incoming transcription results, which are accumulated and processed until a final transcription result is achieved.
 
-```python
+```python Python
 async def speech_to_text(source_lang):
     asr_responses: list[ReverieAsrResult] = []
 
@@ -90,7 +99,7 @@ async def speech_to_text(source_lang):
 5. **Error Handling**:<br></br>
 The script includes robust error handling to manage any issues that may arise during the microphone input, audio streaming, or ASR transcription process.
 
-```python
+```python Python
 import traceback
 
 try:

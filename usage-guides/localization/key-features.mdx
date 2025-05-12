@@ -43,13 +43,6 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 ```
 </CodeGroup>
 
-**Response**:
-| Feature             | `generic` Domain     | `bfsi` Domain                     |
-| ------------------- | -------------------- | --------------------------------- |
-| **Purpose**         | General speech       | Finance-specific language         |
-| **Recognized Term** | "130 करोड़ भारतवासी" | "₹1,30,000" or "₹50,000 ट्रांसफर" |
-| **Use Case**        | Schemes, info        | Voice banking, KYC                |
-
 
 ### `enableNmt` 
 Specify whether the content localization process should use NMT technology or not. i.e., When the enableNmt value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then the NMT is used for translation.
@@ -233,7 +226,7 @@ Example - Masking a term - "nmtMaskTerms": ["Reverie Language Technologies"] Her
 
 **For Example**: 
 <CodeGroup>
-```bash nmtMask = true
+```bash nmtMaskTerms = true
 curl --location --request POST 'https://revapi.reverieinc.com/' \
 --header 'Content-Type: application/json' \
 --header 'REV-API-KEY: <YOUR API KEY>' \
@@ -254,7 +247,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
     }
 }'
 ```
-```bash nmtMask = false
+```bash nmtMaskTerms = false
 curl --location --request POST 'https://revapi.reverieinc.com/' \
 --header 'Content-Type: application/json' \
 --header 'REV-API-KEY: <YOUR API KEY>' \
@@ -276,7 +269,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 
 **Response**
 <CodeGroup>
-```json nmtMask =  true
+```json nmtMaskTerms = true
 {
     "responseList": [
         {
@@ -288,7 +281,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
     "tokenConsumed": 102
 }
 ```
-```json nmtMask =  false
+```json nmtMaskTerms = false
 {
     "responseList": [
         {

@@ -1,7 +1,7 @@
 ---
-title: "Localization API"
+title: "Translation API"
 api: "POST https://revapi.reverieinc.com/"
-description: "Localization is a REST API that quickly translates English content into Indic languages, supporting single or multiple sentences."
+description: "Translation is a REST API that quickly translates English content into Indic languages, supporting single or multiple sentences."
 ---
 
  <RequestExample>
@@ -197,7 +197,7 @@ func main() {
 
 <ParamField header="REV-API-KEY" type="string" required>
   {" "}
-  A unique key/token provided by Reverie to identify the user using the Localization API.
+  A unique key/token provided by Reverie to identify the user using the Translation API.
 </ParamField> 
 
 <ParamField header="REV-APP-ID" type="string" required>
@@ -238,19 +238,19 @@ func main() {
 ### Body
 <ParamField body="data" type="string[]" required>
   {" "}
-  List of input text for localization.
+  List of input text for Translation.
 </ParamField> 
 
 <ParamField body="enableNmt" type="boolean">
   {" "}
-  Specify whether the content localization process should use NMT technology or not. 
+  Specify whether the content Translation process should use NMT technology or not. 
   - For Example, When the enableNmt value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then the NMT is used for translation.
   - **Note** - By default, the `enableNmt`= `true`
 </ParamField> 
 
 <ParamField body="enableTransliteration" type="boolean">
   {" "}
-  Specify whether the content localization process should use transliteration technology or not. 
+  Specify whether the content Translation process should use transliteration technology or not. 
   - For Example, When the enableTransliteration value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then nmt is used for translation. If nmt fails, transliteration is called.
   - **Note** - By default, the `enableTransliteration`= `true`
 </ParamField> 

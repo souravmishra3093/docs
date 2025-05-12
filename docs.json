@@ -31,8 +31,7 @@
                 "pages": [
                   "usage-guides/speech-to-text-streaming/getting-started",
                   "usage-guides/speech-to-text-streaming/key-features",
-                  "usage-guides/speech-to-text-streaming/sample-code",
-                  "usage-guides/speech-to-text-streaming/faqs"
+                  "usage-guides/speech-to-text-streaming/sample-code"
                 ]
               },
               {
@@ -40,8 +39,7 @@
                 "pages": [
                   "usage-guides/speech-to-text-batch/getting-started",
                   "usage-guides/speech-to-text-batch/key-features",
-                  "usage-guides/speech-to-text-batch/sample-code",
-                  "usage-guides/speech-to-text-batch/faq"
+                  "usage-guides/speech-to-text-batch/sample-code"
                 ]
               },
               "usage-guides/speech-to-text/supported-languages",
@@ -55,22 +53,20 @@
               "usage-guides/text-to-speech/getting-started",
               "usage-guides/text-to-speech/key-features",
               "usage-guides/text-to-speech/supported-speakers",
-              "usage-guides/text-to-speech/ssml-tags", 
               "usage-guides/text-to-speech/supported-audio-formats",
               "usage-guides/text-to-speech/supported-sampling-rates",                     
-              "usage-guides/text-to-speech/sample-code",
-              "usage-guides/text-to-speech/faq"   
+              "usage-guides/text-to-speech/sample-code",              
+              "usage-guides/text-to-speech/ssml-tags"
             ]
           },
           {
-            "group": "Localization",
+            "group": "Translation",
             "pages": [
               "usage-guides/localization/getting-started",
               "usage-guides/localization/key-features",
               "usage-guides/localization/supported-languages",
               "usage-guides/localization/supported-domains",              
-              "usage-guides/localization/sample-code",
-              "usage-guides/localization/faq"
+              "usage-guides/localization/sample-code"
             ]
           },
           {
@@ -80,8 +76,7 @@
               "usage-guides/transliteration/key-features",
               "usage-guides/transliteration/supported-languages",
               "usage-guides/transliteration/supported-domains",              
-              "usage-guides/transliteration/sample-code",
-              "usage-guides/transliteration/faq"
+              "usage-guides/transliteration/sample-code"
             ]
           }
         ]
@@ -112,13 +107,6 @@
           "sdk/javascript",
           "sdk/python",
           "sdk/go"
-        ]
-      },
-      {
-        "group": "Resources",
-        "pages": [
-          "resources/security",
-          "resources/on-prem-deployment"
         ]
       },
       {

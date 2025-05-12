@@ -3,12 +3,21 @@ title: Speech Translation
 description: This script demonstrates the integration of real-time Speech-to-Text (STT) and Machine Translation (NMT) using the Reverie SDK. It captures audio input from a microphone, converts the speech into text using the Reverie ASR service, and then translates the transcribed text into a target language using Reverie NMT.
 ---
 
+### Install Dependencies
+<CodeGroup>
+```bash Python
+pip install pyaudio 
+pip install reverie-sdk
+pip install python-dotenv
+```
+</CodeGroup>
+
 ### How does it Works? 
 The script follows these main steps:<br></br>
 1. **Environment Setup**:<br></br>
 The script loads the required credentials (REVERIE_APP_ID and REVERIE_API_KEY) from environment variables using the dotenv library. These credentials are essential for authenticating API requests to the Reverie SDK.
 
-```python
+```python Python
 import os
 import dotenv
 from reverie_sdk import ReverieClient
@@ -25,7 +34,7 @@ client = ReverieClient(
 2. **Real-Time Audio Streaming**:<br></br>
 The script uses pyaudio to capture audio from the microphone in real-time. The captured audio is sent to the Reverie ASR service for continuous transcription via the AudioStream object. The audio data is streamed asynchronously, providing live transcription results.
 
-```python
+```python Python
 import pyaudio
 import asyncio
 from reverie_sdk.services.asr import AudioStream
@@ -55,7 +64,7 @@ pa_stream.start_stream()
 3. **Speech-to-Text (STT) Conversion**:<br></br>
 The captured audio is processed by the Reverie ASR service, which transcribes the spoken words into text. The transcription happens in real-time, and each segment of the transcribed text is displayed as it is received.
 
-```python
+```python Python
 await client.asr.stt_stream_async(
     src_lang=source_lang,
     bytes_or_stream=stream,
@@ -68,7 +77,7 @@ await client.asr.stt_stream_async(
 4. **Callback Function for ASR Results**:<br></br>
 A callback function is used to handle the ASR responses. Once the transcription is finalized, the transcribed text is returned and printed.
 
-```python
+```python Python
 from reverie_sdk.services.asr import ReverieAsrResult
 
 asr_responses: list[ReverieAsrResult] = []
@@ -89,7 +98,7 @@ while True:
 5. **Text Translation**:<br></br>
 After obtaining the transcribed text, the script sends it to the Reverie NMT service for translation into the specified target language (e.g., from Hindi to English in this case). The translation result is then printed.
 
-```python
+```python Python
 src_lang = "hi"
 tgt_lang = "en"
 
@@ -113,7 +122,7 @@ if len(resp.strip()) > 0:
 6. **Error Handling**:<br></br>
 Comprehensive error handling is included to ensure smooth operation, including managing microphone input errors and any potential issues during the transcription or translation processes.
 
-```python
+```python Python
 import traceback
 
 try:

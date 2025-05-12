@@ -1,6 +1,6 @@
 ---
 title: "Getting Started"
-description: "Localization is the REST API developed for localizing the contents from English to Indic languages. Using the Localization API, you can either localize a single sentence or multiple sentences in a fraction of time."
+description: "Translation is the REST API developed for localizing the contents from English to Indic languages. Using the Translation API, you can either localize a single sentence or multiple sentences in a fraction of time."
 ---
 In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
 
@@ -37,7 +37,7 @@ By default, The API will return the strings in the target language.
 ### SDKs
 
 Reverie has several SDKs that can make it easier to use the API.
-Follow these steps to use the SDK of your choice to make a Reverie Localization request.
+Follow these steps to use the SDK of your choice to make a Reverie Translation request.
 
 ### Install Dependencies
 
@@ -86,7 +86,7 @@ client = ReverieClient(
 )
 
 
-resp = client.nmt.localization(
+resp = client.nmt.Translation(
     data=[
         "Reverie Language Technologies was established in 2009.",
         "The company head office is located in Bangalore.",
@@ -166,7 +166,7 @@ func main() {
 	req.Header.Set("tgt_lang", "hi")
 	req.Header.Set("domain", "1")
 	req.Header.Set("cnt_lang", "en")
-	req.Header.Set("REV-APPNAME", "localization")
+	req.Header.Set("REV-APPNAME", "Translation")
 
 	// Making HTTP Request
 	client := &http.Client{}

@@ -4,43 +4,59 @@ title: Introduction
 
 Reverie’s Language AI APIs enable developers to build multilingual, speech-enabled, and intelligent applications tailored for the Indian market. Whether you're building from scratch or embedding into an existing stack, our APIs are designed for scalability, low latency, and easy interoperability across platforms.
 
-1. **India-First Language Intelligence** <br></br>
+**India-First Language Intelligence** <br></br>
 Reverie’s models are trained specifically on Indian languages, dialects, and accents — ensuring better accuracy, fluency, and contextual understanding across diverse regions.
 
-2. **Full-Stack Language Coverage** <br></br>
+**Full-Stack Language Coverage** <br></br>
 From real-time speech transcription to document translation, from text-to-speech to named entity recognition — Reverie offers a comprehensive suite for any Indian language use case.
 
-3. **Easy Integration, Powerful Performance** <br></br>
+**Easy Integration, Powerful Performance** <br></br>
 With developer-friendly APIs, SDKs, and production-grade scalability, you can integrate language AI into your app in minutes — without compromising on performance or reliability.
-
 
 ## Here’s a quick overview of the APIs available
 
 <CardGroup cols={2}>
-  <Card title="Transliteration" icon="keyboard">
-    Convert Roman script to native Indian scripts (e.g., `“namaste”` → `“नमस्ते”`). Ideal for input methods, autocomplete, and typing tools.
-  </Card>
-  <Card title="Translation" icon="language">
-    Translate content between English and Indian languages with domain-tuned accuracy. Useful for apps, customer support, and content platforms.
-  </Card>
+  <a href="/usage-guides/speech-to-text-streaming/getting-started">
+    <Card title="Speech to Text (Streaming)" icon="microphone">
+      Convert live audio into real-time transcriptions using WebSocket. Ideal
+      for IVR systems, virtual assistants, and live meeting captioning.
+    </Card>
+  </a>
+  <a href="/usage-guides/speech-to-text-batch/getting-started">
+    <Card title="Speech to Text (Batch)" icon="file-audio">
+      Upload audio files and receive full transcripts asynchronously. Best for
+      analyzing recorded calls, podcasts, or long audio content.
+    </Card>
+  </a>
 </CardGroup>
 
 <CardGroup cols={2}>
-    <Card title="Speech to Text (Batch)" icon="file-audio">
-    Upload audio files and receive full transcripts asynchronously. Best for analyzing recorded calls, podcasts, or long audio content.
-  </Card>
-  <Card title="Speech to Text (Streaming)" icon="microphone">
-    Convert live audio into real-time transcriptions using WebSocket. Ideal for IVR systems, virtual assistants, and live meeting captioning.
-  </Card>
-</CardGroup>
-
-<CardGroup cols={2}>  
+<a
+    href="/usage-guides/text-to-speech/getting-started"
+  >
   <Card title="Text to Speech" icon="play">
-    Turn written text into natural-sounding speech in Indian languages. Useful in voice bots, accessibility tools, and language learning apps.
+    Turn written text into natural-sounding speech in Indian languages. Useful
+    in voice bots, accessibility tools, and language learning apps.
   </Card>
+  </a>
+  <a
+    href="/usage-guides/localization/getting-started"
+  >
+  <Card title="Translation" icon="language">
+    Translate content between English and Indian languages with domain-tuned
+    accuracy. Useful for apps, customer support, and content platforms.
+  </Card>
+  </a>
 </CardGroup>
 
-
+<CardGroup cols={2}>
+  <a href="/usage-guides/transliteration/getting-started">
+    <Card title="Transliteration" icon="keyboard">
+      Convert Roman script to native Indian scripts (e.g., `“namaste”` →
+      `“नमस्ते”`). Ideal for input methods, autocomplete, and typing tools.
+    </Card>
+  </a>
+</CardGroup>
 
 These APIs are production-ready, scalable, and optimized for Indian language nuances, accents, and dialects.
 

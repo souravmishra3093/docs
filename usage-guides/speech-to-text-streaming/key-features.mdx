@@ -36,29 +36,6 @@ const initGenericSTT = async () => {
 ```
 </CodeGroup>
 
-**Response**:
-<CodeGroup>
-```json generic
-{
-  "text": "आत्म निर्भर योजना का उद्देश्य 130 करोड़ भारतवासियों को आत्मनिर्भर बनाना है",
-  "confidence": 0.82,
-  "final": true
-}
-```
-```json bfsi
-{
-  "text": "मुझे अपना खाता शेष बताइए और पचास हज़ार का फंड ट्रांसफर करना है",
-  "confidence": 0.93,
-  "final": true
-}
-```
-</CodeGroup>
-
-| Feature             | `generic` Domain     | `bfsi` Domain                     |
-| ------------------- | -------------------- | --------------------------------- |
-| **Purpose**         | General speech       | Finance-specific language         |
-| **Recognized Term** | "130 करोड़ भारतवासी" | "₹1,30,000" or "₹50,000 ट्रांसफर" |
-| **Use Case**        | Schemes, info        | Voice banking, KYC                |
 
 ### `timeout`  
 The duration to keep a connection open between the application and the STT server. Note: The default timeout = 15 seconds, and the maximum time allowed = 180 seconds.
@@ -97,15 +74,6 @@ const initGenericSTT = async () => {
 ```
 </CodeGroup>
 
-**Response**:
-<CodeGroup>
-```bash timeout = 15
-The STT socket will remain active for 15 seconds, after which it will automatically close — i.e., the microphone will stop listening.
-```
-```bash timeout = 180
-The STT socket will remain active for 180 seconds, after which it will automatically close — i.e., the microphone will stop listening.
-```
-</CodeGroup>
 
 ### `silence`
 The time to determine when to end the connection automatically after detecting the silence after receiving the speech data. For Example: Consider `silence` = 15 seconds i.e., On passing the speech for 60 seconds, and if you remain silent, the connection will be open for the next 15 seconds and then will automatically get disconnected. Note: The default `silence`= 1 second, and the maximum `silence` = 30 seconds.
@@ -144,13 +112,6 @@ const initGenericSTT = async () => {
 ```
 </CodeGroup>
 
-**Response**:
-| `silence`  | Behavior After 60 Seconds of Speech                                                                                                                            |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `1`       | The connection remains active for **1 more second**. If no speech is detected, it auto-closes. If the user speaks again within 1 second, the timer resets.     |
-| `30`     | The connection remains active for **30 more seconds**. If no speech is detected, it auto-closes. If the user speaks again within 30 seconds, the timer resets. |
-
-
 ### `format`
 The audio sampling rate and the data format of the speech. Refer to [Supporting Audio Formats](/usage-guides/speech-to-text/supported-audio-formats) to know the supporting audio formats. By default, the `format` = 16k_int16. (WAV, Signed 16 bit, 16,000 or 16K Hz).
 
@@ -187,12 +148,6 @@ const initGenericSTT = async () => {
 };
 ```
 </CodeGroup>
-
-**Response**: 
-| Format       | Use Case                                                                                  |
-|--------------|-------------------------------------------------------------------------------------------|
-| `16k_int16`  | **Speech Recognition**: Ideal for real-time speech recognition systems like voice assistants or transcription tools.<br></br> **Voice Biometrics**: Used in voice authentication systems due to its balance of audio quality and file size. |
-| `WAV`        | **High-Quality Audio Processing**: Suitable for applications requiring uncompressed audio with full fidelity, like speech synthesis or detailed audio analysis. <br></br> **Archiving**: Used for storing high-quality recordings for long-term archiving or professional audio editing. |
 
 ### `logging`
 Possible Values are:
@@ -237,11 +192,6 @@ const initGenericSTT = async () => {
 };
 ```
 </CodeGroup>
-**Response**
-| Option       | Description                                                                                          
-|--------------|------------------------------------------------------------------------------------------------------|
-| `true`       | Stores both audio and transcripts in the logs. This option is useful for detailed analysis or record-keeping. |
-| `false`      | Does not store either audio or transcripts in the logs. This option is useful for privacy or compliance reasons. |
 
 ### `punctuate`
 It will enable punctuation and capitalisation in the transcript. The values it can take are `true` and `false`. Supported languages are: `en`, `hi`. Default value is true
@@ -278,11 +228,6 @@ const initGenericSTT = async () => {
 ```
 </CodeGroup>
 
-**Response**
-| Option       | Description                                                                                          | 
-|--------------|------------------------------------------------------------------------------------------------------|
-| `true`       | Enables punctuation and capitalization in the transcript. This option ensures the transcript is more natural and readable. | 
-| `false`      | Disables punctuation and capitalization in the transcript. This option may result in a more raw, unformatted output. | 
 
 ### `continuous`
 It will enable continuous decoding even after silence is detected. Can take value `true`/`1` or `false`/`0`. Default value is `false`/`0`
@@ -318,9 +263,3 @@ const initGenericSTT = async () => {
 };
 ```
 </CodeGroup>
-
-**Response**
-| Option       | Description                                                                                          |
-|--------------|------------------------------------------------------------------------------------------------------|
-| `true` / `1` | Enables continuous decoding even after silence is detected. This option ensures that the system keeps processing audio even during pauses in speech. | 
-| `false` / `0`| Disables continuous decoding after silence. When this option is set to `false`, the system will stop decoding after a period of silence is detected. | 

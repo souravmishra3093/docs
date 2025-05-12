@@ -3,13 +3,23 @@ title: Speech To Speech
 description: "This Python script demonstrates a real-time Speech-to-Speech (STS) translation system using the Reverie SDK. The script captures speech from the microphone, transcribes it into text, translates it into a target language, and finally converts the translated text back into speech, which is then played back to the user."
 ---
 
+### Install Dependencies
+<CodeGroup>
+```bash Python
+pip install pyaudio 
+pip install reverie-sdk
+pip install python-dotenv
+pip install pydub
+```
+</CodeGroup>
+
 ### How does it Works? 
 The main steps involved in the script are as follows:<br></br>
 
 1. **Environment Setup**:<br></br>
 The script loads essential API credentials (REVERIE_APP_ID and REVERIE_API_KEY) from environment variables using the dotenv package. These credentials are required to authenticate with the Reverie API.
 
-```python
+```python Python
 import os
 import dotenv
 from reverie_sdk import ReverieClient
@@ -26,7 +36,7 @@ client = ReverieClient(
 2. **Real-Time Audio Capture**:<br></br>
 The script uses pyaudio to capture real-time audio input from the microphone. This audio is then streamed asynchronously to the Reverie ASR (Automatic Speech Recognition) service for transcription into text.
 
-```python
+```python Python
 import pyaudio
 import asyncio
 from reverie_sdk.services.asr import AudioStream
@@ -56,7 +66,7 @@ pa_stream.start_stream()
 3. **Speech-to-Text (STT) Conversion**:<br></br>
 The captured audio is processed and transcribed using Reverie’s ASR service. The transcription occurs in real-time, providing immediate feedback as the speech is converted into text.
 
-```python
+```python Python
 await client.asr.stt_stream_async(
     src_lang=source_lang,
     bytes_or_stream=stream,
@@ -69,7 +79,7 @@ await client.asr.stt_stream_async(
 4. **Translation**:<br></br>
 Once the transcription is complete, the text is sent to Reverie’s NMT (Neural Machine Translation) service to be translated from the source language (e.g., Hindi) to a target language (e.g., English). The translated text is returned for further processing.
 
-```python
+```python Python
 src_lang = "hi"
 tgt_lang = "en"
 
@@ -93,7 +103,7 @@ if len(resp.strip()) > 0:
 5. **Text-to-Speech (TTS) Conversion**:<br></br>
 The translated text is then sent to Reverie’s TTS (Text-to-Speech) service to convert it into speech. The generated audio is played back to the user, providing a seamless speech-to-speech translation experience.
 
-```python
+```python Python
 tts_resp = client.tts.tts(
     f"{tgt_lang}_female",
     tgt_resp,
@@ -104,14 +114,14 @@ print(tts_resp)
 6. **Optional Audio Saving**:<br></br>
 The generated speech audio can optionally be saved to a file (e.g., .wav) for later use or playback.
 
-```python
+```python Python
 tts_resp.save_audio("./sample.wav", overwrite_existing=True)
 ```
 
 7. **Audio Playback**:<br></br>
 Using the pydub library, the resulting audio is played back in real-time to the user, completing the cycle of speech-to-text, translation, and speech-to-speech output.
 
-```python
+```python Python
 from pydub import AudioSegment, playback
 import io
 
@@ -121,7 +131,7 @@ playback.play(AudioSegment.from_file(io.BytesIO(tts_resp.audio_bytes), format="w
 8. **Error Handling**:<br></br>
 The script includes error handling to manage potential issues during the microphone capture, transcription, translation, and speech synthesis processes.
 
-```python
+```python Python
 import traceback
 
 try:

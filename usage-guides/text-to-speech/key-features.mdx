@@ -20,7 +20,7 @@ The speech rate of the audio file. Allows values: from 0.5 (slowest speed rate) 
 
 **For Example**: 
 <CodeGroup>
-```bash speed = 1
+```bash cURL 
 curl --location --request POST 'https://revapi.reverieinc.com/' \
 --header 'REV-API-KEY: <YOUR API KEY>' \
 --header 'REV-APP-ID: <YOUR APP-ID>' \
@@ -32,17 +32,6 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 	"speed": 1, 
 }'
 ```
-```bash speed = 0.5
-curl --location --request POST 'https://revapi.reverieinc.com/' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APP-ID: <YOUR APP-ID>' \
---header 'REV-APPNAME: tts' \
---header 'speaker: hi_female' \
---header 'Content-Type: application/json' \
---data-raw '{
-	"text": ["भारत मेरा देश है। मेरी कंपनी का नाम रेवेरी लैंग्वेज टेक्नोलॉजीज है।" ], 
-	"speed": 0.5, 
-}'
 ```
 </CodeGroup>
 
@@ -51,7 +40,7 @@ Speaking pitch, in the range Allows values: from -3 up tp 3. 3 indicates an incr
 
 **For Example**: 
 <CodeGroup>
-```bash pitch = -3
+```bash cURL
 curl --location --request POST 'https://revapi.reverieinc.com/' \
 --header 'REV-API-KEY: <YOUR API KEY>' \
 --header 'REV-APP-ID: <YOUR APP-ID>' \
@@ -63,18 +52,6 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 	"pitch": -3, 
 }'
 ```
-```bash pitch = 3
-curl --location --request POST 'https://revapi.reverieinc.com/' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APP-ID: <YOUR APP-ID>' \
---header 'REV-APPNAME: tts' \
---header 'speaker: hi_female' \
---header 'Content-Type: application/json' \
---data-raw '{
-	"text": ["भारत मेरा देश है। मेरी कंपनी का नाम रेवेरी लैंग्वेज टेक्नोलॉजीज है।" ], 
-	"pitch": 3, 
-}'
-```
 </CodeGroup>
 
 ### `sample_rate` 
@@ -82,7 +59,7 @@ The sampling rate (in hertz) to synthesize the audio output. Refer to [Supportin
 
 **For Example**: 
 <CodeGroup>
-```bash sample_rate = 22050
+```bash cURL 
 curl --location --request POST 'https://revapi.reverieinc.com/' \
 --header 'REV-API-KEY: <YOUR API KEY>' \
 --header 'REV-APP-ID: <YOUR APP-ID>' \
@@ -94,18 +71,6 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 	"sample_rate": 22050, 
 }'
 ```
-```bash sample_rate = 8000
-curl --location --request POST 'https://revapi.reverieinc.com/' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APP-ID: <YOUR APP-ID>' \
---header 'REV-APPNAME: tts' \
---header 'speaker: hi_female' \
---header 'Content-Type: application/json' \
---data-raw '{
-	"text": ["भारत मेरा देश है। मेरी कंपनी का नाम रेवेरी लैंग्वेज टेक्नोलॉजीज है।" ], 
-	"sample_rate": 8000, 
-}'
-```
 </CodeGroup>
 
 ### `format` 
@@ -113,7 +78,7 @@ The speech audio format to generate the audio file. Refer to [Supporting Audio F
 
 **For Example**: 
 <CodeGroup>
-```bash format = wav
+```bash cURL 
 curl --location --request POST 'https://revapi.reverieinc.com/' \
 --header 'REV-API-KEY: <YOUR API KEY>' \
 --header 'REV-APP-ID: <YOUR APP-ID>' \
@@ -123,18 +88,6 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 --data-raw '{
 	"text": ["भारत मेरा देश है। मेरी कंपनी का नाम रेवेरी लैंग्वेज टेक्नोलॉजीज है।" ], 
 	"format": wav, 
-}'
-```
-```bash format = mp3
-curl --location --request POST 'https://revapi.reverieinc.com/' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APP-ID: <YOUR APP-ID>' \
---header 'REV-APPNAME: tts' \
---header 'speaker: hi_female' \
---header 'Content-Type: application/json' \
---data-raw '{
-	"text": ["भारत मेरा देश है। मेरी कंपनी का नाम रेवेरी लैंग्वेज टेक्नोलॉजीज है।" ], 
-	"format": mp3, 
 }'
 ```
 </CodeGroup>

@@ -3,13 +3,22 @@ title: Voice Search
 description: "This Python script demonstrates how to implement a real-time voice search system using Reverie SDK’s Speech-to-Text (STT) service. The script captures audio input from the microphone, transcribes it into text, and processes the text for further use (such as conducting a search query, triggering actions, or further processing)."
 ---
 
+### Install Dependencies
+<CodeGroup>
+```bash Python
+pip install pyaudio 
+pip install reverie-sdk
+pip install python-dotenv
+```
+</CodeGroup>
+
 ### How does it Works? 
 The main steps involved in the script are as follows:<br></br>
 
 1. **Environment Configuration**:<br></br>
 The script loads essential credentials (REVERIE_APP_ID and REVERIE_API_KEY) from environment variables using the dotenv package. These credentials are required for accessing the Reverie SDK and its services.
 
-```python
+```python Python
 import os
 import dotenv
 from reverie_sdk import ReverieClient
@@ -26,7 +35,7 @@ client = ReverieClient(
 2. **Real-Time Audio Capture:**:<br></br>
 The script uses the pyaudio library to stream audio data from the microphone. The audio is captured in real-time, with the system processing 16kHz, mono audio in 16-bit signed integer format.
 
-```python
+```python Python
 import pyaudio
 import asyncio
 
@@ -55,7 +64,7 @@ pa_stream.start_stream()
 3. **Speech-to-Text (STT) Conversion**:<br></br>
 The audio data is continuously streamed and sent to Reverie's Automatic Speech Recognition (ASR) service for transcription. The system listens for spoken words and converts them into text in the specified source language (in this case, English).
 
-```python
+```python Python
 from reverie_sdk.services.asr import ReverieAsrResult, AudioStream
 
 await client.asr.stt_stream_async(
@@ -71,7 +80,7 @@ await client.asr.stt_stream_async(
 4. **Voice Search Use Case:**:<br></br>
 The stt_stream_async method is used with the "voice_search" domain. This allows the system to process and transcribe speech, making it ideal for voice search applications where users speak their search queries, and the system translates those queries into text for further action.
 
-```python
+```python Python
 await client.asr.stt_stream_async(
     src_lang=source_lang,
     bytes_or_stream=stream,
@@ -85,7 +94,7 @@ await client.asr.stt_stream_async(
 5. **Real-Time Transcription:**:<br></br>
 The transcription occurs in real-time, with each segment of speech being converted into text and displayed immediately. Once the system recognizes a complete, final transcription, the result is returned and printed.
 
-```python
+```python Python
 async def speech_to_text(source_lang):
     asr_responses: list[ReverieAsrResult] = []
 
@@ -126,7 +135,7 @@ The final transcribed text is printed to the console, which could then be used f
 ### Sample Code 
 
 <CodeGroup>
-```python Python
+```python Python 
 import asyncio
 import os
 import traceback

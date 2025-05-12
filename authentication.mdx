@@ -32,7 +32,28 @@ REV-APP-ID: <YOUR-APP-ID>
 Here are the cURL requests of all the APIs.
 
 <CodeGroup>
-```bash Localization
+```bash Speech-to-Text (Batch)
+curl --location --request POST 'https://revapi.reverieinc.com/upload' \
+--header 'src_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_batch' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--header 'subtitles: true' \
+--form 'file=@"<File Path>"'
+```
+```bash Text-to-Speech
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'REV-APPNAME: tts' \
+--header 'speaker: hi_female' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"text": "किसान होंगे आत्मनिर्भर, समृद्ध भारत"
+}'
+```
+```bash Translation
 curl --location --request POST 'https://revapi.reverieinc.com/' \
 --header 'Content-Type: application/json' \
 --header 'REV-API-KEY: <YOUR API KEY>' \
@@ -70,27 +91,6 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 "isBulk" :false,
 "ignoreTaggedEntities" : false
 }'
-```
-```bash Text-to-Speech
-curl --location --request POST 'https://revapi.reverieinc.com/' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APP-ID: <YOUR APP-ID>' \
---header 'REV-APPNAME: tts' \
---header 'speaker: hi_female' \
---header 'Content-Type: application/json' \
---data-raw '{
-	"text": "किसान होंगे आत्मनिर्भर, समृद्ध भारत"
-}'
-```
-```bash Speech-to-Text (Batch)
-curl --location --request POST 'https://revapi.reverieinc.com/upload' \
---header 'src_lang: hi' \
---header 'domain: generic' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APPNAME: stt_batch' \
---header 'REV-APP-ID: <YOUR API-ID>' \
---header 'subtitles: true' \
---form 'file=@"<File Path>"'
 ```
 ```bash OCR
 curl -X POST https://revapi.reverieinc.com/process_doc \
@@ -154,4 +154,4 @@ curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=fals
 
 2. **Use Environment Variables**: Store your API key in environment variables rather than hardcoding it in your application.
 
-3. **Monitor Usage**: Regularly check your API usage on the RevUp dashboard. You should be able to see the credits utilised & remaining
+3. **Monitor Usage**: Regularly check your API usage on the RevUp dashboard. You should be able to see the credits utilised & remaining.
