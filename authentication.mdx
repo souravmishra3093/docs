@@ -150,8 +150,8 @@ curl --location 'http://revapi.reverieinc.com/api/v2/text-analyse?translate=fals
 
 ### Best Practices for API Key Management
 
-1. **Keep Your Key Secret**: Never expose your API key in public repositories or client-side code.
+1. **Secure Storage**: Store API keys in secure environments like encrypted storage or secrets management tools (e.g., AWS Secrets Manager or Azure Key Vault) to avoid exposure in source code or version control systems.
 
-2. **Use Environment Variables**: Store your API key in environment variables rather than hardcoding it in your application.
+2. **Limit Key Permissions**: Use the principle of least privilege by restricting the permissions associated with the API key. Only allow access to the specific API endpoints and actions required, reducing potential security risks
 
-3. **Monitor Usage**: Regularly check your API usage on the RevUp dashboard. You should be able to see the credits utilised & remaining.
+3. **Monitor Usage and Set Limits**: Continuously monitor API key usage for abnormal activity and implement rate limits to prevent abuse or overuse, ensuring better security and performance.
