@@ -2,7 +2,6 @@
 title: "Getting Started"
 description: "Translation is the REST API developed for localizing the contents from English to Indic languages. Using the Translation API, you can either localize a single sentence or multiple sentences in a fraction of time."
 ---
-In this guide, you’ll learn how to automatically transcribe live streaming audio in real time using Reverie's SDKs, which are supported for use with the Reverie API.
 
 <Note>
   Before you start, you'll need to follow the steps in the [Get your API
@@ -76,7 +75,7 @@ async function translateText() {
 }
 
 translateText();
-```
+````
 ```python Python
 from reverie_sdk import ReverieClient
 
@@ -102,7 +101,8 @@ resp = client.nmt.Translation(
 )
 
 print(resp)
-```
+````
+
 ```go Go
 package main
 
@@ -212,6 +212,7 @@ func main() {
 	}
 }
 ```
+
 </CodeGroup>
 
 ### Results
@@ -237,6 +238,7 @@ python main.py
 // Example:
 go run main.go
 ```
+
 </CodeGroup>
 
 ### Analyzing the Response

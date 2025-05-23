@@ -2,10 +2,12 @@
 title: "Key Features"
 ---
 
-### `domain` 
-The Domain refers to the universe in which you use the Transliteration API. Example- Health Care, Insurance, Legal, etc. Refer to [Supporting Domain](/usage-guides/localization/supported-domains) to see the available domains.
+### `domain`
 
-**For Example**: 
+The Domain refers to the universe in which you use the Translation API. Example- `ecommerce`, `infotainment`, `bfsi`, etc. Refer to [Supporting Domain](/usage-guides/localization/supported-domains) to see the available domains.
+
+**For Example**:
+
 <CodeGroup>
 ```bash generic
 curl --location --request POST 'https://revapi.reverieinc.com/' \
@@ -43,99 +45,12 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 ```
 </CodeGroup>
 
+### `enableLookup`
 
-### `enableNmt` 
-Specify whether the content localization process should use NMT technology or not. i.e., When the enableNmt value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then the NMT is used for translation.
-
-Note - By default, the enableNmt= true
-
-**For Example**: 
-<CodeGroup>
-```bash enableNmt = true
-curl --location --request POST 'https://revapi.reverieinc.com/' \
---header 'Content-Type: application/json' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APP-ID: <YOUR APP-ID>' \
---header 'src_lang: en' \
---header 'tgt_lang: hi' \
---header 'domain: generic' \
---header 'REV-APPNAME: localization' \
---header 'REV-APPVERSION: 3.0' \
---data '{
-    "data": [
-        "Reverie Language Technologies was established in 2009.",
-        "The company head office is located in Bengaluru."
-    ]
-    "enableNmt": true
-}'
-```
-```bash enableNmt = false
-curl --location --request POST 'https://revapi.reverieinc.com/' \
---header 'Content-Type: application/json' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APP-ID: <YOUR APP-ID>' \
---header 'src_lang: en' \
---header 'tgt_lang: hi' \
---header 'domain: generic' \
---header 'REV-APPNAME: localization' \
---header 'REV-APPVERSION: 3.0' \
---data '{
-    "data": [
-        "Reverie Language Technologies was established in 2009.",
-        "The company head office is located in Bengaluru."
-    ]
-    "enableNmt": false
-}'
-```
-</CodeGroup>
-
-### `enableTransliteration` 
-Specify whether the content localization process should use transliteration technology or not. i.e., When the enableTransliteration value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then nmt is used for translation. If nmt fails, transliteration is called. Note - By default, the enableTransliteration= true
-
-**For Example**: 
-<CodeGroup>
-```bash enableTransliteration = true
-curl --location --request POST 'https://revapi.reverieinc.com/' \
---header 'Content-Type: application/json' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APP-ID: <YOUR APP-ID>' \
---header 'src_lang: en' \
---header 'tgt_lang: hi' \
---header 'domain: generic' \
---header 'REV-APPNAME: localization' \
---header 'REV-APPVERSION: 3.0' \
---data '{
-    "data": [
-        "Reverie Language Technologies was established in 2009.",
-        "The company head office is located in Bengaluru."
-    ]
-    "enableTransliteration": true
-}'
-```
-```bash enableTransliteration = false
-curl --location --request POST 'https://revapi.reverieinc.com/' \
---header 'Content-Type: application/json' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APP-ID: <YOUR APP-ID>' \
---header 'src_lang: en' \
---header 'tgt_lang: hi' \
---header 'domain: generic' \
---header 'REV-APPNAME: localization' \
---header 'REV-APPVERSION: 3.0' \
---data '{
-    "data": [
-        "Reverie Language Technologies was established in 2009.",
-        "The company head office is located in Bengaluru."
-    ]
-    "enableTransliteration": false
-}'
-```
-</CodeGroup>
-
-### `enableLookup` 
 The parameter will specify whether the application should refer to the Lookup DB or not. i.e., when the enableLookup is true, the system will initially refer to the Database to fetch contents. Note - By default, the enableLookup= true.
 
-**For Example**: 
+**For Example**:
+
 <CodeGroup>
 ```bash enableLookup = true
 curl --location --request POST 'https://revapi.reverieinc.com/' \
@@ -175,12 +90,104 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 ```
 </CodeGroup>
 
-### `nmtMask` 
+### `enableNmt`
 
-The feature to screen the non-dictionary words used in a sentence. In other words, the mask will indicate the words that should not be translated into the target language. Note - By default, the `nmtMask` = true. Note - To set the `nmtMask` = true, it is mandatory the `src_lang` = en (English).
+Specify whether the content localization process should use NMT technology or not. i.e., When the enableNmt value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then the NMT is used for translation.
 
+Note - By default, the enableNmt= true
 
-**For Example**: 
+**For Example**:
+
+<CodeGroup>
+```bash enableNmt = true
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: localization' \
+--header 'REV-APPVERSION: 3.0' \
+--data '{
+    "data": [
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bengaluru."
+    ]
+    "enableNmt": true
+}'
+```
+```bash enableNmt = false
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: localization' \
+--header 'REV-APPVERSION: 3.0' \
+--data '{
+    "data": [
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bengaluru."
+    ]
+    "enableNmt": false
+}'
+```
+</CodeGroup>
+
+### `enableTransliteration`
+
+Specify whether the content localization process should use transliteration technology or not. i.e., When the enableTransliteration value is true, the system will initially refer to the Lookup database to localize content. If the content is not available in the database, then nmt is used for translation. If nmt fails, transliteration is called. Note - By default, the enableTransliteration= true
+
+**For Example**:
+
+<CodeGroup>
+```bash enableTransliteration = true
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: localization' \
+--header 'REV-APPVERSION: 3.0' \
+--data '{
+    "data": [
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bengaluru."
+    ]
+    "enableTransliteration": true
+}'
+```
+```bash enableTransliteration = false
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'Content-Type: application/json' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APP-ID: <YOUR APP-ID>' \
+--header 'src_lang: en' \
+--header 'tgt_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-APPNAME: localization' \
+--header 'REV-APPVERSION: 3.0' \
+--data '{
+    "data": [
+        "Reverie Language Technologies was established in 2009.",
+        "The company head office is located in Bengaluru."
+    ]
+    "enableTransliteration": false
+}'
+```
+</CodeGroup>
+
+### `nmtMask`
+
+The mask will indicate the words that should not be translated into the target language. Note - By default, the `nmtMask` = true. Note - To set the `nmtMask` = true, it is mandatory the `src_lang` = en (English).
+
+**For Example**:
+
 <CodeGroup>
 ```bash nmtMask = true
 curl --location --request POST 'https://revapi.reverieinc.com/' \
@@ -220,12 +227,13 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 ```
 </CodeGroup>
 
-### `nmtMaskTerms` 
+### `nmtMaskTerms`
 
 Determines the Words that are to be masked. Note - On defining values in the nmtMaskTerms, then automatically the nmtMask is set to true.
 Example - Masking a term - "nmtMaskTerms": ["Reverie Language Technologies"] Here, the API will mask the term Reverie Language Technologies, if found in the source content, and will transliterate the word.
 
-**For Example**: 
+**For Example**:
+
 <CodeGroup>
 ```bash nmtMaskTerms = true
 curl --location --request POST 'https://revapi.reverieinc.com/' \
@@ -269,6 +277,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 </CodeGroup>
 
 **Response**
+
 <CodeGroup>
 ```json nmtMaskTerms = true
 {
@@ -296,11 +305,12 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
 ```
 </CodeGroup>
 
-### `filterProfane` 
+### `filterProfane`
 
-Specify whether you want to filter out profane content from the input. Note - By default, the filterProfane=true.
+Specify whether you want to filter out profane content from the input. Note - By default, the filterProfane=false.
 
-**For Example**: 
+**For Example**:
+
 <CodeGroup>
 ```bash filterProfane = true
 curl --location --request POST 'https://revapi.reverieinc.com/' \
