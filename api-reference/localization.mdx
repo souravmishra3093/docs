@@ -120,7 +120,7 @@ curl --location --request POST 'https://revapi.reverieinc.com/' \
     },
     {
       "inString": "The company head office is located in Bengaluru.",
-      "apiStatus": 3,
+      "apiStatus": 4,
       "outStrings": {
         "hi": "कंपनी का प्रधान कार्यालय बंगलुरू में स्थित है।",
         "ta": "நிறுவனத்தின் தலைமை அலுவலகம் பெங்கலூரில் அமைந்துள்ளது ."
@@ -212,6 +212,14 @@ The error message below indicates that you do not have the necessary permissions
   - List of input text for Translation.
 </ParamField>{" "}
 
+<ParamField header="enableLookup" type="boolean">
+  {" "}
+  - The parameter will specify whether the application should refer to the Lookup
+  DB or not. - For Example, when the enableLookup is true, the system will initially
+  refer to the Database to fetch contents. - **Note** - By default, the `enableLookup`=
+  `true`
+</ParamField>{" "}
+
 <ParamField header="enableNmt" type="boolean">
   {" "}
   - Specify whether the content Translation process should use NMT technology or
@@ -228,14 +236,6 @@ The error message below indicates that you do not have the necessary permissions
   will initially refer to the Lookup database to localize content. If the content
   is not available in the database, then nmt is used for translation. If nmt fails,
   transliteration is called. - **Note** - By default, the `enableTransliteration`=
-  `true`
-</ParamField>{" "}
-
-<ParamField header="enableLookup" type="boolean">
-  {" "}
-  - The parameter will specify whether the application should refer to the Lookup
-  DB or not. - For Example, when the enableLookup is true, the system will initially
-  refer to the Database to fetch contents. - **Note** - By default, the `enableLookup`=
   `true`
 </ParamField>{" "}
 
@@ -258,7 +258,7 @@ The error message below indicates that you do not have the necessary permissions
 <ParamField header="filterProfane" type="boolean">
   {" "}
   - Specify whether you want to filter out profane content from the input. - **Note**
-  - By default, the `filterProfane`= `true`
+  - By default, the `filterProfane`= `false`
 </ParamField>{" "}
 
 ### Response
