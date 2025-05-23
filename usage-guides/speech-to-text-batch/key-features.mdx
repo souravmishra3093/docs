@@ -27,34 +27,6 @@ curl --location --request POST 'https://revapi.reverieinc.com/upload' \
 ```
 </CodeGroup>
 
-
-### `format`
-The audio sampling rate and the data format of the speech. Refer to [Supporting Audio Formats](/usage-guides/speech-to-text/supported-audio-formats) to know the supporting audio formats. By default, the `format` = 16k_int16. (WAV, Signed 16 bit, 16,000 or 16K Hz).
-
-**For Example**: 
-<CodeGroup>
-```bash format = 16k_int16
-curl --location --request POST 'https://revapi.reverieinc.com/upload' \
---header 'src_lang: hi' \
---header 'domain: generic' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APPNAME: stt_batch' \
---header 'REV-APP-ID: <YOUR API-ID>' \
---header 'format: 16k_int16' \
---form 'file=@"<File Path>"'
-```
-```bash format = wav
-curl --location --request POST 'https://revapi.reverieinc.com/upload' \
---header 'src_lang: hi' \
---header 'domain: bfsi' \
---header 'REV-API-KEY: <YOUR API KEY>' \
---header 'REV-APPNAME: stt_batch' \
---header 'REV-APP-ID: <YOUR API-ID>' \
---header 'format: wav' \
---form 'file=@"<File Path>"'
-```
-</CodeGroup>
-
 ### `subtitles`
 Enables subtitling from the audio file.
 
