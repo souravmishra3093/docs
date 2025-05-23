@@ -86,6 +86,7 @@
         "pages": [
           "api-reference/speech-to-text-streaming",
           "api-reference/speech-to-text-batch",
+          "api-reference/speech-to-text-file",
           "api-reference/text-to-speech",
           "api-reference/localization",
           "api-reference/transliteration"

@@ -1,0 +1,225 @@
+---
+title: "Speech-to-Text (File) API"
+description: "The Speech-to-Text API powered by Reverie's AI technology accurately converts speech into text. The solution can transcribe audio files of various Indian languages and audio formats."
+
+---
+
+# How Does API Work?
+
+The process to transcribe an audio file:
+
+- Post the request by:
+  - Enter the valid `REV-APPNAME`, `REV-APP-ID`, and `REV-API-KEY`.
+  - Define the Language Code and domain.
+  - Upload the audio file to transcribe.
+- The API will return the text in the requested Indian language.
+
+
+## cURL for Integration
+### Transcribing Audio
+#### Request
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'src_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_file' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--form 'audio_file=@"<File Path>"'
+```
+
+#### Response
+```json
+{
+    "id": "ddf4ebda44af4fdf95118af9a6f14d46fce12ed85347471d",
+    "success": true,
+    "final": true,
+    "text": "नाइनटी एट पॉइंट थ्री एफएम पर प्ले करिए",
+    "cause": "EOF received",
+    "confidence": 0.891,
+    "display_text": "98.3 एफएम पर प्ले करिए"
+}
+```
+
+### Transcribing Audio other than Default Format
+#### Request
+```bash
+curl --location --request POST 'https://revapi.reverieinc.com/' \
+--header 'src_lang: hi' \
+--header 'domain: generic' \
+--header 'REV-API-KEY: <YOUR API KEY>' \
+--header 'REV-APPNAME: stt_file' \
+--header 'REV-APP-ID: <YOUR API-ID>' \
+--header 'format: mp3'
+--form 'audio_file=@"<File Path>"'
+```
+
+#### Response
+```json
+{
+    "id": "ddf4ebda44af4fdf95118af9a6f14d46fce12ed85347471d",
+    "success": true,
+    "final": true,
+    "text": "नाइनटी एट पॉइंट थ्री एफएम पर प्ले करिए",
+    "cause": "EOF received",
+    "confidence": 0.891,
+    "display_text": "98.3 एफएम पर प्ले करिए"
+}
+```
+#### Error Response
+```json
+{
+    "id": "03e4f260551345e6832bf62ba273e0096fd303e72f94453f",
+    "success": false,
+    "text": "",
+    "final": true,
+    "confidence": 1.0,
+    "cause": "no file given",
+    "display_text": ""  
+}
+```
+
+## API References
+### HTTP Request URL
+| URL Elements       | Sample URL                     |
+|--------------------|--------------------------------|
+| https://(hostname) | https://revapi.reverieinc.com/ |
+
+
+### Headers
+<ParamField header="Content-Type" type="string" required>
+  {" "}
+  The format of the data to be posted: `application/json`
+</ParamField> 
+
+<ParamField header="REV-API-KEY" type="string" required>
+  {" "}
+  A unique key/token is provided by Reverie to identify the user using the STT API
+</ParamField> 
+
+<ParamField header="REV-APP-ID" type="string" required>
+  {" "}
+  The unique account ID to identify the user and the default account settings
+</ParamField> 
+
+<ParamField header="REV-APPNAME" type="string" required>
+  {" "}
+  The parameter to identify the API : `stt_file`
+</ParamField> 
+
+<ParamField header="src_lang" type="string" required>
+  {" "}
+  - Indicates the language in which the audio is spoken
+  - Example : `or`, `hi`, `bn`
+  - Refer to section [Language Codes](/usage-guides/speech-to-text-batch#supported-languages) for valid language code.
+</ParamField> 
+
+<ParamField header="domain" type="string" required>
+  {" "}
+  - Refer to the universe in which the STT API is used for transcribing the audio file
+  - Example: Banking, Insurance, etc.
+  - Refer to section [Domain Codes](/usage-guides/speech-to-text/supported-domains) for valid language code.
+</ParamField> 
+
+<ParamField header="format" type="string">
+  {" "}
+  - Indicates the supporting format of the audio file
+  - Refer to section [Audio Format Codes](/usage-guides/speech-to-text/supported-audio-formats) for valid language code.
+</ParamField> 
+
+<ParamField header="logging" type="boolean">
+  {" "}
+  - Indicates the type of logging of data you can choose
+</ParamField> 
+
+<ParamField header="punctuate" type="boolean">
+  {" "}
+  - Indicates whether capitalisation and Punctuation is needed in the transcript
+  - It will enable punctuation and capitalisation in the transcript. The values it can take are `true` and `false`.
+</ParamField> 
+
+### Request
+<ParamField header="audio_file" type="file" required>
+  {" "}
+  - Local audio file’s path to obtain the transcript.
+  - `audio_file` length should be equal to or less than 300 seconds (5 minutes).
+</ParamField> 
+
+<ParamField header="file_url" type="string" required>
+  {" "}
+  - The audio file’s public URL to obtain the transcript.
+  - `file_url` length should be equal to or less than 300 seconds (5 minutes).
+</ParamField>
+
+### Response
+
+<ParamField header="id" type="string">
+  - API will auto-assign a unique identification number for each request.
+</ParamField>
+
+
+<ParamField header="success" type="boolean">
+  - Will indicate the functional status of the API:
+    - If the success = `true`, then the API is functioning and ready to generate output.
+    - If the success = `false`, then the API is not functional and has some errors.
+</ParamField>
+
+
+<ParamField header="final" type="boolean">
+  - Reason for obtaining the final output.
+    - If the final = `true`, then the received text is the final output.
+    - If the final = `false`, then the text received is partial and is still processing the file.
+</ParamField>
+
+<ParamField header="cause" type="string">
+  - The cause will appear for both successful and failed requests.
+</ParamField>
+
+<ParamField header="text" type="string">
+  - The audio file transcribed into text format in the requested language.
+</ParamField>
+
+<ParamField header="confidence" type="float">
+  - The level of confidence that Reverie STT API has in the accuracy of the transcription.
+  - The Confidence score ranges from `0` to `1`.  Higher scores indicate greater relevance to the transcription.
+</ParamField>
+
+<ParamField header="display_text" type="string">
+  - The beautified text of the final transcript.
+  - If the final transcript consists of digits, URL, app names, it is quickly converted to a readable format for the user.
+</ParamField>
+
+
+### Handling Errors
+
+The STT API raises exceptions for many reasons, such as a failed connection, invalid parameters, authentication errors, and network unavailability. We provide more specific human-readable messages with an error response so that users can react to errors more.
+
+```json
+{
+    "id": "0ca5c7293d1d4eaaa5eb5ade8331dd3300443509daf8434b",
+    "success": false,
+    "text": "",
+    "final": true,
+    "confidence": 1.0,
+    "cause": "no domain given",
+    "display_text": ""
+}
+```
+
+### API Response Codes
+
+| Code | Message                             | Description                                                                 |
+|------|-------------------------------------|-----------------------------------------------------------------------------|
+| 403  | Invalid REV-API-KEY or REV-APP-ID   | Entered invalid credentials.                                                |
+| 403  | usage exhausted                      | The provided credit limit is exhausted.                                     |
+| 403  | API key expired                      | The API key provided to a user has expired.                                 |
+| 403  | unauthorized to use this API         | The user is not authorized to use the STT API.                              |
+| 403  | unauthorized to use this src/tgt language | The invalid language code is passed, or the user is not authorized to use it. |
+| 400  | no `domain` given                    | The domain name is missing.                                                 |
+| 415  | File not supported                   | Upload only audio formats like .wav, .mp3.                                  |
+| 400  | invalid `sample_rate` value         | The requested audio sample rate is invalid or not supported by the API.     |
+| 400  | no file or file url given           | The input is missing.                                                       |
+| 400  | Too many samples                    | The length of the uploaded audio file is greater than 300 seconds.          |
+| 504  | upstream request timeout             | Terminated the request as it took longer than the defined time.             |
+| 200  | EOF received                         | The input is received completely, and the end of the file is received.      |
+| 200  | silence detected                     | Final response as silence was detected in the audio.                        |
